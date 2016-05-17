@@ -1,6 +1,6 @@
 Gnostice StarDocs SDK for JavaScript.
 
-The SDK is provided in the source form. You can also read articles to [understand more about StarDocs](https://www.gnostice.com/stardocs.asp) and [easily get started using it](https://www.gnostice.com/stardocs.asp).
+The SDK is provided in the source form. You can read our articles to [understand more about StarDocs](https://www.gnostice.com/stardocs.asp) and [easily get started using it](https://www.gnostice.com/stardocs.asp).
 
 
 For more information about the StarDocs product please click [here](https://www.gnostice.com/stardocs.asp).<br>
