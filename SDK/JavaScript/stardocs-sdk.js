@@ -33,38 +33,6 @@ Gnostice.Preferences = function(docPasswordSettings) {
 };
 Gnostice.Preferences.prototype.constructor = Gnostice.Preferences;
 
-/* FileObject */
-Gnostice.FileObject = function(arg) {
-	this.fileUploaded = false;
-	if (typeof arg === "string") {	// Consider as URI
-		this.fileUploaded = true;
-		this.fileUri = arg;
-	} else if (typeof arg === "object") {	// Consider as JQuery input file element object
-		this.formObj = arg;
-	}
-	
-	// Public methods
-	this.fileNameFromUri = function() {
-		if (typeof this.fileUri === "string") {
-			// Todo: Decode the URI first?
-			var lpos = this.fileUri.lastIndexOf('/');
-			return this.fileUri.substr(lpos + 1);
-		}
-	};
-};
-Gnostice.FileObject.prototype.constructor = Gnostice.FileObject;
-
-/* DocObject */
-Gnostice.DocObject = function(apiResponse) {
-	Gnostice.FileObject.call(this, apiResponse.uri);
-	this.name = apiResponse.fileName;
-	this.size = apiResponse.fileSize;
-	this.pageCount = apiResponse.pageCount;
-	this.mimeType = apiResponse.mimeType;
-};
-Gnostice.DocObject.prototype = Object.create(Gnostice.FileObject.prototype);
-Gnostice.DocObject.prototype.constructor = Gnostice.DocObject;
-
 /* StarDocs */
 Gnostice.StarDocs = function(connectionInfo, preferences) {
 	this.connectionInfo = connectionInfo || new Gnostice.ConnectionInfo();
@@ -90,6 +58,12 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	this.pollInterval = 1000 * 1;			// 1 second
 	this.pollRetryMaxCount = 60 * 10;	// 10 minutes
 
+	/* Internal settings passed when SDK is used in viewer */
+	this.documentPassword = null;
+	this.setDocumentPassword = function(password) {
+		this.documentPassword = password;
+	};
+	
 	/* Authentication related APIs */
 	var Auth = function(starDocs) {
 		this.starDocs = starDocs;
@@ -200,13 +174,18 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	
 	// Upload file(s)
 	// inputElementFileId - id of the <input> element of type 'file'
-	Storage.prototype.upload = function(inputElementFileId) {
+	// password - Password if the document is encrypted
+	Storage.prototype.upload = function(inputElementFileId, password) {
 		var fileInput = document.getElementById(inputElementFileId);
 		// Currently we only support a single file upload at a time
 		var file = fileInput.files[0];
 		console.log('Uploading ' + file);
 		var formData = new FormData();
 		formData.append('fileUpload', file);
+		if (password != null) {
+			formData.append('password', password);
+		}
+		formData.append('forceFullPermission', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
 		var docsUri = this.starDocs.connectionInfo.apiServerUri + this.starDocs.uriSegDocs;
 		var self = this;
 		var deferred = this.starDocs.doAjaxWithBody('POST', docsUri, formData);
@@ -837,25 +816,21 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	* @class The purpose of this function is to fill a PDF form
 	* @param {string} docUrl URL of the document on the server
 	* @param {string} password Some comment
-	* @param {boolean} flattenFields Some comment
 	* @param {array} fields JS array having schema
 	* [
 	*		{
-	*			"fieldName": <string>,
-	*			"fieldValue": <string>,
-	*			"flattenField": <boolean>
+	*			fieldName: <string>,
+	*			fieldValue: <string>,
+	*			flattenField: <boolean>
 	*		},
 	*		...
 	*	]
 	*/
-	DocOperations.prototype.fillForm = function(docUrl, password, fields, flattenFields) {
+	DocOperations.prototype.fillForm = function(docUrl, password, fields) {
 		var docsOpsUri = docUrl + this.starDocs.uriSegOps + "/fill-form";
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
 		if (password != null) {
 			jsonBody.password = passwords;
-		}
-		if (flattenFields != null) {
-			jsonBody.flattenFields = flattenFields;
 		}
 		if (fields != null) {
 			jsonBody.fields = fields;
@@ -898,9 +873,17 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	};
 
 	// Get document info
-	DocOperations.prototype.getDocInfo = function(docUri) {
-		docUri = docUri + this.starDocs.uriSegInfo;
-		var deferred = this.starDocs.doAjax('GET', docUri);
+	DocOperations.prototype.getDocInfo = function(docUrl, password) {
+		docUrl = docUrl + this.starDocs.uriSegInfo;
+		docUrl = docUrl + "?force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		if (password != null) {
+			docUrl = docUrl + "&password=" + encodeURIComponent(password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			docUrl = docUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+		}
+
+		var deferred = this.starDocs.doAjax('GET', docUrl);
 		var that = this;
 		return deferred.then(
 			function(response, textStatus, jqXhr) {
@@ -910,8 +893,12 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				else if (jqXhr.status === 202) {
 					// Page is not ready so we need to poll
 					var newDeferred = $.Deferred();
-					var pollUri = jqXhr.getResponseHeader("location");
-					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUri, newDeferred, that.starDocs, 1);
+					var pollUrl = jqXhr.getResponseHeader("location");
+					pollUrl = pollUrl + "?force-full-permission=" + that.starDocs.preferences.docPasswordSettings.forceFullPermission;
+					if (that.starDocs.documentPassword != null) {
+						pollUrl = pollUrl + "&password=" + encodeURIComponent(that.starDocs.documentPassword);
+					}
+					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUrl, newDeferred, that.starDocs, 1);
 					return newDeferred.promise();
 				}
 				else {
@@ -926,8 +913,15 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	};
 	
 	// Get page image
-	DocOperations.prototype.getPageImage = function(pageUrl, dpi) {
+	DocOperations.prototype.getPageImage = function(pageUrl, dpi, password) {
 		pageUrl = pageUrl + "?dpi=" + dpi;
+		pageUrl = pageUrl + "&force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		if (password != null) {
+			pageUrl = pageUrl + "&password=" + encodeURIComponent(password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			pageUrl = pageUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+		}
 		var deferred = this.starDocs.doAjax('GET', pageUrl);
 		var that = this;
 		return deferred.then(
@@ -940,8 +934,12 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 					console.log("In getPageImage: Page not ready, need to poll");
 					// Page is not ready so we need to poll
 					var newDeferred = $.Deferred();
-					var pollUri = jqXhr.getResponseHeader("location");
-					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUri, newDeferred, that.starDocs, 1);
+					var pollUrl = jqXhr.getResponseHeader("location");
+					pollUrl = pollUrl + "?force-full-permission=" + that.starDocs.preferences.docPasswordSettings.forceFullPermission;
+					if (that.starDocs.documentPassword != null) {
+						pollUrl = pollUrl + "&password=" + encodeURIComponent(that.starDocs.documentPassword);
+					}
+					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUrl, newDeferred, that.starDocs, 1);
 					return newDeferred.promise();
 				}
 				else {
@@ -957,8 +955,15 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	};
 
 	// Get page form fields
-	DocOperations.prototype.getPageFormFields = function(pageUrl) {
+	DocOperations.prototype.getPageFormFields = function(pageUrl, password) {
 		var pageTextUrl = pageUrl + "/formfields";
+		pageTextUrl = pageTextUrl + "?force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		if (password != null) {
+			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+		}
 		var deferred = this.starDocs.doAjax('GET', pageTextUrl);
 		var that = this;
 		return deferred.then(
@@ -969,8 +974,12 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				else if (jqXhr.status === 202) {
 					// Page is not ready so we need to poll
 					var newDeferred = $.Deferred();
-					var pollUri = jqXhr.getResponseHeader("location");
-					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUri, newDeferred, that.starDocs, 1);
+					var pollUrl = jqXhr.getResponseHeader("location");
+					pollUrl = pollUrl + "?force-full-permission=" + that.starDocs.preferences.docPasswordSettings.forceFullPermission;
+					if (that.starDocs.documentPassword != null) {
+						pollUrl = pollUrl + "&password=" + encodeURIComponent(that.starDocs.documentPassword);
+					}
+					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUrl, newDeferred, that.starDocs, 1);
 					return newDeferred.promise();
 				}
 				else {
@@ -985,8 +994,15 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	};
 
 	// Get page text
-	DocOperations.prototype.getPageText = function(pageUrl) {
+	DocOperations.prototype.getPageText = function(pageUrl, password) {
 		var pageTextUrl = pageUrl + "/text";
+		pageTextUrl = pageTextUrl + "?force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		if (password != null) {
+			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+		}
 		var deferred = this.starDocs.doAjax('GET', pageTextUrl);
 		var that = this;
 		return deferred.then(
@@ -999,8 +1015,12 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 					console.log("In getPageText: Page text not ready, need to poll");
 					// Page is not ready so we need to poll
 					var newDeferred = $.Deferred();
-					var pollUri = jqXhr.getResponseHeader("location");
-					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUri, newDeferred, that.starDocs, 1);
+					var pollUrl = jqXhr.getResponseHeader("location");
+					pollUrl = pollUrl + "?force-full-permission=" + that.starDocs.preferences.docPasswordSettings.forceFullPermission;
+					if (that.starDocs.documentPassword != null) {
+						pollUrl = pollUrl + "&password=" + encodeURIComponent(that.starDocs.documentPassword);
+					}
+					setTimeout(that.starDocs.doPoll, that.starDocs.pollInterval, pollUrl, newDeferred, that.starDocs, 1);
 					return newDeferred.promise();
 				}
 				else {
@@ -1063,7 +1083,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		var viewSessionsUri = this.starDocs.connectionInfo.apiServerUri + this.starDocs.uriSegViewSessions;
 		viewerSettings = viewerSettings || {};
 		password = password || "";
-		var body = JSON.stringify({'documents': [{ 'url': docUrl, 'password': password }], 'viewerSettings': viewerSettings});
+		var body = JSON.stringify({'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission, 'documents': [{ 'url': docUrl, 'password': password }], 'viewerSettings': viewerSettings});
 		var deferred = this.starDocs.doAjaxWithBody('POST', viewSessionsUri, body, 'application/json; charset=utf-8');
 		return deferred.then(
 			function(response, textStatus, jqXhr) {
@@ -1252,8 +1272,12 @@ Gnostice.StarDocs.prototype.doAjaxWithBodyAndPoll = function(method, uri, body, 
 				else if (jqXhr.status === 202) {
 					// Result is not ready so we need to poll
 					var newDeferred = $.Deferred();
-					var pollUri = jqXhr.getResponseHeader("location");
-					setTimeout(that.doPoll, that.pollInterval, pollUri, newDeferred, that, 1);
+					var pollUrl = jqXhr.getResponseHeader("location");
+					pollUrl = pollUrl + "?force-full-permission=" + that.preferences.docPasswordSettings.forceFullPermission;
+					if (that.documentPassword != null) {
+						pollUrl = pollUrl + "&password=" + encodeURIComponent(that.documentPassword);
+					}
+					setTimeout(that.doPoll, that.pollInterval, pollUrl, newDeferred, that, 1);
 					return newDeferred.promise();
 				}
 				else {
@@ -1267,13 +1291,14 @@ Gnostice.StarDocs.prototype.doAjaxWithBodyAndPoll = function(method, uri, body, 
 		);
 };
 
-Gnostice.StarDocs.prototype.doPoll = function(pollUri, deferred, starDocs, pollRetryCount) {
-	console.log("In doPoll: Polling " + pollUri);
-	var deferredRequest = starDocs.doAjax('GET', pollUri);
+Gnostice.StarDocs.prototype.doPoll = function(pollUrl, deferred, starDocs, pollRetryCount) {
+	console.log("In doPoll: Polling " + pollUrl);
+
+	var deferredRequest = starDocs.doAjax('GET', pollUrl);
 	return deferredRequest.then(
 		function(response, textStatus, jqXhr) {
 			if (jqXhr.status === 200 || jqXhr.status === 201) {
-				console.log("In doPoll: done " + pollUri);
+				console.log("In doPoll: done " + pollUrl);
 				deferred.resolve(response);
 			}
 			else if (jqXhr.status === 202) {
@@ -1286,7 +1311,7 @@ Gnostice.StarDocs.prototype.doPoll = function(pollUri, deferred, starDocs, pollR
 					deferred.reject(200, 'OK', 0, 'Exceeded poll retry count.');
 					return;
 				}
-				setTimeout(starDocs.doPoll, starDocs.pollInterval, pollUri, deferred, starDocs, pollRetryCount);
+				setTimeout(starDocs.doPoll, starDocs.pollInterval, pollUrl, deferred, starDocs, pollRetryCount);
 			}
 			else {
 				// Unexpected response
