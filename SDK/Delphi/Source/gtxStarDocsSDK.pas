@@ -1,6 +1,6 @@
 {
  Gnostice StarDocs v2
- Copyright Â© 2002-2016 Gnostice Information Technologies Private Limited, Bangalore, India
+ Copyright © 2002-2016 Gnostice Information Technologies Private Limited, Bangalore, India
  http://www.gnostice.com
 }
 
@@ -339,8 +339,7 @@ type
       AConversionMode: TgtxPDFConversionMode = TgtxPDFConversionMode.
       pcmConvertToSeparateFiles): TObjectList<TgtxDocObject>;
     function FillForm(AFile: TgtxFileObject; APassword: string;
-      AformFields: TObjectList<TgtxPDFFormFieldFillData>;
-      AFlattenFields: Boolean = False): TgtxDocObject;
+      AformFields: TObjectList<TgtxPDFFormFieldFillData>): TgtxDocObject;
   end;
 
   { Enumerations }
@@ -410,16 +409,16 @@ type
   { TgtxDocObject }
   TgtxDocObject = class(TgtxFileObject)
   private
-    FName: string;
-    FSize: Longint;
+    FFileName: string;
+    FFileSize: Longint;
     FExpiryTime: Longint;
     FPageCount: Integer;
     FMimeType: TgtxMimeType;
     function ParseMimeType(AMimeType: string): TgtxMimeType;
     constructor Create(AApiResponse: TgtxRestAPIDocumentCommon);
   public
-    property Name: string read FName;
-    property Size: Longint read FSize;
+    property FileName: string read FFileName;
+    property FileSize: Longint read FFileSize;
     property ExpiryTime: Longint read FExpiryTime;
     property PageCount: Integer read FPageCount;
     property MimeType: TgtxMimeType read FMimeType;
@@ -509,6 +508,9 @@ type
       AApiResponseStr: string); overload;
     constructor Create(AHttpStatusCode: Integer;
       AApiResponse: TgtxRestAPIResponseError); overload;
+    property HttpStatusCode: Integer read FHttpStatusCode;
+    property ErrorCode: TgtxExceptionStatusCode read FErrorCode;
+    property Documents: TObjectList<TgtxDocErrorDetails> read FDocuments;
   end;
 
   // Classes used for passing parameters to the Doc Operations API
@@ -585,7 +587,7 @@ type
     FGreen: Byte;
     FBlue: Byte;
     FAlpha: Byte;
-    function EncodeString(): string;
+    function EncodeString(AEncodeAlpha: boolean = True): string;
   public
     constructor Create(ARed: Byte; AGreen: Byte; ABlue: Byte;
       AAlpha: Byte = 100);
@@ -1250,7 +1252,7 @@ type
     FFlattenField: Boolean;
   public
     constructor Create(AfieldName: string = ''; AfieldValue: string = '';
-      AflattenField: Boolean = False);
+      AFlattenField: Boolean = False);
     property FieldName: string read FFieldName write FFieldName;
     property FieldValue: string read FFieldValue write FFieldValue;
     property FlattenField: Boolean read FFlattenField write FFlattenField;
@@ -1260,7 +1262,7 @@ implementation
 
 { Helper routines }
 const
-  BooleanToStringName: array [False .. True] of string = ('False', 'True');
+  BooleanToStringName: array [False .. True] of string = ('false', 'true');
 
   { TgtxStarDocsSDK }
 
@@ -1651,8 +1653,8 @@ var
 begin
   LRemoteFileUri := TgtxRemoteFileUri.Create(AApiResponse.Url);
   inherited Create(LRemoteFileUri);
-  FName := AApiResponse.FileName;
-  FSize := AApiResponse.FileSize;
+  FFileName := AApiResponse.FileName;
+  FFileSize := AApiResponse.FileSize;
   FPageCount := AApiResponse.PageCount;
   FMimeType := ParseMimeType(AApiResponse.MimeType);
 end;
@@ -2077,11 +2079,12 @@ begin
   FAlpha := AAlpha;
 end;
 
-function TgtxColor.EncodeString(): string;
+function TgtxColor.EncodeString(AEncodeAlpha: boolean): string;
 begin
   // Convert each component to hex string and concatenate them as RRGGBBAA
-  Result := IntToHex(Red, 2) + IntToHex(Green, 2) + IntToHex(Blue, 2) +
-    IntToHex(Alpha, 2);
+  Result := '#' + IntToHex(Red, 2) + IntToHex(Green, 2) + IntToHex(Blue, 2);
+  if AEncodeAlpha then
+    Result := Result + IntToHex(Alpha, 2);
 end;
 
 { TgtxPen }
@@ -2199,11 +2202,9 @@ begin
   Result := Result + '"name":"' + Name + '"';
   // Encode Style
   Result := Result + ',"style":{';
-  Result := Result + '"bold":' + BoolToStr(fstBold in FStyles, True).ToLower;
-  Result := Result + ',"italic":' + BoolToStr(fstItalic in FStyles,
-    True).ToLower;
-  Result := Result + ',"underline":' + BoolToStr(fstUnderline in FStyles,
-    True).ToLower;
+  Result := Result + '"bold":' + BooleanToStringName[fstBold in FStyles];
+  Result := Result + ',"italic":' + BooleanToStringName[fstItalic in FStyles];
+  Result := Result + ',"underline":' + BooleanToStringName[fstUnderline in FStyles];
   Result := Result + '}';
   // Encode Size
   if AFontSizingMode = fsmUseFontSize then
@@ -2515,7 +2516,7 @@ begin
     GetEnumName(TypeInfo(TgtxFontEmbeddingType), Integer(FFontEmbeddingType))
     .Substring(3) + '"';
   Result := Result + ',"overrideFontEmbeddingRestriction":' +
-    BoolToStr(FOverrideFontEmbeddingRestriction, True).ToLower();
+    BooleanToStringName[FOverrideFontEmbeddingRestriction];
   Result := Result + '}';
 end;
 
@@ -2588,6 +2589,8 @@ begin
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.FileParam('fileUpload', AFileNameWithPath);
     LRestRequest.Param('password', APassword);
+    LRestRequest.Param('forceFullPermission',
+      BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
     LRestResponse := LRestRequest.Post('');
     if LRestResponse.ResponseCode <> 200 then
       raise EgtxStarDocsException.Create(LRestResponse.ResponseCode,
@@ -2616,6 +2619,8 @@ begin
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.FileParam('fileUpload', AfileName, AStream);
     LRestRequest.Param('password', APassword);
+    LRestRequest.Param('forceFullPermission',
+      BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
     LRestResp := LRestRequest.Post('');
     if LRestResp.ResponseCode <> 200 then
       raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
@@ -2650,7 +2655,7 @@ begin
   if ExtractFileName(AFilePath) = '' then
   begin
     if AFile.ClassType = TgtxDocObject then
-      LFileName := TgtxDocObject(AFile).Name
+      LFileName := TgtxDocObject(AFile).FileName
     else
       // Append file name from URI
       LFileName := AFile.GetFileNameFromUri;
@@ -2708,10 +2713,10 @@ var
   LJsonResponse: TgtxRestAPIResponseGetDocumentInfo;
 begin
   LUrl := FStarDocs.GetDocUri(AFile) + '/info';
+  LUrl :=  LUrl + ('?force-full-permission=' +
+    BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
   if APassword <> '' then
-  begin
-    LUrl :=  LUrl + ('?password=' + APassword);
-  end;
+    LUrl :=  LUrl + ('&password=' + APassword);
   LJsonResponseStr := FStarDocs.IssueGetRequestAndPoll(LUrl);
   LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseGetDocumentInfo>
     (LJsonResponseStr);
@@ -2893,8 +2898,7 @@ begin
 end;
 
 function TgtxDocOperations.FillForm(AFile: TgtxFileObject; APassword: string;
-  AformFields: TObjectList<TgtxPDFFormFieldFillData>;
-  AFlattenFields: Boolean) : TgtxDocObject;
+  AformFields: TObjectList<TgtxPDFFormFieldFillData>) : TgtxDocObject;
 var
   LUrl: string;
   LDocUrl: string;
@@ -2903,10 +2907,10 @@ var
   LJsonResponse: TgtxRestAPIResponseCommon;
 begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
-  LJsonStr := '{"flattenFields":' + BooleanToStringName[AFlattenFields];
 
-  if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
-    LJsonStr := LJsonStr + ',"forceFullPermission":true';
+  LJsonStr := '{';
+  LJsonStr := LJsonStr + ',"forceFullPermission":' + BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission];
+
   if APassword <> '' then
     LJsonStr := LJsonStr + ',"password":"' + APassword + '"';
 
@@ -3197,9 +3201,6 @@ begin
   end;
 end;
 
-
-// Uploads the local file and/or returns the full document URI
-
 function TgtxDocOperations.EncodeFormFieldFillData
   (AformFields: TObjectList<TgtxPDFFormFieldFillData>): string;
 var
@@ -3214,9 +3215,11 @@ begin
     if (I > 0) then
       LJsonStr := LJsonStr + ',';
 
-    LJsonStr := LJsonStr + '{' + '"fieldName":"' + LformField.FieldName + '"' +
-      ',"fieldValue":"' + LformField.FieldValue + '"' + ',"flattenField":' +
-      BooleanToStringName[LformField.FlattenField] + '}';
+    LJsonStr := LJsonStr + '{';
+    LJsonStr := LJsonStr + '"fieldName":"' + LformField.FieldName + '"';
+    LJsonStr := LJsonStr + ',"fieldValue":"' + LformField.FieldValue + '"';
+    LJsonStr := LJsonStr + ',"flattenField":' + BooleanToStringName[LformField.FlattenField];
+    LJsonStr := LJsonStr + '}';
   end;
   LJsonStr := LJsonStr + ']';
   Result := LJsonStr;
@@ -3256,8 +3259,8 @@ begin
       LJsonStr := LJsonStr + ',';
     LSearchText := ASearchText[LIndex];
     LJsonStr := LJsonStr + '{"text":"' + LSearchText.Text + '","caseSensitive":'
-      + BoolToStr(LSearchText.CaseSensitive, True).ToLower() + ',"wholeWord":' +
-      BoolToStr(LSearchText.WholeWord, True).ToLower() + '}';
+      + BooleanToStringName[LSearchText.CaseSensitive] + ',"wholeWord":' +
+      BooleanToStringName[LSearchText.WholeWord] + '}';
   end;
   LJsonStr := LJsonStr + ']';
   Result := LJsonStr;
@@ -3267,15 +3270,14 @@ function TgtxDocOperations.SetToCSV(ADocumentItems: TgtxDocumentItems): string;
 begin
   Result := '';
   Result := Result + '"documentProperties":' +
-    BoolToStr(ditDocumentProperties in ADocumentItems, True).ToLower;
-  Result := Result + ',"bookmarks":' + BoolToStr(ditBookmarks in ADocumentItems,
-    True).ToLower;
+    BooleanToStringName[ditDocumentProperties in ADocumentItems];
+  Result := Result + ',"bookmarks":' + BooleanToStringName[ditBookmarks in ADocumentItems];
   Result := Result + ',"bookmarkActions":' +
-    BoolToStr(ditBookmarkActions in ADocumentItems, True).ToLower;
+    BooleanToStringName[ditBookmarkActions in ADocumentItems];
   Result := Result + ',"annotations":' +
-    BoolToStr(ditAnnotations in ADocumentItems, True).ToLower;
+    BooleanToStringName[ditAnnotations in ADocumentItems];
   Result := Result + ',"annotationActions":' +
-    BoolToStr(ditAnnotationActions in ADocumentItems, True).ToLower;
+    BooleanToStringName[ditAnnotationActions in ADocumentItems];
 end;
 
 function TgtxDocOperations.SetToCSV(ARedactCleanupSettings
@@ -3283,19 +3285,15 @@ function TgtxDocOperations.SetToCSV(ARedactCleanupSettings
 begin
   Result := '';
   Result := Result + '"removeEmptyBookmarks":' +
-    BoolToStr(rcsRemoveEmptyBookmarks in ARedactCleanupSettings, True).ToLower;
+    BooleanToStringName[rcsRemoveEmptyBookmarks in ARedactCleanupSettings];
   Result := Result + ',"removeEmptyBookmarkActions":' +
-    BoolToStr(rcsRemoveEmptyBookmarkActions in ARedactCleanupSettings,
-    True).ToLower;
+    BooleanToStringName[rcsRemoveEmptyBookmarkActions in ARedactCleanupSettings];
   Result := Result + ',"removeEmptyAnnotations":' +
-    BoolToStr(rcsRemoveEmptyAnnotations in ARedactCleanupSettings,
-    True).ToLower;
+    BooleanToStringName[rcsRemoveEmptyAnnotations in ARedactCleanupSettings];
   Result := Result + ',"removeEmptyAnnotationActions":' +
-    BoolToStr(rcsRemoveEmptyAnnotationActions in ARedactCleanupSettings,
-    True).ToLower;
+    BooleanToStringName[rcsRemoveEmptyAnnotationActions in ARedactCleanupSettings];
   Result := Result + ',"removeAffectedLinkActions":' +
-    BoolToStr(rcsRemoveAffectedLinkActions in ARedactCleanupSettings,
-    True).ToLower;
+    BooleanToStringName[rcsRemoveAffectedLinkActions in ARedactCleanupSettings];
 end;
 
 function TgtxDocOperations.SetToCSV(APDFDocPermissions
@@ -3303,21 +3301,21 @@ function TgtxDocOperations.SetToCSV(APDFDocPermissions
 begin
   Result := '';
   Result := Result + '"allowAccessibility":' +
-    BoolToStr(pdpAllowAccessibility in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowAccessibility in APDFDocPermissions];
   Result := Result + ',"allowAssembly":' +
-    BoolToStr(pdpAllowAssembly in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowAssembly in APDFDocPermissions];
   Result := Result + ',"allowCopy":' +
-    BoolToStr(pdpAllowCopy in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowCopy in APDFDocPermissions];
   Result := Result + ',"allowFormFill":' +
-    BoolToStr(pdpAllowFormFill in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowFormFill in APDFDocPermissions];
   Result := Result + ',"allowHighResPrint":' +
-    BoolToStr(pdpAllowHighResPrint in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowHighResPrint in APDFDocPermissions];
   Result := Result + ',"allowModifyAnnotations":' +
-    BoolToStr(pdpAllowModifyAnnotations in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowModifyAnnotations in APDFDocPermissions];
   Result := Result + ',"allowModifyContents":' +
-    BoolToStr(pdpAllowModifyContents in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowModifyContents in APDFDocPermissions];
   Result := Result + ',"allowPrinting":' +
-    BoolToStr(pdpAllowPrinting in APDFDocPermissions, True).ToLower;
+    BooleanToStringName[pdpAllowPrinting in APDFDocPermissions];
 end;
 
 { TgtxViewResponse }
@@ -3445,7 +3443,7 @@ begin
   if FHighlightColor <> nil then
     FHighlightColor := AHighlightColor
   else
-    FHighlightColor := TgtxColor.Create(255, 255, 255);
+    FHighlightColor := TgtxColor.Create(255, 255, 0);
 end;
 
 function TgtxSearchControls.GetHighlightColor: TgtxColor;
@@ -3462,7 +3460,7 @@ function TgtxSearchControls.ToJson: String;
 begin
   Result := '"searchControls":{' + '"enableQuickSearch":"' + BooleanToStringName
     [FEnableQuickSearch] + '",' + '"highlightColor":"' +
-    FHighlightColor.EncodeString() + '"' + '}';
+    FHighlightColor.EncodeString(false) + '"' + '}';
 end;
 
 { TgtxViewerSettings }
@@ -3594,6 +3592,8 @@ begin
     begin
       LJsonStr := LJsonStr + (',' + AViewerSettings.ToJson());
     end;
+    if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
+      LJsonStr := LJsonStr + ',"forceFullPermission":true';
     LJsonStr := LJsonStr + '}';
     LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri + '/viewsessions';
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
@@ -3754,12 +3754,12 @@ end;
 
 { TgtxPDFFormFieldFillData }
 
-constructor TgtxPDFFormFieldFillData.Create(AfieldName, AfieldValue: string;
-  AflattenField: Boolean);
+constructor TgtxPDFFormFieldFillData.Create(AFieldName, AFieldValue: string;
+  AFlattenField: Boolean);
 begin
-  FFieldName := AfieldName;
-  FFieldValue := AfieldValue;
-  FFlattenField := AflattenField;
+  FFieldName := AFieldName;
+  FFieldValue := AFieldValue;
+  FFlattenField := AFlattenField;
 end;
 
 end.
