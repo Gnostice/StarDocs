@@ -1246,7 +1246,7 @@ type
 
   public
     function CreateView(AFile: TgtxFileObject; APassword: string;
-      AViewerSettings: TgtxViewerSettings): TgtxViewResponse;
+      AViewerSettings: TgtxViewerSettings = nil): TgtxViewResponse;
   end;
 
   { TgtxPDFFormFieldFillData }
