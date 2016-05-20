@@ -15,7 +15,7 @@ uses
   TypInfo,
   SysUtils,
   IdURI,
-  Graphics,
+  //Graphics,
   RestRequest,
   REST.Json;
 
@@ -1245,7 +1245,7 @@ type
     constructor Create(AStarDocs: TgtxStarDocsSDK);
 
   public
-    function CreateView(AFile: TgtxFileObject; APassword: string;
+    function CreateView(AFile: TgtxFileObject; APassword: string = '';
       AViewerSettings: TgtxViewerSettings = nil): TgtxViewResponse;
   end;
 
@@ -2553,6 +2553,7 @@ begin
     LRestResp := LRestRequest.Post('grant_type=client_credentials');
     if LRestResp.ResponseCode <> 200 then
     begin
+			FStarDocs.AuthResponse := nil;
       if LRestResp.ResponseContentType.Equals('application/json') = True then
       begin
         LResponseError := TJSON.JsonToObject<TgtxRestAPIResponseAuthFailure>
@@ -2567,6 +2568,7 @@ begin
     LResponseSuccess := TJSON.JsonToObject<TgtxRestAPIResponseAuth>
       (LRestResp.ResponseStr);
     Result := TgtxAuthResponse.Create(LResponseSuccess);
+		FStarDocs.AuthResponse := Result;
   finally
     LRestRequest.Free;
   end;
