@@ -2916,7 +2916,7 @@ begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
 
   LJsonStr := '{';
-  LJsonStr := LJsonStr + ',"forceFullPermission":' + BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission];
+  LJsonStr := LJsonStr + '"forceFullPermission":' + BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission];
 
   if APassword <> '' then
     LJsonStr := LJsonStr + ',"password":"' + APassword + '"';
