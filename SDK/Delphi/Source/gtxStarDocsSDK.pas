@@ -2546,7 +2546,7 @@ begin
       FStarDocs.FConnectionInfo.FAppSecret);
     if AEntity <> '' then
     begin
-      LRestRequest.Param('entity_id', AEntity);
+      LRestRequest.UrlParam('entity_id', AEntity);
     end;
     // LRestRequest.Param('grant_type', 'client_credentials');
     LRestRequest.ContentType := 'application/x-www-form-urlencoded';
@@ -2595,8 +2595,8 @@ begin
       .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.FileParam('fileUpload', AFileNameWithPath);
-    LRestRequest.Param('password', APassword);
-    LRestRequest.Param('forceFullPermission',
+    LRestRequest.BodyParam('password', APassword);
+    LRestRequest.BodyParam('forceFullPermission',
       BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
     LRestResponse := LRestRequest.Post('');
     if LRestResponse.ResponseCode <> 200 then
@@ -2625,8 +2625,8 @@ begin
       .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.FileParam('fileUpload', AfileName, AStream);
-    LRestRequest.Param('password', APassword);
-    LRestRequest.Param('forceFullPermission',
+    LRestRequest.BodyParam('password', APassword);
+    LRestRequest.BodyParam('forceFullPermission',
       BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
     LRestResp := LRestRequest.Post('');
     if LRestResp.ResponseCode <> 200 then

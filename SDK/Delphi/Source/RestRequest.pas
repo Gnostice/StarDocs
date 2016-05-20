@@ -91,7 +91,8 @@ uses
         FScheme: string;
         FDomain: string;
         FPaths: TStringList;
-        FParams: TStringList;
+        FUrlParams: TStringList;
+        FBodyParams: TStringList;
         FFileParams: TStringList;
         FFileParamsStream: TArray<TStreamList>;
         FHeaders: TStringList;
@@ -130,7 +131,8 @@ uses
         function Scheme(aScheme: string): TRestRequest;
         function Domain(aDomain: string): TRestRequest;
         function Path(aPath: string): TRestRequest;
-        function Param(aKey: string; aValue: string): TRestRequest;
+        function UrlParam(aKey: string; aValue: string): TRestRequest;
+        function BodyParam(aKey: string; aValue: string): TRestRequest;
         function FileParam(aKey: string; aValue: string): TRestRequest; overload;
         function FileParam(aFieldName, aFileName: string; aStream: TStream): TRestRequest; overload;
         function WithReadTimeout(timeout: Integer): TRestRequest;
@@ -164,7 +166,8 @@ const
 begin
   inherited Create;
   Self.FPaths := TStringList.Create;
-  Self.FParams := TStringList.Create;
+  Self.FUrlParams := TStringList.Create;
+  Self.FBodyParams := TStringList.Create;
   Self.FFileParams := TStringList.Create;
   Self.FHeaders := TStringList.Create;
   Self.FAccept := DEFAULT_ACCEPT;
@@ -202,6 +205,14 @@ begin
   for i := 0 to Length(FFileParamsStream) - 1 do
   begin
     Result.AddFormField(FFileParamsStream[i].FileField, '', '', FFileParamsStream[i].FileStream, FFileParamsStream[i].FileName);
+  end;
+
+  // Add other form data
+  for i := 0 to FBodyParams.Count - 1 do
+  begin
+    key := FBodyParams.Names[i];
+    value := FBodyParams.ValueFromIndex[i];
+    Result.AddFormField(key, value);
   end;
 end;
 
@@ -259,7 +270,8 @@ end;
 destructor TRestRequest.Destroy;
 begin
   Self.FPaths.Free;
-  Self.FParams.Free;
+  Self.FUrlParams.Free;
+  Self.FBodyParams.Free;
   Self.FFileParams.Free;
   Self.FHeaders.Free;
   if Assigned(FSslHandler) then FSslHandler.Free;
@@ -459,13 +471,13 @@ begin
   begin
     aFullPath := aFullPath + '/' + Self.FPaths.Strings[i];
   end;
-  if Self.FParams.Count > 0 then
+  if Self.FUrlParams.Count > 0 then
   begin
     aFullParams := '?';
-    for i := 0 to Self.FParams.Count - 1 do
+    for i := 0 to Self.FUrlParams.Count - 1 do
     begin
       if i > 0 then aFullParams := aFullParams + '&';
-      aFullParams := aFullParams + Self.FParams.Names[i] + '=' + Self.FParams.ValueFromIndex[i];
+      aFullParams := aFullParams + Self.FUrlParams.Names[i] + '=' + Self.FUrlParams.ValueFromIndex[i];
     end;
   end;
   Result := {FScheme + '://' +} FDomain + aFullPath + aFullParams;
@@ -514,9 +526,15 @@ begin
   end;
 end;
 
-function TRestRequest.Param(aKey, aValue: string): TRestRequest;
+function TRestRequest.UrlParam(aKey, aValue: string): TRestRequest;
 begin
-  Self.FParams.Add(aKey + '=' + aValue);
+  Self.FUrlParams.Add(aKey + '=' + aValue);
+  Result := Self;
+end;
+
+function TRestRequest.BodyParam(aKey: string; aValue: string): TRestRequest;
+begin
+  Self.FBodyParams.Add(aKey + '=' + aValue);
   Result := Self;
 end;
 
