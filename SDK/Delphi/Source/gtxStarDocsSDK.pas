@@ -1192,7 +1192,9 @@ type
 
   TgtxViewerSettings = class
   private
+    FEnableFormFilling: Boolean;
     FToolbarVisible: Boolean;
+    FFullScreenVisible: Boolean;
     FVisibleNavigationControls: TgtxVisibleNavigationControls;
     FVisibleZoomControls: TgtxVisibleZoomControls;
     FVisibleRotationControls: TgtxVisibleRotationControls;
@@ -1214,13 +1216,16 @@ type
     procedure SetSearchControls(const AValue: TgtxSearchControls);
     function ToJson(): String;
   public
-    constructor Create(AToolbarVisible: Boolean = True;
+    constructor Create(AEnableFormFilling: Boolean = True; AToolbarVisible: Boolean = True;
+      AFullScreenVisible: Boolean = False;
       AVisibleNavigationControls: TgtxVisibleNavigationControls = nil;
       AVisibleZoomControls: TgtxVisibleZoomControls = nil;
       AVisibleRotationControls: TgtxVisibleRotationControls = nil;
       AVisibleColorInversionControls: TgtxVisibleColorInversionControls = nil;
       ASearchControls: TgtxSearchControls = nil);
+    property EnableFormFilling: Boolean read FEnableFormFilling write FEnableFormFilling;
     property ToolbarVisible: Boolean read FToolbarVisible write FToolbarVisible;
+    property FullScreenVisible: Boolean read FFullScreenVisible write FFullScreenVisible;
     property VisibleNavigationControls: TgtxVisibleNavigationControls
       read GetVisibleNavigationControls write SetVisibleNavigationControls;
     property VisibleZoomControls: TgtxVisibleZoomControls
@@ -3358,13 +3363,14 @@ end;
 
 function TgtxVisibleNavigationControls.ToJson: String;
 begin
-  Result := '"visibleNavigationControls":{' + '"firstPage":"' +
-    BooleanToStringName[FFirstPage] + '"' + ',"lastPage":"' + BooleanToStringName
-    [FLastPage] + '"' + ',"prevPage":"' + BooleanToStringName[FPrevPage] + '"' +
-    ',"nextPage":"' + BooleanToStringName[FNextPage] + '"' + ',"pageIndicator":"'
-    + BooleanToStringName[FPageIndicator] + '"' + ',"gotoPage":"' +
-    BooleanToStringName[FGotoPage] + '"' + '}';
-
+  Result := '"visibleNavigationControls":{';
+  Result := Result + '"firstPage":' + BooleanToStringName[FFirstPage];
+  Result := Result + ',"lastPage":' + BooleanToStringName[FLastPage];
+  Result := Result + ',"prevPage":' + BooleanToStringName[FPrevPage];
+  Result := Result + ',"nextPage":' + BooleanToStringName[FNextPage];
+  Result := Result + ',"pageIndicator":' + BooleanToStringName[FPageIndicator];
+  Result := Result + ',"gotoPage":' + BooleanToStringName[FGotoPage];
+  Result := Result + '}';
 end;
 
 { TgtxVisibleZoomControls }
@@ -3389,10 +3395,11 @@ end;
 
 function TgtxVisibleZoomControls.ToJson: String;
 begin
-  Result := '"visibleZoomControls":{' + '"fixedSteps":"' + BooleanToStringName
-    [FFixedSteps] + '"' + ',"zoomIn":"' + BooleanToStringName[FZoomIn] + '"' +
-    ',"zoomOut":"' + BooleanToStringName[FZoomOut] + '"' + '}';
-
+  Result := '"visibleZoomControls":{';
+  Result := Result + '"fixedSteps":' + BooleanToStringName[FFixedSteps];
+  Result := Result + ',"zoomIn":' + BooleanToStringName[FZoomIn];
+  Result := Result + ',"zoomOut":' + BooleanToStringName[FZoomOut];
+  Result := Result + '}';
 end;
 
 { TgtxVisibleRotationControls }
@@ -3406,9 +3413,10 @@ end;
 
 function TgtxVisibleRotationControls.ToJson: String;
 begin
-  Result := '"visibleRotationControls":{' + '"clockwise":"' + BooleanToStringName
-    [FClockwise] + '"' + ',"counterClockwise":"' + BooleanToStringName
-    [FCounterClockwise] + '"' + '}';
+  Result := '"visibleRotationControls":{';
+  Result := Result + '"clockwise":' + BooleanToStringName[FClockwise];
+  Result := Result + ',"counterClockwise":' + BooleanToStringName[FCounterClockwise];
+  Result := Result + '}';
 end;
 
 { TgtxVisibleColorInversionControls }
@@ -3420,9 +3428,9 @@ end;
 
 function TgtxVisibleColorInversionControls.ToJson: String;
 begin
-  Result := '"visibleColorInversionControls":{' + '"allPages":"' +
-    BooleanToStringName[FAllPages] + '"' + '}';
-
+  Result := '"visibleColorInversionControls":{';
+  Result := Result + '"allPages":' + BooleanToStringName[FAllPages];
+  Result := Result + '}';
 end;
 
 { TgtxSearchControls }
@@ -3458,21 +3466,26 @@ end;
 
 function TgtxSearchControls.ToJson: String;
 begin
-  Result := '"searchControls":{' + '"enableQuickSearch":"' + BooleanToStringName
-    [FEnableQuickSearch] + '",' + '"highlightColor":"' +
-    FHighlightColor.EncodeString(false) + '"' + '}';
+  Result := '"searchControls":{';
+  Result := Result + '"enableQuickSearch":' + BooleanToStringName[FEnableQuickSearch];
+  Result := Result + ',"highlightColor":"' + FHighlightColor.EncodeString(False) + '"';
+  Result := Result + '}';
 end;
 
 { TgtxViewerSettings }
 
-constructor TgtxViewerSettings.Create(AToolbarVisible: Boolean = True;
-  AVisibleNavigationControls: TgtxVisibleNavigationControls = nil;
-  AVisibleZoomControls: TgtxVisibleZoomControls = nil;
-  AVisibleRotationControls: TgtxVisibleRotationControls = nil;
-  AVisibleColorInversionControls: TgtxVisibleColorInversionControls = nil;
-  ASearchControls: TgtxSearchControls = nil);
+constructor TgtxViewerSettings.Create(AEnableFormFilling: Boolean;
+  AToolbarVisible: Boolean;
+  AFullScreenVisible: Boolean;
+  AVisibleNavigationControls: TgtxVisibleNavigationControls;
+  AVisibleZoomControls: TgtxVisibleZoomControls;
+  AVisibleRotationControls: TgtxVisibleRotationControls;
+  AVisibleColorInversionControls: TgtxVisibleColorInversionControls;
+  ASearchControls: TgtxSearchControls);
 begin
+  FEnableFormFilling := AEnableFormFilling;
   FToolbarVisible := AToolbarVisible;
+  FFullScreenVisible := AFullScreenVisible;
   if AVisibleNavigationControls <> nil then
     FVisibleNavigationControls := AVisibleNavigationControls
   else
@@ -3558,11 +3571,16 @@ end;
 
 function TgtxViewerSettings.ToJson: String;
 begin
-  Result := '"viewerSettings":{' + '"toolbarVisible":"' + BooleanToStringName
-    [ToolbarVisible] + '"' + ',' + FVisibleNavigationControls.ToJson() + ',' +
-    FVisibleZoomControls.ToJson() + ',' + FVisibleRotationControls.ToJson() +
-    ',' + FVisibleColorInversionControls.ToJson() + ',' +
-    FSearchControls.ToJson() + '}';
+  Result := '"viewerSettings":{';
+  Result := Result + '"enableFormFilling":' + BooleanToStringName[EnableFormFilling];
+  Result := Result + ',"toolbarVisible":' + BooleanToStringName[ToolbarVisible];
+  Result := Result + ',"fullScreenVisible":' + BooleanToStringName[FullScreenVisible];
+  Result := Result + ',' + FVisibleNavigationControls.ToJson();
+  Result := Result + ',' + FVisibleZoomControls.ToJson();
+  Result := Result + ',' + FVisibleRotationControls.ToJson();
+  Result := Result + ',' + FVisibleColorInversionControls.ToJson();
+  Result := Result + ',' + FSearchControls.ToJson();
+  Result := Result + '}';
 end;
 
 { TgtxViewer }
