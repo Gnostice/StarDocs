@@ -14,10 +14,10 @@ uses
 procedure Register;
 
 implementation
-
+{$R gtxRegControls.dcr}
 procedure Register;
 begin
-  RegisterComponents('StarDocs SDK', [TgtxStarDocsSDK]);
+  RegisterComponents('StarDocs SDK', [TgtStarDocsSDK]);
 
 end;
 

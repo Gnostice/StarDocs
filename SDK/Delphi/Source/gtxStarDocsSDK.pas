@@ -1,7 +1,7 @@
 {
- Gnostice StarDocs v2
- Copyright © 2002-2016 Gnostice Information Technologies Private Limited, Bangalore, India
- http://www.gnostice.com
+  Gnostice StarDocs v2
+  Copyright © 2002-2016 Gnostice Information Technologies Private Limited, Bangalore, India
+  http://www.gnostice.com
 }
 
 unit gtxStarDocsSDK;
@@ -15,124 +15,121 @@ uses
   TypInfo,
   SysUtils,
   IdURI,
-  //Graphics,
+  // Graphics,
   RestRequest,
   REST.Json;
 
 type
-  TgtxConnectionInfo = class;
-  TgtxPreferences = class;
-  TgtxAuth = class;
-  TgtxStorage = class;
-  TgtxDocOperations = class;
-  TgtxRemoteFileUri = class;
-  TgtxFileObject = class;
-  TgtxDocObject = class;
-  TgtxGetDocumentInfoResponse = class;
-  TgtxAuthResponse = class;
-  TgtxRestAPIResponseAuth = class;
-  TgtxRestAPIResponseAuthFailure = class;
-  TgtxRestAPIDocumentCommon = class;
-  TgtxRestAPIResponseError = class;
-  TgtxRestAPIResponseGetDocumentInfo = class;
-  TgtxRestAPIResponseGetPropertiesPDF = class;
-  TgtxPageRangeSettings = class;
-  TgtxPageSeparator = class;
-  TgtxEncoderSettings = class;
-  TgtxDPI = class;
-  TgtxSize = class;
-  TgtxCanvasSize = class;
-  TgtxContentAlignment = class;
-  TgtxImageEncoderSettings = class;
-  TgtxPDFPortfolioSettings = class;
-  TgtxPDFEncoderSettings = class;
-  TgtxSearchText = class;
-  TgtxColor = class;
-  TgtxFont = class;
-  TgtxRedactFillSettings = class;
-  TgtxOutline = class;
-  TgtxFillRect = class;
-  TgtxFillText = class;
-  TgtxPen = class;
-  // TgtxGetPropertiesResponse = class;
-  // TgtxDocProperties = class;
-  TgtxDocErrorDetails = class;
-  TgtxRestAPIResponseCreateView = class;
-  TgtxViewResponse = class;
-  TgtxVisibleNavigationControls = class;
-  TgtxVisibleZoomControls = class;
-  TgtxVisibleRotationControls = class;
-  TgtxVisibleColorInversionControls = class;
-  TgtxSearchControls = class;
-  TgtxViewerSettings = class;
-  TgtxViewer = class;
-  TgtxPDFFormFieldFillData = class;
+  TgtConnectionInfo = class;
+  TgtPreferences = class;
+  TgtAuth = class;
+  TgtStorage = class;
+  TgtDocOperations = class;
+  TgtRemoteFileUri = class;
+  TgtFileObject = class;
+  TgtDocObject = class;
+  TgtGetDocumentInfoResponse = class;
+  TgtAuthResponse = class;
+  TgtRestAPIResponseAuth = class;
+  TgtRestAPIResponseAuthFailure = class;
+  TgtRestAPIDocumentCommon = class;
+  TgtRestAPIResponseError = class;
+  TgtRestAPIResponseGetDocumentInfo = class;
+  TgtRestAPIResponseGetPropertiesPDF = class;
+  TgtPageRangeSettings = class;
+  TgtPageSeparator = class;
+  TgtEncoderSettings = class;
+  TgtDPI = class;
+  TgtSize = class;
+  TgtCanvasSize = class;
+  TgtContentAlignment = class;
+  TgtImageEncoderSettings = class;
+  TgtPDFPortfolioSettings = class;
+  TgtPDFEncoderSettings = class;
+  TgtSearchText = class;
+  TgtColor = class;
+  TgtFont = class;
+  TgtRedactFillSettings = class;
+  TgtOutline = class;
+  TgtFillRect = class;
+  TgtFillText = class;
+  TgtPen = class;
+  // TgtGetPropertiesResponse = class;
+  // TgtDocProperties = class;
+  TgtDocErrorDetails = class;
+  TgtRestAPIResponseCreateView = class;
+  TgtViewResponse = class;
+  TgtVisibleNavigationControls = class;
+  TgtVisibleZoomControls = class;
+  TgtVisibleRotationControls = class;
+  TgtVisibleColorInversionControls = class;
+  TgtSearchControls = class;
+  TgtViewerSettings = class;
+  TgtViewer = class;
+  TgtPDFFormFieldFillData = class;
 
-  TgtxStarDocsSDK = class(TComponent)
+  TgtStarDocsSDK = class(TComponent)
   private
-    FConnectionInfo: TgtxConnectionInfo;
-    FPreferences: TgtxPreferences;
-    FAuthResponse: TgtxAuthResponse;
-    FAuth: TgtxAuth;
-    FStorage: TgtxStorage;
-    FDocOperations: TgtxDocOperations;
-    FViewer: TgtxViewer;
-    function GetDocUri(AFile: TgtxFileObject): string;
+    FConnectionInfo: TgtConnectionInfo;
+    FPreferences: TgtPreferences;
+    FAuthResponse: TgtAuthResponse;
+    FAuth: TgtAuth;
+    FStorage: TgtStorage;
+    FDocOperations: TgtDocOperations;
+    FViewer: TgtViewer;
+    function GetDocUri(AFile: TgtFileObject): string;
     function IssueGetRequestAndPoll(AUrl: string): string;
     function IssuePostPutRequestAndPoll(AUrl: string; APost: Boolean;
       AJsonStr: string): string;
     function EncodeJsonDocuments(ADocUris: TStringList; APasswords: TStringList;
-      APageRanges: TObjectList<TgtxPageRangeSettings>): string;
-    function GetAuth: TgtxAuth;
-    procedure SetAuth(const AValue: TgtxAuth);
-    function GetStorage: TgtxStorage;
-    procedure SetStorage(const AValue: TgtxStorage);
-    function GetDocOperations: TgtxDocOperations;
-    procedure SetDocOperations(const AValue: TgtxDocOperations);
-    function GetViewer: TgtxViewer;
-    procedure SetViewer(const AValue: TgtxViewer);
-    function GetConnectionInfo: TgtxConnectionInfo;
-    procedure SetConnectionInfo(const AValue: TgtxConnectionInfo);
-    function GetPreferences: TgtxPreferences;
-    procedure SetPreferences(const AValue: TgtxPreferences);
+      APageRanges: TObjectList<TgtPageRangeSettings>): string;
+    function GetAuth: TgtAuth;
+    procedure SetAuth(const AValue: TgtAuth);
+    function GetStorage: TgtStorage;
+    procedure SetStorage(const AValue: TgtStorage);
+    function GetDocOperations: TgtDocOperations;
+    function GetViewer: TgtViewer;
+    function GetConnectionInfo: TgtConnectionInfo;
+    procedure SetConnectionInfo(const AValue: TgtConnectionInfo);
+    function GetPreferences: TgtPreferences;
+    procedure SetPreferences(const AValue: TgtPreferences);
   public
-    property AuthResponse: TgtxAuthResponse read FAuthResponse
+    property AuthResponse: TgtAuthResponse read FAuthResponse
       write FAuthResponse;
-    property Auth: TgtxAuth read GetAuth write SetAuth;
-    property Storage: TgtxStorage read GetStorage write SetStorage;
-    property DocOperations: TgtxDocOperations read GetDocOperations
-      write SetDocOperations;
-    property Viewer: TgtxViewer read GetViewer write SetViewer;
+    property Auth: TgtAuth read GetAuth write SetAuth;
+    property Storage: TgtStorage read GetStorage write SetStorage;
+    property DocOperations: TgtDocOperations read GetDocOperations;
+    property Viewer: TgtViewer read GetViewer;
     constructor Create(AOwner: TComponent); overload; override;
-    constructor Create(AOwner: TComponent; AConnectionInfo: TgtxConnectionInfo;
-      APreferences: TgtxPreferences); reintroduce; overload;
+    constructor Create(AOwner: TComponent; AConnectionInfo: TgtConnectionInfo;
+      APreferences: TgtPreferences); reintroduce; overload;
     destructor Destroy; override;
   published
-    property ConnectionInfo: TgtxConnectionInfo read GetConnectionInfo
+    property ConnectionInfo: TgtConnectionInfo read GetConnectionInfo
       write SetConnectionInfo;
-    property Preferences: TgtxPreferences read GetPreferences
+    property Preferences: TgtPreferences read GetPreferences
       write SetPreferences;
   end;
 
-  TgtxConnectionInfo = class(TPersistent)
+  TgtConnectionInfo = class(TPersistent)
   private
     FApiServerVersion: string;
     FApiServerUri: TIdURI;
-    FAppKey: string;
-    FAppSecret: string;
+    FApiKey: string;
+    FApiSecret: string;
     FServerTimeout: Integer;
     FDocOperationTimeout: Integer;
     FPollInterval: Integer;
+
   public
-    constructor Create(AUri: TIdURI; AAppKey: string; AAppSecret: string;
-      AServerTimeout: Integer = -1; ADocOperationTimeout: Integer = -1);
+    constructor Create;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
 
   published
     property ApiServerUri: TIdURI read FApiServerUri write FApiServerUri;
-    property AppKey: string read FAppKey write FAppKey;
-    property AppSecret: string read FAppSecret write FAppSecret;
+    property ApiKey: string read FApiKey write FApiKey;
+    property ApiSecret: string read FApiSecret write FApiSecret;
     property ApiServerVersion: string read FApiServerVersion
       write FApiServerVersion;
     property ServerTimeout: Integer read FServerTimeout write FServerTimeout;
@@ -141,237 +138,275 @@ type
     property PollInterval: Integer read FPollInterval write FPollInterval;
   end;
 
-  TgtxDocPasswordSettings = class(TPersistent)
+  TgtDocPasswordSettings = class(TPersistent)
   private
     FForceFullPermission: Boolean;
   public
     constructor Create(AForceFullPermission: Boolean);
-
+    destructor Destroy; override;
   published
     procedure Assign(Source: TPersistent); override;
     property ForceFullPermission: Boolean read FForceFullPermission
       write FForceFullPermission;
   end;
 
-  TgtxPreferences = class(TPersistent)
+  TgtPreferences = class(TPersistent)
   private
-    FDocPasswordSettings: TgtxDocPasswordSettings;
+    FDocPasswordSettings: TgtDocPasswordSettings;
 
-    function GetDocPasswordSettings: TgtxDocPasswordSettings;
-    procedure SetDocPasswordSettings(const AValue: TgtxDocPasswordSettings);
+    function GetDocPasswordSettings: TgtDocPasswordSettings;
+    procedure SetDocPasswordSettings(const AValue: TgtDocPasswordSettings);
   public
-    constructor Create(ADocPasswordSettings: TgtxDocPasswordSettings);
+    constructor Create;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
-    property DocPasswordSettings: TgtxDocPasswordSettings
+    property DocPasswordSettings: TgtDocPasswordSettings
       read GetDocPasswordSettings write SetDocPasswordSettings;
   end;
 
   // Service groups
-  TgtxAuth = class
+  TgtAuth = class
   private
-    FStarDocs: TgtxStarDocsSDK;
-    constructor Create(AStarDocs: TgtxStarDocsSDK);
+    FStarDocs: TgtStarDocsSDK;
   public
-    function loginApp(AEntity: string = ''): TgtxAuthResponse;
+    constructor Create(AStarDocs: TgtStarDocsSDK);
+    destructor Destroy; override;
+    function loginApp(AEntity: string = ''): TgtAuthResponse;
   end;
 
-  TgtxStorage = class
+  TgtStorage = class
   private
-    FStarDocs: TgtxStarDocsSDK;
-    constructor Create(AStarDocs: TgtxStarDocsSDK);
+    FStarDocs: TgtStarDocsSDK;
+
   public
+    constructor Create(AStarDocs: TgtStarDocsSDK);
+    destructor Destroy; override;
     function Upload(AFileNameWithPath: string; APassword: string = '')
-      : TgtxDocObject; overload;
+      : TgtDocObject; overload;
     function Upload(AStream: TStream; AfileName: string; APassword: string = '')
-      : TgtxDocObject; overload;
-    procedure Download(AFile: TgtxFileObject; AFilePath: string); overload;
-    procedure Download(AFile: TgtxFileObject; FOutStream: TStream); overload;
+      : TgtDocObject; overload;
+    procedure Download(AFile: TgtFileObject; AFilePath: string); overload;
+    procedure Download(AFile: TgtFileObject; FOutStream: TStream); overload;
   end;
 
-  { TgtxDocOperations }
+  { TgtDocOperations }
 
-  TgtxPDFEncryptionLevel = (pelNone, pelAES_128bit, pelRC4_128bit,
-    pelRC4_40bit);
-  TgtxTextSearchMode = (tsmLiteral, tsmRegex);
-  TgtxDocumentItem = (ditDocumentProperties, ditBookmarks, ditBookmarkActions,
+  TgtPDFEncryptionLevel = (pelNone, pelAES_128bit, pelRC4_128bit, pelRC4_40bit);
+  TgtTextSearchMode = (tsmLiteral, tsmRegex);
+  TgtDocumentItem = (ditDocumentProperties, ditBookmarks, ditBookmarkActions,
     ditAnnotations, ditAnnotationActions);
-  TgtxDocumentItems = set of TgtxDocumentItem;
-  TgtxRedactCleanupSetting = (rcsRemoveEmptyBookmarks,
+  TgtDocumentItems = set of TgtDocumentItem;
+  TgtRedactCleanupSetting = (rcsRemoveEmptyBookmarks,
     rcsRemoveEmptyBookmarkActions, rcsRemoveEmptyAnnotations,
     rcsRemoveEmptyAnnotationActions, rcsRemoveAffectedLinkActions);
-  TgtxRedactCleanupSettings = set of TgtxRedactCleanupSetting;
-  TgtxColoringMode = (cmoNone, cmUseColor);
-  TgtxPenStyle = (pstSolid, pstDash, pstDashDot, pstDashDotDot);
-  TgtxBrushPattern = (bptSolid, bptForwardDiagonal, bptBackwardDiagonal,
+  TgtRedactCleanupSettings = set of TgtRedactCleanupSetting;
+  TgtColoringMode = (cmoNone, cmUseColor);
+  TgtPenStyle = (pstSolid, pstDash, pstDashDot, pstDashDotDot);
+  TgtBrushPattern = (bptSolid, bptForwardDiagonal, bptBackwardDiagonal,
     bptCross, bptDiagonalCross, bptHorizontal, bptVertical);
-  TgtxFontSelectionMode = (fsmUseFont);
-  TgtxFontSizingMode = (fsmAutoFit, fsmUseFontSize);
-  TgtxFontColoringMode = (fcmSource, fcmUseFontColor);
-  TgtxFontStyle = (fstBold, fstItalic, fstUnderline);
-  TgtxFontStyles = set of TgtxFontStyle;
-  TgtxFontEffect = (fefNone);
-  TgtxFontEffects = set of TgtxFontEffect;
-  TgtxPDFDocPermission = (pdpAllowAccessibility, pdpAllowAssembly, pdpAllowCopy,
+  TgtFontSelectionMode = (fsmUseFont);
+  TgtFontSizingMode = (fsmAutoFit, fsmUseFontSize);
+  TgtFontColoringMode = (fcmSource, fcmUseFontColor);
+  TgtFontStyle = (fstBold, fstItalic, fstUnderline);
+  TgtFontStyles = set of TgtFontStyle;
+  TgtFontEffect = (fefNone);
+  TgtFontEffects = set of TgtFontEffect;
+  TgtPDFDocPermission = (pdpAllowAccessibility, pdpAllowAssembly, pdpAllowCopy,
     pdpAllowFormFill, pdpAllowHighResPrint, pdpAllowModifyAnnotations,
     pdpAllowModifyContents, pdpAllowPrinting);
-  TgtxPDFDocPermissions = set of TgtxPDFDocPermission;
-  TgtxResolutionMode = (rmmUseSource, rmmUseSpecifiedDPI);
-  TgtxPaperSize = (psiA2, psiA3, psiA4, psiA5, psiA6, psiCustom);
-  TgtxMeasurementUnit = (munMillimeters, munCentimeters, munInches, munPicas,
+  TgtPDFDocPermissions = set of TgtPDFDocPermission;
+  TgtResolutionMode = (rmmUseSource, rmmUseSpecifiedDPI);
+  TgtPaperSize = (psiA2, psiA3, psiA4, psiA5, psiA6, psiCustom);
+  TgtMeasurementUnit = (munMillimeters, munCentimeters, munInches, munPicas,
     munPixels, munPoints, munTwips);
-  TgtxHorizontalAlignmentType = (hatLeft, hatRight, hatCenter);
-  TgtxVerticalAlignmentType = (vatTop, vatBottom, vatCenter);
-  TgtxCanvasSizingMode = (csmUseSource, csmUseSpecifiedSize,
+  TgtHorizontalAlignmentType = (hatLeft, hatRight, hatCenter);
+  TgtVerticalAlignmentType = (vatTop, vatBottom, vatCenter);
+  TgtCanvasSizingMode = (csmUseSource, csmUseSpecifiedSize,
     csmUseSpecifiedRelativeSize);
-  TgtxContentScaling = (cscFitWithAspect, cscStretch, cscCrop);
-  TgtxTIFFCompressionType = (tctNone, tctDeflate, tctCCITT_3, tctCCITT_4,
+  TgtContentScaling = (cscFitWithAspect, cscStretch, cscCrop);
+  TgtTIFFCompressionType = (tctNone, tctDeflate, tctCCITT_3, tctCCITT_4,
     tctCCITT_RLE, tctEXIF_JPEG, tctJPEG, tctLZW, tctPackBits, tctZLib);
-  TgtxMTIFFConversionMode = (tcmConvertToSeparateFiles, tcmConvertToSingleFile);
-  TgtxPDFConversionMode = (pcmConvertToSeparateFiles, pcmConvertToSingleFile,
+  TgtMTIFFConversionMode = (tcmConvertToSeparateFiles, tcmConvertToSingleFile);
+  TgtPDFConversionMode = (pcmConvertToSeparateFiles, pcmConvertToSingleFile,
     pcmConvertFirstFileAndAttachRestAsOriginal,
     pcmCreateNewFileAndAttachAllAsOriginal);
-  TgtxPDFPortfolioCreationMode = (pcmOff, pcmAlways, pcmWhenInputIsPortfolio,
+  TgtPDFPortfolioCreationMode = (pcmOff, pcmAlways, pcmWhenInputIsPortfolio,
     pcmOnlyWhenAttachmentsExist);
-  TgtxPDFPortfolioInitialLayout = (pilDetails, pilTile, pilHidden);
-  TgtxFontEmbeddingType = (fetNone, fetSubset, fetFull);
+  TgtPDFPortfolioInitialLayout = (pilDetails, pilTile, pilHidden);
+  TgtFontEmbeddingType = (fetNone, fetSubset, fetFull);
 
-  TgtxDocOperations = class
+  TgtDocOperations = class
   private
-    FStarDocs: TgtxStarDocsSDK;
-    constructor Create(AStarDocs: TgtxStarDocsSDK);
+    FStarDocs: TgtStarDocsSDK;
+    FRedactFillSettings: TgtRedactFillSettings;
+    FPageSeparator: TgtPageSeparator;
+    FImageEncoderSettings: TgtImageEncoderSettings;
+    FPDFEncoderSettings: TgtPDFEncoderSettings;
+
     function EncodeJsonPageRanges(APageRanges
-      : TObjectList<TgtxPageRangeSettings>): string;
+      : TObjectList<TgtPageRangeSettings>): string;
     function EncodeJsonSearchText(ASearchText
-      : TObjectList<TgtxSearchText>): string;
+      : TObjectList<TgtSearchText>): string;
     function ConvertToImage(AUrlPath: string;
-      AFiles: TObjectList<TgtxFileObject>; APasswords: TStringList;
-      APageRanges: TObjectList<TgtxPageRangeSettings>;
-      AImageEncoderSettings: TgtxImageEncoderSettings)
-      : TObjectList<TgtxDocObject>;
-    function SetToCSV(ADocumentItems: TgtxDocumentItems): string; overload;
-    function SetToCSV(ARedactCleanupSettings: TgtxRedactCleanupSettings)
+      AFiles: TObjectList<TgtFileObject>; APasswords: TStringList;
+      APageRanges: TObjectList<TgtPageRangeSettings>;
+      AImageEncoderSettings: TgtImageEncoderSettings)
+      : TObjectList<TgtDocObject>;
+    function SetToCSV(ADocumentItems: TgtDocumentItems): string; overload;
+    function SetToCSV(ARedactCleanupSettings: TgtRedactCleanupSettings)
       : string; overload;
-    function SetToCSV(APDFDocPermissions: TgtxPDFDocPermissions)
+    function SetToCSV(APDFDocPermissions: TgtPDFDocPermissions)
       : string; overload;
-    function EncodeFormFieldFillData(AformFields
-      : TObjectList<TgtxPDFFormFieldFillData>): string;
+    function EncodeFormFieldFillData(AFormFields
+      : TObjectList<TgtPDFFormFieldFillData>): string;
+
+    function GetRedactFillSettings: TgtRedactFillSettings;
+    function GetPageSeparator: TgtPageSeparator;
+    function GetImageEncoderSettings: TgtImageEncoderSettings;
+    function GetPDFEncoderSettings: TgtPDFEncoderSettings;
 
   public
+    constructor Create(AStarDocs: TgtStarDocsSDK);
+    destructor Destroy; override;
+
+    property RedactFillSettings: TgtRedactFillSettings
+      read GetRedactFillSettings;
+    property PageSeparator: TgtPageSeparator read GetPageSeparator;
+    property ImageEncoderSettings: TgtImageEncoderSettings
+      read GetImageEncoderSettings;
+    property PDFEncoderSettings: TgtPDFEncoderSettings
+      read GetPDFEncoderSettings;
     { GetProperties }
-    // function GetProperties(AFile: TgtxFileObject; APassword: string = ''): TgtxGetPropertiesResponse;
+    // function GetProperties(AFile: TgtFileObject; APassword: string = ''): TgtGetPropertiesResponse;
 
     { SetProperties }
-    // function SetProperties(AFile: TgtxFileObject; APassword: string; AProperties: TgtxDocProperties): TgtxDocObject;
+    // function SetProperties(AFile: TgtFileObject; APassword: string; AProperties: TgtDocProperties): TgtDocObject;
 
     { GetDocumentInfo }
-    function GetDocumentInfo(AFile: TgtxFileObject;
-      APassword: string = ''): TgtxGetDocumentInfoResponse;
+    function GetDocumentInfo(AFile: TgtFileObject; APassword: string = '')
+      : TgtGetDocumentInfoResponse;
 
     { Merge }
-    function Merge(AFiles: TObjectList<TgtxFileObject>;
+    function Merge(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil): TgtxDocObject;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil): TgtDocObject;
 
     { Split }
-    function SplitByPageRange(AFile: TgtxFileObject; APassword: string = '';
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil)
-      : TObjectList<TgtxDocObject>;
+    function SplitByPageRange(AFile: TgtFileObject; APassword: string;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+      : TObjectList<TgtDocObject>;
 
-    function SplitBySeparatorPage(AFile: TgtxFileObject; APassword: string = '';
-      APageSeparator: TgtxPageSeparator = nil): TObjectList<TgtxDocObject>;
+    function SplitBySeparatorPage(AFile: TgtFileObject; APassword: string)
+      : TObjectList<TgtDocObject>;
 
     { Encrypt }
-    function Encrypt(AFile: TgtxFileObject; APassword: string;
-      APDFEncryptionLevel: TgtxPDFEncryptionLevel = TgtxPDFEncryptionLevel.
+    function Encrypt(AFile: TgtFileObject; APassword: string;
+      APDFEncryptionLevel: TgtPDFEncryptionLevel = TgtPDFEncryptionLevel.
       pelAES_128bit; ANewOpenPassword: string = '';
       ANewPermissionsPassword: string = '';
-      ANewPermissions: TgtxPDFDocPermissions = []): TgtxDocObject;
+      ANewPermissions: TgtPDFDocPermissions = []): TgtDocObject;
 
     { Redact }
-    function RedactText(AFile: TgtxFileObject; APassword: string;
-      APageRange: TgtxPageRangeSettings; ATextSearchMode: TgtxTextSearchMode;
-      ASearchText: TObjectList<TgtxSearchText>;
-      AFillSettings: TgtxRedactFillSettings = nil;
-      AIncludeAdditionalItems: TgtxDocumentItems = [];
-      ACleanupSettings: TgtxRedactCleanupSettings = []): TgtxDocObject;
+    function RedactText(AFile: TgtFileObject; APassword: string;
+      APageRange: TgtPageRangeSettings; ATextSearchMode: TgtTextSearchMode;
+      ASearchText: TObjectList<TgtSearchText>;
+      AIncludeAdditionalItems: TgtDocumentItems = [];
+      ACleanupSettings: TgtRedactCleanupSettings = []): TgtDocObject;
 
     { Convert }
-    function ConvertToTIFF(AFiles: TObjectList<TgtxFileObject>;
+    function ConvertToTIFF(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      AImageEncoderSettings: TgtxImageEncoderSettings = nil;
-      ATIFFCompressionType: TgtxTIFFCompressionType = TgtxTIFFCompressionType.
-      tctDeflate): TObjectList<TgtxDocObject>;
-    function ConvertToMTIFF(AFiles: TObjectList<TgtxFileObject>;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil;
+      ATIFFCompressionType: TgtTIFFCompressionType = TgtTIFFCompressionType.
+      tctDeflate): TObjectList<TgtDocObject>;
+    function ConvertToMTIFF(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      AImageEncoderSettings: TgtxImageEncoderSettings = nil;
-      ATIFFCompressionType: TgtxTIFFCompressionType = TgtxTIFFCompressionType.
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil;
+      ATIFFCompressionType: TgtTIFFCompressionType = TgtTIFFCompressionType.
       tctDeflate;
-      AConversionMode: TgtxMTIFFConversionMode = TgtxMTIFFConversionMode.
-      tcmConvertToSeparateFiles): TObjectList<TgtxDocObject>;
-    function ConvertToJPEG(AFiles: TObjectList<TgtxFileObject>;
+      AConversionMode: TgtMTIFFConversionMode = TgtMTIFFConversionMode.
+      tcmConvertToSeparateFiles): TObjectList<TgtDocObject>;
+    function ConvertToJPEG(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-      : TObjectList<TgtxDocObject>;
-    function ConvertToGIF(AFiles: TObjectList<TgtxFileObject>;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+      : TObjectList<TgtDocObject>;
+    function ConvertToGIF(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-      : TObjectList<TgtxDocObject>;
-    function ConvertToBMP(AFiles: TObjectList<TgtxFileObject>;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+      : TObjectList<TgtDocObject>;
+    function ConvertToBMP(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-      : TObjectList<TgtxDocObject>;
-    function ConvertToPNG(AFiles: TObjectList<TgtxFileObject>;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+      : TObjectList<TgtDocObject>;
+    function ConvertToPNG(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-      : TObjectList<TgtxDocObject>;
-    function ConvertToPDF(AFiles: TObjectList<TgtxFileObject>;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+      : TObjectList<TgtDocObject>;
+    function ConvertToPDF(AFiles: TObjectList<TgtFileObject>;
       APasswords: TStringList = nil;
-      APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-      APDFEncoderSettings: TgtxPDFEncoderSettings = nil;
-      AConversionMode: TgtxPDFConversionMode = TgtxPDFConversionMode.
-      pcmConvertToSeparateFiles): TObjectList<TgtxDocObject>;
-    function FillForm(AFile: TgtxFileObject; APassword: string;
-      AformFields: TObjectList<TgtxPDFFormFieldFillData>): TgtxDocObject;
+      APageRanges: TObjectList<TgtPageRangeSettings> = nil;
+      AConversionMode: TgtPDFConversionMode = TgtPDFConversionMode.
+      pcmConvertToSeparateFiles): TObjectList<TgtDocObject>;
+    function FillForm(AFile: TgtFileObject; APassword: string;
+      AFormFields: TObjectList<TgtPDFFormFieldFillData>;
+      AFlattenAllFields: Boolean = False): TgtDocObject;
   end;
 
   { Enumerations }
-  TgtxMimeType = (mtUnrecognizable, mtApplication_pdf, mtImage_jpeg,
-    mtImage_gif, mtImage_bmp, mtImage_tiff, mtImage_png,
+  TgtMimeType = (mtUnrecognizable, mtApplication_pdf, mtImage_jpeg, mtImage_gif,
+    mtImage_bmp, mtImage_tiff, mtImage_png,
     mtApplication_vnd_openxmlformats_officedocument_wordprocessingml_document);
 
-  TgtxExceptionStatusCode = (escHTTPBadRequest = 400, escHTTPUnauthorized = 401,
-    escHTTPNotFound = 404, escHTTPConflict = 500, escOperationFailed = 1000,
-    escFileCorrupt = 1010, escPasswordRequired = 1020,
-    escFileFormatNotSupported = 1030, escInsufficientRights = 1040,
-    escJobNotFound = 1050, escUnexpectedResponse = 10000,
+  TgtExceptionStatusCode = (
+    escHTTPBadRequest = 400,
+    escHTTPUnauthorized = 401,
+    escHTTPNotFound = 404,
+    escHTTPConflict = 500,
+    escGeneralError = 1000,
+    escBadRequest = 1010,
+    escBadDocument = 1011,
+    escPasswordRequired = 1020,
+    escUnsupportedDocumentFormat = 1030,
+    escInsufficientRights = 1040,
+    escUnknownJob = 1050,
+    escUnknownDocument = 1051,
+    escUnknownPage = 1052,
+    escUnknownUser = 1053,
+    escInvalidApiKey = 1054,
+    escUnsupportedOperationForFormat = 1060,
+    escExhaustedStorageQuotaForLicense = 1070,
+    escExhaustedStorageQuotaForUser = 1071,
+    escExhaustedStorageQuotaForApp = 1072,
+    escUploadSizeOverlimitForLicense = 1080,
+    escUploadSizeOverlimitForUser = 1081,
+    escUploadSizeOverlimitForApp = 1082,
+    escExhaustedUsageQuotaForApp = 1090,
+    escExhaustedUsageQuotaForLicense = 1091,
+    escSubscriptionPaymentFailure = 1092,
+    escInternalError = 2000,
+    escUnexpectedResponse = 10000,
     escOperationTimedOut = 10001);
 
-  { TgtxAuthResponse }
-  TgtxAuthResponse = class
+  { TgtAuthResponse }
+  TgtAuthResponse = class
   private
     FAccessToken: string;
     FTokenType: string;
     FExpiresIn: Longint;
   public
-    constructor Create(ARestAPIResponseAuth: TgtxRestAPIResponseAuth);
+    constructor Create(ARestAPIResponseAuth: TgtRestAPIResponseAuth);
+    destructor Destroy; override;
     property AccessToken: string read FAccessToken;
     property TokenType: string read FTokenType;
     property ExpiresIn: Longint read FExpiresIn;
   end;
 
-  { TgtxRemoteFileUri }
-  TgtxRemoteFileUri = class
+  { TgtRemoteFileUri }
+  TgtRemoteFileUri = class
   private
     FUri: TIdURI;
-    procedure Assign(Source: TgtxRemoteFileUri);
+    procedure Assign(Source: TgtRemoteFileUri);
   public
     constructor Create(AUri: TIdURI); overload;
     constructor Create(AUri: string); overload;
@@ -379,67 +414,70 @@ type
     property Uri: TIdURI read FUri;
   end;
 
-  { TgtxFileObject }
-  TgtxFileObject = class
+  { TgtFileObject }
+  TgtFileObject = class
   private
     FFileUploaded: Boolean;
     FStream: TStream;
     FStreamFileName: string;
-    FRemoteFileUri: TgtxRemoteFileUri;
+    FRemoteFileUri: TgtRemoteFileUri;
     FLocalFilePath: string;
     function GetFileNameFromUri: string;
     { procedure SetUploaded(AUri: string); }
     function GetStream: TStream;
     procedure SetStream(const AValue: TStream);
-    function GetRemoteFileUri: TgtxRemoteFileUri;
-    procedure SetRemoteFileUri(const AValue: TgtxRemoteFileUri);
+    function GetRemoteFileUri: TgtRemoteFileUri;
+    procedure SetRemoteFileUri(const AValue: TgtRemoteFileUri);
   public
-    constructor Create(ARemoteFileUri: TgtxRemoteFileUri); overload;
+    constructor Create(ARemoteFileUri: TgtRemoteFileUri); overload;
     constructor Create(AStream: TStream; AStreamFileName: string); overload;
     constructor Create(ALocalFilePath: string); overload;
     destructor Destroy; override;
     property FileUploaded: Boolean read FFileUploaded;
     property Stream: TStream read GetStream Write SetStream;
     property StreamFileName: string read FStreamFileName;
-    property RemoteFileUri: TgtxRemoteFileUri read GetRemoteFileUri
+    property RemoteFileUri: TgtRemoteFileUri read GetRemoteFileUri
       write SetRemoteFileUri;
     property LocalFilePath: string read FLocalFilePath;
   end;
 
-  { TgtxDocObject }
-  TgtxDocObject = class(TgtxFileObject)
+  { TgtDocObject }
+  TgtDocObject = class(TgtFileObject)
   private
     FFileName: string;
     FFileSize: Longint;
     FExpiryTime: Longint;
     FPageCount: Integer;
-    FMimeType: TgtxMimeType;
-    function ParseMimeType(AMimeType: string): TgtxMimeType;
-    constructor Create(AApiResponse: TgtxRestAPIDocumentCommon);
+    FMimeType: TgtMimeType;
+    function ParseMimeType(AMimeType: string): TgtMimeType;
   public
+    constructor Create(AApiResponse: TgtRestAPIDocumentCommon);
+    destructor Destroy; override;
     property FileName: string read FFileName;
     property FileSize: Longint read FFileSize;
     property ExpiryTime: Longint read FExpiryTime;
     property PageCount: Integer read FPageCount;
-    property MimeType: TgtxMimeType read FMimeType;
+    property MimeType: TgtMimeType read FMimeType;
   end;
 
-  { TgtxGetDocumentInfoResponse }
-  TgtxGetDocumentInfoResponse = class(TgtxDocObject)
+  { TgtGetDocumentInfoResponse }
+  TgtGetDocumentInfoResponse = class(TgtDocObject)
   private
     FUnsupportedMimeTypeOrCorrupt: Boolean;
     FPasswordProtected: Boolean;
     FPasswordCorrect: Boolean;
   public
-    constructor Create(AApiResponse: TgtxRestAPIResponseGetDocumentInfo);
-    property UnsupportedMimeTypeOrCorrupt: Boolean read FUnsupportedMimeTypeOrCorrupt;
+    constructor Create(AApiResponse: TgtRestAPIResponseGetDocumentInfo);
+    destructor Destroy; override;
+    property UnsupportedMimeTypeOrCorrupt: Boolean
+      read FUnsupportedMimeTypeOrCorrupt;
     property PasswordProtected: Boolean read FPasswordProtected;
     property PasswordCorrect: Boolean read FPasswordCorrect;
   end;
 
   {
-    TgtxDocProperties
-    TgtxDocProperties = class
+    TgtDocProperties
+    TgtDocProperties = class
     private
     FTitle: string;
     FAuthor: string;
@@ -452,7 +490,7 @@ type
     ACreator: string); overload;
     constructor Create(ATitle, AAuthor, ASubject: string;
     AKeywords: TStringList; ACreator: string); overload;
-    procedure Assign(Source: TgtxDocProperties);
+    procedure Assign(Source: TgtDocProperties);
     property Title: string read FTitle write FTitle;
     property Author: string read FAuthor write FAuthor;
     property Subject: string read FSubject write FSubject;
@@ -460,8 +498,8 @@ type
     property Creator: string read FCreator write FCreator;
     end;
 
-    TgtxPDFDocProperties
-    TgtxPDFDocProperties = class(TgtxDocProperties)
+    TgtPDFDocProperties
+    TgtPDFDocProperties = class(TgtDocProperties)
     private
     FProducer: string;
     FHasExPropertySecurity: Boolean;
@@ -473,55 +511,58 @@ type
     property HasExPropertySecurity: Boolean read FHasExPropertySecurity;
     end;
 
-    TgtxGetPropertiesResponse
+    TgtGetPropertiesResponse
 
-    TgtxGetPropertiesResponse = class(TgtxDocObject)
+    TgtGetPropertiesResponse = class(TgtDocObject)
     private
-    FDocProperties: TgtxDocProperties;
-    function GetDocProperties: TgtxDocProperties;
-    procedure SetDocProperties(const AValue: TgtxDocProperties);
+    FDocProperties: TgtDocProperties;
+    function GetDocProperties: TgtDocProperties;
+    procedure SetDocProperties(const AValue: TgtDocProperties);
     public
-    constructor Create(AApiResponse: TgtxRestAPIResponseGetPropertiesPDF);
-    property DocProperties: TgtxDocProperties read GetDocProperties
+    constructor Create(AApiResponse: TgtRestAPIResponseGetPropertiesPDF);
+    property DocProperties: TgtDocProperties read GetDocProperties
     write SetDocProperties;
     end;
   }
   // Exception class
-  TgtxDocErrorDetails = class
+  TgtDocErrorDetails = class
   private
     FUri: string;
   public
     constructor Create(AUri: string);
+    destructor Destroy; override;
     property Uri: string read FUri write FUri;
   end;
 
-  EgtxStarDocsException = class(Exception)
+  EgtStarDocsException = class(Exception)
   private
     FHttpStatusCode: Integer;
-    FErrorCode: TgtxExceptionStatusCode;
-    FDocuments: TObjectList<TgtxDocErrorDetails>;
+    FErrorCode: TgtExceptionStatusCode;
+    FDocuments: TObjectList<TgtDocErrorDetails>;
   public
     constructor Create(AHttpStatusCode: Integer;
-      AErrorCode: TgtxExceptionStatusCode; const AMessage: string); overload;
-    constructor Create(AApiResponse: TgtxRestAPIResponseError); overload;
+      AErrorCode: TgtExceptionStatusCode; const AMessage: string); overload;
+    constructor Create(AApiResponse: TgtRestAPIResponseError); overload;
     constructor Create(AHttpStatusCode: Integer;
       AApiResponseStr: string); overload;
     constructor Create(AHttpStatusCode: Integer;
-      AApiResponse: TgtxRestAPIResponseError); overload;
+      AApiResponse: TgtRestAPIResponseError); overload;
+    destructor Destroy; override;
     property HttpStatusCode: Integer read FHttpStatusCode;
-    property ErrorCode: TgtxExceptionStatusCode read FErrorCode;
-    property Documents: TObjectList<TgtxDocErrorDetails> read FDocuments;
+    property ErrorCode: TgtExceptionStatusCode read FErrorCode;
+    property Documents: TObjectList<TgtDocErrorDetails> read FDocuments;
   end;
 
   // Classes used for passing parameters to the Doc Operations API
 
-  { TgtxPageRange }
-  TgtxPageRange = class
+  { TgtPageRange }
+  TgtPageRange = class
   private
     FRange: string;
-    { procedure Assign(ASource: TgtxPageRange); }
+    { procedure Assign(ASource: TgtPageRange); }
   public
     constructor Create(ARange: string);
+    destructor Destroy; override;
     property Range: string read FRange write FRange;
     procedure AddPage(APage: Integer);
     procedure AddPages(APages: TList<Integer>);
@@ -529,45 +570,48 @@ type
     procedure Clear();
   end;
 
-  { TgtxPageRangeSettings }
-  TgtxPageSubRangeMode = (psmAll, psmEven, psmOdd);
+  { TgtPageRangeSettings }
+  TgtPageSubRangeMode = (psmAll, psmEven, psmOdd);
 
-  TgtxPageRangeSettings = class
+  TgtPageRangeSettings = class
   private
-    FPageRange: TgtxPageRange;
-    FPageSubRangeMode: TgtxPageSubRangeMode;
+    FPageRange: TgtPageRange;
+    FPageSubRangeMode: TgtPageSubRangeMode;
     FReverseOrder: Boolean;
     function ToJson(AExcludeOrdering: Boolean = False): string;
-    function GetPageRange: TgtxPageRange;
-    procedure SetPageRange(const AValue: TgtxPageRange);
+    function GetPageRange: TgtPageRange;
+    procedure SetPageRange(const AValue: TgtPageRange);
   public
     constructor Create(APageRange: string;
-      APageSubRangeMode: TgtxPageSubRangeMode = TgtxPageSubRangeMode.psmAll;
+      APageSubRangeMode: TgtPageSubRangeMode = TgtPageSubRangeMode.psmAll;
       AReverseOrder: Boolean = False); overload;
-    constructor Create(APageRange: TgtxPageRange;
-      APageSubRangeMode: TgtxPageSubRangeMode = TgtxPageSubRangeMode.psmAll;
+    destructor Destroy; override;
+    constructor Create(APageRange: TgtPageRange;
+      APageSubRangeMode: TgtPageSubRangeMode = TgtPageSubRangeMode.psmAll;
       AReverseOrder: Boolean = False); overload;
-    property PageRange: TgtxPageRange read GetPageRange write SetPageRange;
-    property PageSubRangeMode: TgtxPageSubRangeMode read FPageSubRangeMode
+
+    property PageRange: TgtPageRange read GetPageRange write SetPageRange;
+    property PageSubRangeMode: TgtPageSubRangeMode read FPageSubRangeMode
       write FPageSubRangeMode;
     property ReverseOrder: Boolean read FReverseOrder write FReverseOrder;
   end;
 
-  { TgtxPageSeparator }
-  TgtxPageSeparatorType = (pstEmptyPage);
+  { TgtPageSeparator }
+  TgtPageSeparatorType = (pstEmptyPage);
 
-  TgtxPageSeparator = class
+  TgtPageSeparator = class
   private
-    FPageSeparatorType: TgtxPageSeparatorType;
+    FPageSeparatorType: TgtPageSeparatorType;
   public
-    constructor Create(APageSeparatorType: TgtxPageSeparatorType);
-    property SeparatorType: TgtxPageSeparatorType read FPageSeparatorType
+    constructor Create;
+    destructor Destroy; override;
+    property SeparatorType: TgtPageSeparatorType read FPageSeparatorType
       write FPageSeparatorType;
     function EncodeString: string;
   end;
 
-  { TgtxSearchText }
-  TgtxSearchText = class
+  { TgtSearchText }
+  TgtSearchText = class
   private
     FText: string;
     FCaseSensitive: Boolean;
@@ -575,281 +619,273 @@ type
   public
     constructor Create(AText: string; ACaseSensitive: Boolean = False;
       AWholeWord: Boolean = False);
+    destructor Destroy; override;
     property Text: string read FText write FText;
     property CaseSensitive: Boolean read FCaseSensitive write FCaseSensitive;
     property WholeWord: Boolean read FWholeWord write FWholeWord;
   end;
 
-  { TgtxColor }
-  TgtxColor = class
+  { TgtColor }
+  TgtColor = class
   private
     FRed: Byte;
     FGreen: Byte;
     FBlue: Byte;
     FAlpha: Byte;
-    function EncodeString(AEncodeAlpha: boolean = True): string;
+    function EncodeString(AEncodeAlpha: Boolean = True): string;
   public
     constructor Create(ARed: Byte; AGreen: Byte; ABlue: Byte;
       AAlpha: Byte = 100);
-    procedure Assign(Source: TgtxColor);
-    property Red: Byte read FRed;
-    property Green: Byte read FGreen;
-    property Blue: Byte read FBlue;
-    property Alpha: Byte read FAlpha;
+    procedure Assign(Source: TgtColor);
+    destructor Destroy; override;
+    property Red: Byte read FRed write FRed;
+    property Green: Byte read FGreen write FGreen;
+    property Blue: Byte read FBlue write FBlue;
+    property Alpha: Byte read FAlpha write FAlpha;
   end;
 
-  { TgtxRedactFillSettings }
-  TgtxRedactFillSettings = class
+  { TgtRedactFillSettings }
+  TgtRedactFillSettings = class
   private
-    FOutline: TgtxOutline;
-    FFillRect: TgtxFillRect;
-    FFillText: TgtxFillText;
+    FOutline: TgtOutline;
+    FFillRect: TgtFillRect;
+    FFillText: TgtFillText;
     function ToJson: string;
-    function GetOutline: TgtxOutline;
-    function GetFillRect: TgtxFillRect;
-    function GetFillText: TgtxFillText;
+    function GetOutline: TgtOutline;
+    function GetFillRect: TgtFillRect;
+    function GetFillText: TgtFillText;
   public
-    constructor Create(AOutline: TgtxOutline = nil;
-      AFillRect: TgtxFillRect = nil; AFillText: TgtxFillText = nil);
-    property Outline: TgtxOutline read GetOutline;
-    property FillRect: TgtxFillRect read GetFillRect;
-    property FillText: TgtxFillText read GetFillText;
+    constructor Create;
+    destructor Destroy; override;
+    property Outline: TgtOutline read GetOutline;
+    property FillRect: TgtFillRect read GetFillRect;
+    property FillText: TgtFillText read GetFillText;
   end;
 
-  { TgtxPen }
-  TgtxPen = class
+  { TgtPen }
+  TgtPen = class
   private
-    FColor: TgtxColor;
+    FColor: TgtColor;
     FWidth: Integer;
-    FStyle: TgtxPenStyle;
-    function GetColor: TgtxColor;
+    FStyle: TgtPenStyle;
+    function GetColor: TgtColor;
   public
-    constructor Create(AColor: TgtxColor = nil;
-      AStyle: TgtxPenStyle = TgtxPenStyle.pstSolid; AWidth: Integer = 1);
-    property Color: TgtxColor read GetColor;
+    constructor Create;
+    destructor Destroy; override;
+    property Color: TgtColor read GetColor;
     property Width: Integer read FWidth;
-    property Style: TgtxPenStyle read FStyle;
+    property Style: TgtPenStyle read FStyle;
   end;
 
-  { TgtxBrush }
-  TgtxBrush = class
+  { TgtBrush }
+  TgtBrush = class
   private
-    FColor: TgtxColor;
-    FPattern: TgtxBrushPattern;
-    function GetColor: TgtxColor;
+    FColor: TgtColor;
+    FPattern: TgtBrushPattern;
+    function GetColor: TgtColor;
   public
-    constructor Create(AColor: TgtxColor = nil;
-      APattern: TgtxBrushPattern = TgtxBrushPattern.bptSolid);
-    property Color: TgtxColor read GetColor;
-    property Pattern: TgtxBrushPattern read FPattern;
+    constructor Create;
+    destructor Destroy; override;
+    property Color: TgtColor read GetColor;
+    property Pattern: TgtBrushPattern read FPattern;
   end;
 
-  { TgtxOutline }
-  TgtxOutline = class
+  { TgtOutline }
+  TgtOutline = class
   private
-    FPenColoringMode: TgtxColoringMode;
-    FPen: TgtxPen;
+    FPenColoringMode: TgtColoringMode;
+    FPen: TgtPen;
     function ToJson: string;
-    function GetPen: TgtxPen;
+    function GetPen: TgtPen;
   public
-    constructor Create(APenColoringMode
-      : TgtxColoringMode = TgtxColoringMode.cmoNone; APen: TgtxPen = nil);
-    property PenColoringMode: TgtxColoringMode read FPenColoringMode;
-    property Pen: TgtxPen read GetPen;
+    constructor Create;
+    destructor Destroy; override;
+    property PenColoringMode: TgtColoringMode read FPenColoringMode
+      write FPenColoringMode;
+    property Pen: TgtPen read GetPen;
   end;
 
-  { TgtxFont }
-  TgtxFont = class
+  { TgtFont }
+  TgtFont = class
   private
     FName: String;
     FSize: Integer;
-    FColor: TgtxColor;
-    FStyles: TgtxFontStyles;
-    FEffects: TgtxFontEffects;
-    function ToJson(AFontSizingMode: TgtxFontSizingMode;
-      AFontColoringMode: TgtxFontColoringMode): string;
-    function GetColor: TgtxColor;
+    FColor: TgtColor;
+    FStyles: TgtFontStyles;
+    FEffects: TgtFontEffects;
+    function ToJson(AFontSizingMode: TgtFontSizingMode;
+      AFontColoringMode: TgtFontColoringMode): string;
+    function GetColor: TgtColor;
   public
-    constructor Create(AName: String; ASize: Integer; AColor: TgtxColor = nil;
-      AStyles: TgtxFontStyles = []; AEffects: TgtxFontEffects = []);
+    constructor Create;
+    destructor Destroy; override;
     property Name: String read FName;
     property Size: Integer read FSize;
-    property Color: TgtxColor read GetColor;
-    property Styles: TgtxFontStyles read FStyles;
-    property Effects: TgtxFontEffects read FEffects;
+    property Color: TgtColor read GetColor;
+    property Styles: TgtFontStyles read FStyles;
+    property Effects: TgtFontEffects read FEffects;
   end;
 
-  { TgtxFillText }
-  TgtxFillText = class
+  { TgtFillText }
+  TgtFillText = class
   private
     FReplaceText: string;
-    FFontSelectionMode: TgtxFontSelectionMode;
-    FFontSizingMode: TgtxFontSizingMode;
-    FFontColoringMode: TgtxFontColoringMode;
-    FFont: TgtxFont;
+    FFontSelectionMode: TgtFontSelectionMode;
+    FFontSizingMode: TgtFontSizingMode;
+    FFontColoringMode: TgtFontColoringMode;
+    FFont: TgtFont;
     function ToJson: string;
-    function GetFont: TgtxFont;
+    function GetFont: TgtFont;
   public
-    constructor Create(AReplaceText: String;
-      AFontSelectionMode: TgtxFontSelectionMode = TgtxFontSelectionMode.
-      fsmUseFont; AFontSizingMode: TgtxFontSizingMode = TgtxFontSizingMode.
-      fsmAutoFit; AFontColoringMode
-      : TgtxFontColoringMode = TgtxFontColoringMode.fcmSource;
-      AFont: TgtxFont = nil);
-    property ReplaceText: String read FReplaceText;
-    property FontSelectionMode: TgtxFontSelectionMode read FFontSelectionMode;
-    property FontSizingMode: TgtxFontSizingMode read FFontSizingMode;
-    property FontColoringMode: TgtxFontColoringMode read FFontColoringMode;
-    property Font: TgtxFont read GetFont;
+    constructor Create;
+    destructor Destroy; override;
+    property ReplaceText: String read FReplaceText write FReplaceText;
+    property FontSelectionMode: TgtFontSelectionMode read FFontSelectionMode
+      write FFontSelectionMode;
+    property FontSizingMode: TgtFontSizingMode read FFontSizingMode
+      write FFontSizingMode;
+    property FontColoringMode: TgtFontColoringMode read FFontColoringMode
+      write FFontColoringMode;
+    property Font: TgtFont read GetFont;
   end;
 
-  { TgtxFillRect }
-  TgtxFillRect = class
+  { TgtFillRect }
+  TgtFillRect = class
   private
-    FBrushColoringMode: TgtxColoringMode;
-    FBrush: TgtxBrush;
+    FBrushColoringMode: TgtColoringMode;
+    FBrush: TgtBrush;
     function ToJson: string;
+    function GetBrush: TgtBrush;
   public
-    constructor Create(ABrushColoringMode
-      : TgtxColoringMode = TgtxColoringMode.cmoNone; ABrush: TgtxBrush = nil);
+    constructor Create;
+    destructor Destroy; override;
+    property BrushColoringMode: TgtColoringMode read FBrushColoringMode
+      write FBrushColoringMode;
+    property Brush: TgtBrush read GetBrush;
   end;
 
-  { TgtxEncoderSettings }
-  TgtxEncoderSettings = class
+  { TgtEncoderSettings }
+  TgtEncoderSettings = class
   protected
     function ToJson(): string; virtual;
   end;
 
-  { TgtxDPI }
-  TgtxDPI = class
+  { TgtDPI }
+  TgtDPI = class
   private
-    FResolutionMode: TgtxResolutionMode;
+    FResolutionMode: TgtResolutionMode;
     FX: Integer;
     FY: Integer;
     function ToJson: String;
   public
-    constructor Create(AResolutionMode: TgtxResolutionMode = TgtxResolutionMode.
-      rmmUseSource; AX: Integer = 72; AY: Integer = 72);
-    property ResolutionMode: TgtxResolutionMode read FResolutionMode
+    constructor Create;
+    destructor Destroy; override;
+    property ResolutionMode: TgtResolutionMode read FResolutionMode
       write FResolutionMode;
     property X: Integer read FX write FX;
     property Y: Integer read FY write FY;
   end;
 
-  { TgtxSize }
-  TgtxSize = class
+  { TgtSize }
+  TgtSize = class
   private
-    FPaperSize: TgtxPaperSize;
+    FPaperSize: TgtPaperSize;
     FWidth: Integer;
     FHeight: Integer;
-    FMeasurementUnit: TgtxMeasurementUnit;
+    FMeasurementUnit: TgtMeasurementUnit;
     function EncodeString: String;
   public
-    constructor Create(APaperSize: TgtxPaperSize = TgtxPaperSize.psiA4;
-      AWidth: Integer = 0; AHeight: Integer = 0;
-      AMeasurementUnit: TgtxMeasurementUnit = TgtxMeasurementUnit.
-      munMillimeters);
-    property PaperSize: TgtxPaperSize read FPaperSize write FPaperSize;
+    constructor Create;
+    destructor Destroy; override;
+    property PaperSize: TgtPaperSize read FPaperSize write FPaperSize;
     property Width: Integer read FWidth write FWidth;
     property Height: Integer read FHeight write FHeight;
-    property MeasurementUnit: TgtxMeasurementUnit read FMeasurementUnit
+    property MeasurementUnit: TgtMeasurementUnit read FMeasurementUnit
       write FMeasurementUnit;
   end;
 
-  { TgtxCanvasSize }
-  TgtxCanvasSize = class
+  { TgtCanvasSize }
+  TgtCanvasSize = class
   private
-    FSizingMode: TgtxCanvasSizingMode;
-    FSize: TgtxSize;
+    FSizingMode: TgtCanvasSizingMode;
+    FSize: TgtSize;
     FRelativeSizeX: Integer;
     FRelativeSizeY: Integer;
     function ToJson: String;
   public
-    constructor Create(ASizingMode: TgtxCanvasSizingMode = TgtxCanvasSizingMode.
-      csmUseSource; ASize: TgtxSize = nil; ARelativeSizeX: Integer = 100;
-      ARelativeSizeY: Integer = 100);
+    constructor Create;
+    destructor Destroy; override;
   end;
 
-  { TgtxContentAlignment }
-  TgtxContentAlignment = class
+  { TgtContentAlignment }
+  TgtContentAlignment = class
   private
-    FHorizontalAlignmentType: TgtxHorizontalAlignmentType;
+    FHorizontalAlignmentType: TgtHorizontalAlignmentType;
     FHorizontalOffset: Integer;
-    FVerticalAlignmentType: TgtxVerticalAlignmentType;
+    FVerticalAlignmentType: TgtVerticalAlignmentType;
     FVerticalOffset: Integer;
     function ToJson: String;
   public
-    constructor Create(AHorizontalAlignmentType
-      : TgtxHorizontalAlignmentType = TgtxHorizontalAlignmentType.hatCenter;
-      AHorizontalOffset: Integer = 0;
-      AVerticalAlignmentType: TgtxVerticalAlignmentType =
-      TgtxVerticalAlignmentType.vatCenter; AVerticalOffset: Integer = 0);
-    procedure Assign(Source: TgtxContentAlignment);
-    property HorizontalAlignmentType: TgtxHorizontalAlignmentType
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtContentAlignment);
+    property HorizontalAlignmentType: TgtHorizontalAlignmentType
       read FHorizontalAlignmentType write FHorizontalAlignmentType;
     property HorizontalOffset: Integer read FHorizontalOffset
       write FHorizontalOffset;
-    property VerticalAlignmentType: TgtxVerticalAlignmentType
+    property VerticalAlignmentType: TgtVerticalAlignmentType
       read FVerticalAlignmentType write FVerticalAlignmentType;
     property VerticalOffset: Integer read FVerticalOffset write FVerticalOffset;
   end;
 
-  { TgtxImageEncoderSettings }
-  TgtxImageEncoderSettings = class(TgtxEncoderSettings)
+  { TgtImageEncoderSettings }
+  TgtImageEncoderSettings = class(TgtEncoderSettings)
   private
-    FDPI: TgtxDPI;
+    FDPI: TgtDPI;
     FQuality: Byte;
-    FCanvasSize: TgtxCanvasSize;
-    FContentScaling: TgtxContentScaling;
-    FContentAlignment: TgtxContentAlignment;
-    function GetContentAlignment: TgtxContentAlignment;
-    procedure SetContentAlignment(const AValue: TgtxContentAlignment);
+    FCanvasSize: TgtCanvasSize;
+    FContentScaling: TgtContentScaling;
+    FContentAlignment: TgtContentAlignment;
+    function GetContentAlignment: TgtContentAlignment;
+    // procedure SetContentAlignment(const AValue: TgtContentAlignment);
   public
     function ToJson(): string; override;
-    constructor Create(ADPI: TgtxDPI = nil; AQuality: Byte = 80;
-      ACanvasSize: TgtxCanvasSize = nil;
-      AScaling: TgtxContentScaling = TgtxContentScaling.cscFitWithAspect;
-      AAlignment: TgtxContentAlignment = nil);
-    property DPI: TgtxDPI read FDPI write FDPI;
+    constructor Create;
+    destructor Destroy; override;
+    property DPI: TgtDPI read FDPI write FDPI;
     property Quality: Byte read FQuality write FQuality;
-    property CanvasSize: TgtxCanvasSize read FCanvasSize write FCanvasSize;
-    property ContentScaling: TgtxContentScaling read FContentScaling
+    property CanvasSize: TgtCanvasSize read FCanvasSize write FCanvasSize;
+    property ContentScaling: TgtContentScaling read FContentScaling
       write FContentScaling;
-    property ContentAlignment: TgtxContentAlignment read GetContentAlignment
-      write SetContentAlignment;
+    property ContentAlignment: TgtContentAlignment read GetContentAlignment;
   end;
 
-  { TgtxPDFPortfolioSettings }
-  TgtxPDFPortfolioSettings = class
+  { TgtPDFPortfolioSettings }
+  TgtPDFPortfolioSettings = class
   private
-    FPDFPortfolioCreationMode: TgtxPDFPortfolioCreationMode;
-    FPDFPortfolioInitialLayout: TgtxPDFPortfolioInitialLayout;
+    FPDFPortfolioCreationMode: TgtPDFPortfolioCreationMode;
+    FPDFPortfolioInitialLayout: TgtPDFPortfolioInitialLayout;
     function ToJson: String;
   public
-    constructor Create(APDFPortfolioCreationMode
-      : TgtxPDFPortfolioCreationMode = TgtxPDFPortfolioCreationMode.
-      pcmWhenInputIsPortfolio;
-      APDFPortfolioInitialLayout: TgtxPDFPortfolioInitialLayout =
-      TgtxPDFPortfolioInitialLayout.pilDetails);
+    constructor Create;
+    destructor Destroy; override;
   end;
 
-  { TgtxPDFEncoderSettings }
-  TgtxPDFEncoderSettings = class(TgtxEncoderSettings)
+  { TgtPDFEncoderSettings }
+  TgtPDFEncoderSettings = class(TgtEncoderSettings)
   private
-    FPDFPortfolioSettings: TgtxPDFPortfolioSettings;
-    FFontEmbeddingType: TgtxFontEmbeddingType;
+    FPDFPortfolioSettings: TgtPDFPortfolioSettings;
+    FFontEmbeddingType: TgtFontEmbeddingType;
     FOverrideFontEmbeddingRestriction: Boolean;
-
-    function GetPDFPortfolioSettings: TgtxPDFPortfolioSettings;
-    procedure SetPDFPortfolioSettings(const AValue: TgtxPDFPortfolioSettings);
+    function GetPDFPortfolioSettings: TgtPDFPortfolioSettings;
+    procedure SetPDFPortfolioSettings(const AValue: TgtPDFPortfolioSettings);
   public
-    constructor Create(APDFPortfolioSettings: TgtxPDFPortfolioSettings;
-      AFontEmbeddingType: TgtxFontEmbeddingType = TgtxFontEmbeddingType.
-      fetSubset; AOverrideFontEmbeddingRestriction: Boolean = False);
+    constructor Create;
+    destructor Destroy; override;
     function ToJson: string; override;
-    property PDFPortfolioSettings: TgtxPDFPortfolioSettings
+    property PDFPortfolioSettings: TgtPDFPortfolioSettings
       read GetPDFPortfolioSettings write SetPDFPortfolioSettings;
-    property FontEmbeddingType: TgtxFontEmbeddingType read FFontEmbeddingType
+    property FontEmbeddingType: TgtFontEmbeddingType read FFontEmbeddingType
       write FFontEmbeddingType;
     property OverrideFontEmbeddingRestriction: Boolean
       read FOverrideFontEmbeddingRestriction
@@ -858,7 +894,7 @@ type
 
   // Classes for accepting parsed JSON responses
   // These are meant to be internal
-  TgtxRestAPIResponseAuth = class
+  TgtRestAPIResponseAuth = class
   private
     FAccess_Token: string;
     FToken_Type: string;
@@ -869,7 +905,7 @@ type
     property ExpiresIn: Longint read FExpires_In;
   end;
 
-  TgtxRestAPIResponseAuthFailure = class
+  TgtRestAPIResponseAuthFailure = class
   private
     FError: string;
     FErrorDescription: string;
@@ -881,7 +917,7 @@ type
     property ErrorUri: string read FErrorURI write FErrorURI;
   end;
 
-  TgtxRestAPIDocumentCommon = class
+  TgtRestAPIDocumentCommon = class
   private
     FUrl: string;
     FFileName: string;
@@ -898,32 +934,31 @@ type
     property MimeType: string read FMimeType write FMimeType;
   end;
 
-  TgtxRestAPIResponseGetDocumentInfo = class(TgtxRestAPIDocumentCommon)
+  TgtRestAPIResponseGetDocumentInfo = class(TgtRestAPIDocumentCommon)
   private
     FUnsupportedMimeTypeOrCorrupt: Boolean;
     FPasswordProtected: Boolean;
     FPasswordCorrect: Boolean;
-
   public
-    property UnsupportedMimeTypeOrCorrupt: Boolean read FUnsupportedMimeTypeOrCorrupt
-      write FUnsupportedMimeTypeOrCorrupt;
+    property UnsupportedMimeTypeOrCorrupt: Boolean
+      read FUnsupportedMimeTypeOrCorrupt write FUnsupportedMimeTypeOrCorrupt;
     property PasswordProtected: Boolean read FPasswordProtected
       write FPasswordProtected;
     property PasswordCorrect: Boolean read FPasswordCorrect
       write FPasswordCorrect;
   end;
 
-  TgtxRestAPIResponseCommon = class
+  TgtRestAPIResponseCommon = class
   private
-    FDocuments: TArray<TgtxRestAPIDocumentCommon>;
-    function GetDocuments: TArray<TgtxRestAPIDocumentCommon>;
-    procedure SetDocuments(const AValue: TArray<TgtxRestAPIDocumentCommon>);
+    FDocuments: TArray<TgtRestAPIDocumentCommon>;
+    function GetDocuments: TArray<TgtRestAPIDocumentCommon>;
+    procedure SetDocuments(const AValue: TArray<TgtRestAPIDocumentCommon>);
   public
-    property Documents: TArray<TgtxRestAPIDocumentCommon> read GetDocuments
+    property Documents: TArray<TgtRestAPIDocumentCommon> read GetDocuments
       write SetDocuments;
   end;
 
-  TgtxRestAPIDocPropertiesCommon = class
+  TgtRestAPIDocPropertiesCommon = class
   private
     FTitle: string;
     FAuthor: string;
@@ -932,7 +967,7 @@ type
     FCreator: string;
     FProducer: string;
   public
-    procedure Assign(Source: TgtxRestAPIDocPropertiesCommon);
+    procedure Assign(Source: TgtRestAPIDocPropertiesCommon);
     property Title: string read FTitle write FTitle;
     property Author: string read FAuthor write FAuthor;
     property Subject: string read FSubject write FSubject;
@@ -941,7 +976,7 @@ type
     property Producer: string read FProducer write FProducer;
   end;
 
-  TgtxRestAPIDocExPropertiesPDF = class
+  TgtRestAPIDocExPropertiesPDF = class
   private
     FHasBookmarks: Boolean;
     FHasSecurity: Boolean;
@@ -950,23 +985,22 @@ type
     property HasSecurity: Boolean read FHasSecurity write FHasSecurity;
   end;
 
-  TgtxRestAPIDocumentGetPropertiesPDF = class(TgtxRestAPIDocumentCommon)
+  TgtRestAPIDocumentGetPropertiesPDF = class(TgtRestAPIDocumentCommon)
   private
-    FProperties: TgtxRestAPIDocPropertiesCommon;
-    FExtendedProperties: TgtxRestAPIDocExPropertiesPDF;
-    function GetExtendedProperties: TgtxRestAPIDocExPropertiesPDF;
-    procedure SetExtendedProperties(const AValue
-      : TgtxRestAPIDocExPropertiesPDF);
-    function GetProperties: TgtxRestAPIDocPropertiesCommon;
-    procedure SetProperties(const AValue: TgtxRestAPIDocPropertiesCommon);
+    FProperties: TgtRestAPIDocPropertiesCommon;
+    FExtendedProperties: TgtRestAPIDocExPropertiesPDF;
+    function GetExtendedProperties: TgtRestAPIDocExPropertiesPDF;
+    procedure SetExtendedProperties(const AValue: TgtRestAPIDocExPropertiesPDF);
+    function GetProperties: TgtRestAPIDocPropertiesCommon;
+    procedure SetProperties(const AValue: TgtRestAPIDocPropertiesCommon);
   public
-    property Properties: TgtxRestAPIDocPropertiesCommon read GetProperties
+    property Properties: TgtRestAPIDocPropertiesCommon read GetProperties
       write SetProperties;
-    property ExtendedProperties: TgtxRestAPIDocExPropertiesPDF
+    property ExtendedProperties: TgtRestAPIDocExPropertiesPDF
       read GetExtendedProperties write SetExtendedProperties;
   end;
 
-  TgtxRestAPIDocPermissionsPDF = class
+  TgtRestAPIDocPermissionsPDF = class
   private
     FAllowAssembly: Boolean;
     FAllowModifyAnnotations: Boolean;
@@ -977,7 +1011,7 @@ type
     FAllowHighResPrint: Boolean;
     FAllowFormFill: Boolean;
   public
-    procedure Assign(Source: TgtxRestAPIDocPermissionsPDF);
+    procedure Assign(Source: TgtRestAPIDocPermissionsPDF);
     property AllowAssembly: Boolean read FAllowAssembly write FAllowAssembly;
     property AllowModifyAnnotations: Boolean read FAllowModifyAnnotations
       write FAllowModifyAnnotations;
@@ -992,18 +1026,18 @@ type
     property AllowFormFill: Boolean read FAllowFormFill write FAllowFormFill;
   end;
 
-  TgtxRestAPIDocPropertiesSecurity = class
+  TgtRestAPIDocPropertiesSecurity = class
   private
     FSecurityMethod: string;
     FEncryptionLevel: string;
     FSuppliedPassword: string;
     FHasOpenPassword: Boolean;
     FHasPermissionsPassword: Boolean;
-    FPermissions: TgtxRestAPIDocPermissionsPDF;
-    function GetPermissions: TgtxRestAPIDocPermissionsPDF;
-    procedure SetPermissions(const AValue: TgtxRestAPIDocPermissionsPDF);
+    FPermissions: TgtRestAPIDocPermissionsPDF;
+    function GetPermissions: TgtRestAPIDocPermissionsPDF;
+    procedure SetPermissions(const AValue: TgtRestAPIDocPermissionsPDF);
   public
-    procedure Assign(Source: TgtxRestAPIDocPropertiesSecurity);
+    procedure Assign(Source: TgtRestAPIDocPropertiesSecurity);
     property SecurityMethod: string read FSecurityMethod write FSecurityMethod;
     property EncryptionLevel: string read FEncryptionLevel
       write FEncryptionLevel;
@@ -1013,86 +1047,84 @@ type
       write FHasOpenPassword;
     property HasPermissionsPassword: Boolean read FHasPermissionsPassword
       write FHasPermissionsPassword;
-    property Permissions: TgtxRestAPIDocPermissionsPDF read GetPermissions
+    property Permissions: TgtRestAPIDocPermissionsPDF read GetPermissions
       write SetPermissions;
   end;
 
-  TgtxRestAPIDocumentGetPropertiesSecurityPDF = class(TgtxRestAPIDocumentCommon)
+  TgtRestAPIDocumentGetPropertiesSecurityPDF = class(TgtRestAPIDocumentCommon)
   private
-    FExtendedPropertiesSecurity: TgtxRestAPIDocPropertiesSecurity;
-    function GetExtendedPropertiesSecurity: TgtxRestAPIDocPropertiesSecurity;
+    FExtendedPropertiesSecurity: TgtRestAPIDocPropertiesSecurity;
+    function GetExtendedPropertiesSecurity: TgtRestAPIDocPropertiesSecurity;
     procedure SetExtendedPropertiesSecurity(const AValue
-      : TgtxRestAPIDocPropertiesSecurity);
+      : TgtRestAPIDocPropertiesSecurity);
   public
-    property ExtendedPropertiesSecurity: TgtxRestAPIDocPropertiesSecurity
+    property ExtendedPropertiesSecurity: TgtRestAPIDocPropertiesSecurity
       read GetExtendedPropertiesSecurity write SetExtendedPropertiesSecurity;
   end;
 
-  TgtxRestAPIResponseGetPropertiesPDF = class
+  TgtRestAPIResponseGetPropertiesPDF = class
   private
     FOprStatusCode: Integer;
-    FDocuments: TArray<TgtxRestAPIDocumentGetPropertiesPDF>;
-    function GetDocuments: TArray<TgtxRestAPIDocumentGetPropertiesPDF>;
+    FDocuments: TArray<TgtRestAPIDocumentGetPropertiesPDF>;
+    function GetDocuments: TArray<TgtRestAPIDocumentGetPropertiesPDF>;
     procedure SetDocuments(const AValue
-      : TArray<TgtxRestAPIDocumentGetPropertiesPDF>);
+      : TArray<TgtRestAPIDocumentGetPropertiesPDF>);
   public
     property OprStatusCode: Integer read FOprStatusCode write FOprStatusCode;
-    property Documents: TArray<TgtxRestAPIDocumentGetPropertiesPDF>
+    property Documents: TArray<TgtRestAPIDocumentGetPropertiesPDF>
       read GetDocuments write SetDocuments;
   end;
 
-  TgtxRestAPIResponseGetPropertiesSecurityPDF = class
+  TgtRestAPIResponseGetPropertiesSecurityPDF = class
   private
     FOprStatusCode: Integer;
-    FDocuments: TArray<TgtxRestAPIDocumentGetPropertiesSecurityPDF>;
-    function GetDocuments: TArray<TgtxRestAPIDocumentGetPropertiesSecurityPDF>;
+    FDocuments: TArray<TgtRestAPIDocumentGetPropertiesSecurityPDF>;
+    function GetDocuments: TArray<TgtRestAPIDocumentGetPropertiesSecurityPDF>;
     procedure SetDocuments(const AValue
-      : TArray<TgtxRestAPIDocumentGetPropertiesSecurityPDF>);
+      : TArray<TgtRestAPIDocumentGetPropertiesSecurityPDF>);
   public
     property OprStatusCode: Integer read FOprStatusCode write FOprStatusCode;
-    property Documents: TArray<TgtxRestAPIDocumentGetPropertiesSecurityPDF>
+    property Documents: TArray<TgtRestAPIDocumentGetPropertiesSecurityPDF>
       read GetDocuments write SetDocuments;
   end;
 
-  TgtxRestAPIDocumentError = class
+  TgtRestAPIDocumentError = class
   private
     FUrl: string;
   public
     property Url: string read FUrl write FUrl;
   end;
 
-  TgtxRestAPIResponseError = class
+  TgtRestAPIResponseError = class
   private
     FErrorCode: Integer;
     FErrorMessage: string;
-    FDocuments: TArray<TgtxRestAPIDocumentError>;
-
+    FDocuments: TArray<TgtRestAPIDocumentError>;
   public
     property ErrorCode: Integer read FErrorCode write FErrorCode;
     property ErrorMessage: string read FErrorMessage write FErrorMessage;
-    property Documents: TArray<TgtxRestAPIDocumentError> read FDocuments
+    property Documents: TArray<TgtRestAPIDocumentError> read FDocuments
       write FDocuments;
   end;
 
-  TgtxRestAPIResponseJob = class
+  TgtRestAPIResponseJob = class
   private
     FUri: string;
   public
     property Uri: string read FUri write FUri;
   end;
 
-  TgtxRestAPIResponseJobs = class
+  TgtRestAPIResponseJobs = class
   private
     FOprStatusCode: Integer;
-    FJobs: TArray<TgtxRestAPIResponseJob>;
-
+    FJobs: TArray<TgtRestAPIResponseJob>;
   public
     property OprStatusCode: Integer read FOprStatusCode write FOprStatusCode;
-    property Jobs: TArray<TgtxRestAPIResponseJob> read FJobs write FJobs;
+    property Jobs: TArray<TgtRestAPIResponseJob> read FJobs write FJobs;
   end;
 
-  { TgtxRestAPIResponseCreateView }
-  TgtxRestAPIResponseCreateView = class
+  { TgtRestAPIResponseCreateView }
+  TgtRestAPIResponseCreateView = class
   private
     FUrl: String;
     FTimeToLive: Longint;
@@ -1101,19 +1133,20 @@ type
     property TimeToLive: Longint read FTimeToLive write FTimeToLive;
   end;
 
-  { TgtxViewResponse }
-  TgtxViewResponse = class
+  { TgtViewResponse }
+  TgtViewResponse = class
   private
     FUrl: String;
     FTimeToLive: Longint;
   public
-    constructor Create(AApiResponse: TgtxRestAPIResponseCreateView);
+    constructor Create(AApiResponse: TgtRestAPIResponseCreateView);
+    destructor Destroy; override;
     property Url: string read FUrl write FUrl;
     property TimeToLive: Longint read FTimeToLive write FTimeToLive;
   end;
 
-  { TgtxVisibleNavigationControls }
-  TgtxVisibleNavigationControls = class
+  { TgtVisibleNavigationControls }
+  TgtVisibleNavigationControls = class
   private
     FFirstPage: Boolean;
     FLastPage: Boolean;
@@ -1123,10 +1156,9 @@ type
     FGotoPage: Boolean;
     function ToJson(): String;
   public
-    constructor Create(AFirstPage: Boolean = True; ALastPage: Boolean = True;
-      APrevPage: Boolean = True; ANextPage: Boolean = True;
-      APageIndicator: Boolean = True; AGotoPage: Boolean = True);
-    procedure Assign(Source: TgtxVisibleNavigationControls);
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtVisibleNavigationControls);
     property FirstPage: Boolean read FFirstPage write FFirstPage;
     property LastPage: Boolean read FLastPage write FLastPage;
     property PrevPage: Boolean read FPrevPage write FPrevPage;
@@ -1135,129 +1167,126 @@ type
     property GotoPage: Boolean read FGotoPage write FGotoPage;
   end;
 
-  TgtxVisibleZoomControls = class
+  TgtVisibleZoomControls = class
   private
     FFixedSteps: Boolean;
     FZoomIn: Boolean;
     FZoomOut: Boolean;
     function ToJson(): String;
   public
-    constructor Create(AFixedSteps: Boolean = True; AzoomIn: Boolean = True;
-      AZoomout: Boolean = True);
-    procedure Assign(Source: TgtxVisibleZoomControls);
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtVisibleZoomControls);
     property FixedSteps: Boolean read FFixedSteps write FFixedSteps;
     property ZoomIn: Boolean read FZoomIn write FZoomIn;
     property ZoomOut: Boolean read FZoomOut write FZoomOut;
   end;
 
-  TgtxVisibleRotationControls = class
+  TgtVisibleRotationControls = class
   private
     FClockwise: Boolean;
     FCounterClockwise: Boolean;
     function ToJson(): String;
   public
-    constructor Create(AClockwise: Boolean = True;
-      ACounterClockwise: Boolean = True);
+    constructor Create;
+    destructor Destroy; override;
     property Clockwise: Boolean read FClockwise write FClockwise;
     property CounterClockwise: Boolean read FCounterClockwise
       write FCounterClockwise;
   end;
 
-  TgtxVisibleColorInversionControls = class
+  TgtVisibleColorInversionControls = class
   private
     FAllPages: Boolean;
     function ToJson(): String;
   public
-    constructor Create(AAllPages: Boolean = True);
+    constructor Create;
+    destructor Destroy; override;
     property AllPages: Boolean read FAllPages write FAllPages;
   end;
 
-  TgtxSearchControls = class
+  TgtSearchControls = class
   private
     FEnableQuickSearch: Boolean;
-    FHighlightColor: TgtxColor;
+    FHighlightColor: TgtColor;
     function ToJson(): String;
-    function GetHighlightColor: TgtxColor;
-    procedure SetHighlightColor(const AValue: TgtxColor);
+    function GetHighlightColor: TgtColor;
+    procedure SetHighlightColor(const AValue: TgtColor);
   public
-
-    constructor Create(AEnableQuickSearch: Boolean = True;
-      AHighlightColor: TgtxColor = nil);
-    procedure Assign(Source: TgtxSearchControls);
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtSearchControls);
     property EnableQuickSearch: Boolean read FEnableQuickSearch
       write FEnableQuickSearch;
-    property HighlightColor: TgtxColor read GetHighlightColor
+    property HighlightColor: TgtColor read GetHighlightColor
       write SetHighlightColor;
   end;
 
-  TgtxViewerSettings = class
+  TgtViewerSettings = class
   private
     FEnableFormFilling: Boolean;
     FToolbarVisible: Boolean;
     FFullScreenVisible: Boolean;
-    FVisibleNavigationControls: TgtxVisibleNavigationControls;
-    FVisibleZoomControls: TgtxVisibleZoomControls;
-    FVisibleRotationControls: TgtxVisibleRotationControls;
-    FVisibleColorInversionControls: TgtxVisibleColorInversionControls;
-    FSearchControls: TgtxSearchControls;
-    function GetVisibleNavigationControls: TgtxVisibleNavigationControls;
-    function GetVisibleZoomControls: TgtxVisibleZoomControls;
-    function GetVisibleRotationControls: TgtxVisibleRotationControls;
-    function GetVisibleColorInversionControls
-      : TgtxVisibleColorInversionControls;
-    function GetSearchControls: TgtxSearchControls;
-    procedure SetVisibleNavigationControls(const AValue
-      : TgtxVisibleNavigationControls);
-    procedure SetVisibleZoomControls(const AValue: TgtxVisibleZoomControls);
-    procedure SetVisibleRotationControls(const AValue
-      : TgtxVisibleRotationControls);
-    procedure SetVisibleColorInversionControls(const AValue
-      : TgtxVisibleColorInversionControls);
-    procedure SetSearchControls(const AValue: TgtxSearchControls);
+    FVisibleNavigationControls: TgtVisibleNavigationControls;
+    FVisibleZoomControls: TgtVisibleZoomControls;
+    FVisibleRotationControls: TgtVisibleRotationControls;
+    FVisibleColorInversionControls: TgtVisibleColorInversionControls;
+    FSearchControls: TgtSearchControls;
+    function GetVisibleNavigationControls: TgtVisibleNavigationControls;
+    function GetVisibleZoomControls: TgtVisibleZoomControls;
+    function GetVisibleRotationControls: TgtVisibleRotationControls;
+    function GetVisibleColorInversionControls: TgtVisibleColorInversionControls;
+    function GetSearchControls: TgtSearchControls;
+    // procedure SetVisibleNavigationControls(const AValue
+    // : TgtVisibleNavigationControls);
+    // procedure SetVisibleZoomControls(const AValue: TgtVisibleZoomControls);
+    // procedure SetVisibleRotationControls(const AValue
+    // : TgtVisibleRotationControls);
+    // procedure SetVisibleColorInversionControls(const AValue
+    // : TgtVisibleColorInversionControls);
+    // procedure SetSearchControls(const AValue: TgtSearchControls);
     function ToJson(): String;
   public
-    constructor Create(AEnableFormFilling: Boolean = True; AToolbarVisible: Boolean = True;
-      AFullScreenVisible: Boolean = False;
-      AVisibleNavigationControls: TgtxVisibleNavigationControls = nil;
-      AVisibleZoomControls: TgtxVisibleZoomControls = nil;
-      AVisibleRotationControls: TgtxVisibleRotationControls = nil;
-      AVisibleColorInversionControls: TgtxVisibleColorInversionControls = nil;
-      ASearchControls: TgtxSearchControls = nil);
-    property EnableFormFilling: Boolean read FEnableFormFilling write FEnableFormFilling;
+    constructor Create;
+    destructor Destroy; override;
+    property EnableFormFilling: Boolean read FEnableFormFilling
+      write FEnableFormFilling;
     property ToolbarVisible: Boolean read FToolbarVisible write FToolbarVisible;
-    property FullScreenVisible: Boolean read FFullScreenVisible write FFullScreenVisible;
-    property VisibleNavigationControls: TgtxVisibleNavigationControls
-      read GetVisibleNavigationControls write SetVisibleNavigationControls;
-    property VisibleZoomControls: TgtxVisibleZoomControls
-      read GetVisibleZoomControls write SetVisibleZoomControls;
-    property VisibleRotationControls: TgtxVisibleRotationControls
-      read GetVisibleRotationControls write SetVisibleRotationControls;
-    property VisibleColorInversionControls: TgtxVisibleColorInversionControls
-      read GetVisibleColorInversionControls
-      write SetVisibleColorInversionControls;
-    property SearchControls: TgtxSearchControls read GetSearchControls
-      write SetSearchControls;
+    property FullScreenVisible: Boolean read FFullScreenVisible
+      write FFullScreenVisible;
+    property VisibleNavigationControls: TgtVisibleNavigationControls
+      read GetVisibleNavigationControls;
+    property VisibleZoomControls: TgtVisibleZoomControls
+      read GetVisibleZoomControls;
+    property VisibleRotationControls: TgtVisibleRotationControls
+      read GetVisibleRotationControls;
+    property VisibleColorInversionControls: TgtVisibleColorInversionControls
+      read GetVisibleColorInversionControls;
+    property SearchControls: TgtSearchControls read GetSearchControls;
   end;
 
-  TgtxViewer = class
+  TgtViewer = class
   private
-    FStarDocs: TgtxStarDocsSDK;
-    constructor Create(AStarDocs: TgtxStarDocsSDK);
-
+    FStarDocs: TgtStarDocsSDK;
+    FViewerSettings: TgtViewerSettings;
+    function GetViewerSettings: TgtViewerSettings;
   public
-    function CreateView(AFile: TgtxFileObject; APassword: string = '';
-      AViewerSettings: TgtxViewerSettings = nil): TgtxViewResponse;
+    constructor Create(AStarDocs: TgtStarDocsSDK);
+    destructor Destroy; override;
+    property ViewerSettings: TgtViewerSettings read GetViewerSettings;
+    function CreateView(AFile: TgtFileObject; APassword: string = '')
+      : TgtViewResponse;
+    procedure DeleteView(AResponse: TgtViewResponse);
   end;
 
-  { TgtxPDFFormFieldFillData }
-  TgtxPDFFormFieldFillData = class
+  { TgtPDFFormFieldFillData }
+  TgtPDFFormFieldFillData = class
   private
     FFieldName: string;
     FFieldValue: string;
     FFlattenField: Boolean;
   public
-    constructor Create(AfieldName: string = ''; AfieldValue: string = '';
-      AFlattenField: Boolean = False);
+    constructor Create(AFieldName: string; AFieldValue: string; AFlattenField: Boolean = False);
     property FieldName: string read FFieldName write FFieldName;
     property FieldValue: string read FFieldValue write FFieldValue;
     property FlattenField: Boolean read FFlattenField write FFlattenField;
@@ -1267,42 +1296,47 @@ implementation
 
 { Helper routines }
 const
-  BooleanToStringName: array [False .. True] of string = ('false', 'true');
+  BooleanToString: array [False .. True] of string = ('False', 'True');
 
-  { TgtxStarDocsSDK }
+  { TgtStarDocsSDK }
 
-constructor TgtxStarDocsSDK.Create(AOwner: TComponent);
+constructor TgtStarDocsSDK.Create(AOwner: TComponent);
 begin
   inherited;
-  FConnectionInfo := TgtxConnectionInfo.Create(nil, '', '', -1, -1);
-  FPreferences := TgtxPreferences.Create(TgtxDocPasswordSettings.Create(False));
+  FConnectionInfo := TgtConnectionInfo.Create;
+  FPreferences := TgtPreferences.Create;
   { Instantiate service groups }
-  FAuth := TgtxAuth.Create(Self);
-  FStorage := TgtxStorage.Create(Self);
-  FDocOperations := TgtxDocOperations.Create(Self);
-  FViewer := TgtxViewer.Create(Self);
+  FAuth := TgtAuth.Create(Self);
+  FStorage := TgtStorage.Create(Self);
+  FDocOperations := TgtDocOperations.Create(Self);
+  FViewer := TgtViewer.Create(Self);
 end;
 
-constructor TgtxStarDocsSDK.Create(AOwner: TComponent;
-  AConnectionInfo: TgtxConnectionInfo; APreferences: TgtxPreferences);
+constructor TgtStarDocsSDK.Create(AOwner: TComponent;
+  AConnectionInfo: TgtConnectionInfo; APreferences: TgtPreferences);
 begin
   Create(AOwner);
   FConnectionInfo.Assign(AConnectionInfo);
   FPreferences.Assign(APreferences);
 end;
 
-destructor TgtxStarDocsSDK.Destroy;
+destructor TgtStarDocsSDK.Destroy;
 begin
-
+  FConnectionInfo.Free;
+  FPreferences.Free;
+  FAuth.Free;
+  FStorage.Free;
+  FDocOperations.Free;
+  FViewer.Free;
   inherited;
 end;
 
-function TgtxStarDocsSDK.EncodeJsonDocuments(ADocUris, APasswords: TStringList;
-  APageRanges: TObjectList<TgtxPageRangeSettings>): string;
+function TgtStarDocsSDK.EncodeJsonDocuments(ADocUris, APasswords: TStringList;
+  APageRanges: TObjectList<TgtPageRangeSettings>): string;
 var
   LJsonStr: string;
   LIndex: Integer;
-  LPageRange: TgtxPageRangeSettings;
+  LPageRange: TgtPageRangeSettings;
 begin
   LJsonStr := '"documents":[';
   for LIndex := 0 to ADocUris.Count - 1 do
@@ -1323,24 +1357,24 @@ begin
   Result := LJsonStr;
 end;
 
-function TgtxStarDocsSDK.GetAuth: TgtxAuth;
+function TgtStarDocsSDK.GetAuth: TgtAuth;
 begin
   Result := FAuth;
 end;
 
-function TgtxStarDocsSDK.GetConnectionInfo: TgtxConnectionInfo;
+function TgtStarDocsSDK.GetConnectionInfo: TgtConnectionInfo;
 begin
   Result := FConnectionInfo;
 end;
 
-function TgtxStarDocsSDK.GetDocOperations: TgtxDocOperations;
+function TgtStarDocsSDK.GetDocOperations: TgtDocOperations;
 begin
   Result := FDocOperations;
 end;
 
-function TgtxStarDocsSDK.GetDocUri(AFile: TgtxFileObject): string;
+function TgtStarDocsSDK.GetDocUri(AFile: TgtFileObject): string;
 var
-  LOutDoc: TgtxDocObject;
+  LOutDoc: TgtDocObject;
 begin
   LOutDoc := nil;
   if AFile.FFileUploaded then
@@ -1361,22 +1395,22 @@ begin
 
 end;
 
-function TgtxStarDocsSDK.GetPreferences: TgtxPreferences;
+function TgtStarDocsSDK.GetPreferences: TgtPreferences;
 begin
   Result := FPreferences;
 end;
 
-function TgtxStarDocsSDK.GetStorage: TgtxStorage;
+function TgtStarDocsSDK.GetStorage: TgtStorage;
 begin
   Result := FStorage;
 end;
 
-function TgtxStarDocsSDK.GetViewer: TgtxViewer;
+function TgtStarDocsSDK.GetViewer: TgtViewer;
 begin
   Result := FViewer;
 end;
 
-function TgtxStarDocsSDK.IssueGetRequestAndPoll(AUrl: string): string;
+function TgtStarDocsSDK.IssueGetRequestAndPoll(AUrl: string): string;
 var
   LRestResp: THttpResponse;
   LRestRequestGet: TRestRequest;
@@ -1389,9 +1423,8 @@ begin
   LRestRequestGetPoll := TRestRequest.Create();
   LStopWatch := TStopWatch.Create;
   try
-    LRestRequestGet.Domain(AUrl).WithReadTimeout
-      (FConnectionInfo.FServerTimeout).WithBearerToken
-      (FAuthResponse.AccessToken);
+    LRestRequestGet.Domain(AUrl).WithReadTimeout(FConnectionInfo.FServerTimeout)
+      .WithBearerToken(FAuthResponse.AccessToken);
     LRestResp := LRestRequestGet.Get;
     if (LRestResp.ResponseCode = 201) OR (LRestResp.ResponseCode = 200) then
     begin
@@ -1401,7 +1434,7 @@ begin
     end;
 
     if LRestResp.ResponseCode <> 202 then
-      raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
+      raise EgtStarDocsException.Create(LRestResp.ResponseCode,
         LRestResp.ResponseStr);
 
     // Get the job URL and start polling for completion
@@ -1424,7 +1457,7 @@ begin
       else if LRestResp.ResponseCode <> 202 then
       begin
         // Something went wrong
-        raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
+        raise EgtStarDocsException.Create(LRestResp.ResponseCode,
           LRestResp.ResponseStr);
       end;
 
@@ -1434,8 +1467,8 @@ begin
         LStopWatch.Stop;
         if LStopWatch.ElapsedMilliseconds > ConnectionInfo.DocOperationTimeout
         then
-          raise EgtxStarDocsException.Create(0,
-            TgtxExceptionStatusCode.escOperationTimedOut,
+          raise EgtStarDocsException.Create(0,
+            TgtExceptionStatusCode.escOperationTimedOut,
             'The server is taking too long. Try increasing the timeout value.');
       end;
     end;
@@ -1446,14 +1479,14 @@ begin
   end;
 end;
 
-function TgtxStarDocsSDK.IssuePostPutRequestAndPoll(AUrl: string;
-  APost: Boolean; AJsonStr: string): string;
+function TgtStarDocsSDK.IssuePostPutRequestAndPoll(AUrl: string; APost: Boolean;
+  AJsonStr: string): string;
 var
   LRestResp: THttpResponse;
   LRestRequestPost: TRestRequest;
   LRestRequestGet: TRestRequest;
-  // LResponseError: TgtxRestAPIResponseError;
-  // LJobsResponse: TgtxRestAPIResponseJobs;
+  // LResponseError: TgtRestAPIResponseError;
+  // LJobsResponse: TgtRestAPIResponseJobs;
   LFullJobUri: string;
   LSleepTime: Integer;
   LStopWatch: TStopWatch;
@@ -1477,16 +1510,16 @@ begin
     end;
 
     if LRestResp.ResponseCode <> 202 then
-      raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
+      raise EgtStarDocsException.Create(LRestResp.ResponseCode,
         LRestResp.ResponseStr);
 
     // Get the job URL and start polling for completion
-    // LJobsResponse := TJSON.JsonToObject<TgtxRestAPIResponseJobs>(LRestResp.ResponseStr);
+    // LJobsResponse := TJSON.JsonToObject<TgtRestAPIResponseJobs>(LRestResp.ResponseStr);
     // LFullJobUri := LJobsResponse.Jobs[0].Uri;
     LFullJobUri := LRestResp.LocationHeader;
-    LRestRequestGet.Domain(LFullJobUri)
-      .WithReadTimeout(FConnectionInfo.FServerTimeout)
-      .WithBearerToken(FAuthResponse.AccessToken);
+    LRestRequestGet.Domain(LFullJobUri).WithReadTimeout
+      (FConnectionInfo.FServerTimeout).WithBearerToken
+      (FAuthResponse.AccessToken);
     LSleepTime := ConnectionInfo.PollInterval;
     LStopWatch.Start;
     while True do
@@ -1502,7 +1535,7 @@ begin
       else if LRestResp.ResponseCode <> 202 then
       begin
         // Something went wrong
-        raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
+        raise EgtStarDocsException.Create(LRestResp.ResponseCode,
           LRestResp.ResponseStr);
       end;
 
@@ -1512,8 +1545,8 @@ begin
         LStopWatch.Stop;
         if LStopWatch.ElapsedMilliseconds > ConnectionInfo.DocOperationTimeout
         then
-          raise EgtxStarDocsException.Create(0,
-            TgtxExceptionStatusCode.escOperationTimedOut,
+          raise EgtStarDocsException.Create(0,
+            TgtExceptionStatusCode.escOperationTimedOut,
             'The server is taking too long. Try increasing the timeout value.');
       end;
     end;
@@ -1524,139 +1557,120 @@ begin
   end;
 end;
 
-procedure TgtxStarDocsSDK.SetAuth(const AValue: TgtxAuth);
+procedure TgtStarDocsSDK.SetAuth(const AValue: TgtAuth);
 begin
   FAuth := AValue;
 end;
 
-procedure TgtxStarDocsSDK.SetConnectionInfo(const AValue: TgtxConnectionInfo);
+procedure TgtStarDocsSDK.SetConnectionInfo(const AValue: TgtConnectionInfo);
 begin
   FConnectionInfo.Assign(AValue);
 end;
 
-procedure TgtxStarDocsSDK.SetDocOperations(const AValue: TgtxDocOperations);
-begin
-  FDocOperations := AValue;
-end;
-
-procedure TgtxStarDocsSDK.SetPreferences(const AValue: TgtxPreferences);
+procedure TgtStarDocsSDK.SetPreferences(const AValue: TgtPreferences);
 begin
   FPreferences.Assign(AValue);
 end;
 
-procedure TgtxStarDocsSDK.SetStorage(const AValue: TgtxStorage);
+procedure TgtStarDocsSDK.SetStorage(const AValue: TgtStorage);
 begin
   FStorage := AValue;
 end;
 
-procedure TgtxStarDocsSDK.SetViewer(const AValue: TgtxViewer);
-begin
-  FViewer := AValue;
-end;
-
-{ TgtxConnectionInfo }
-constructor TgtxConnectionInfo.Create(AUri: TIdURI; AAppKey: string;
-  AAppSecret: string; AServerTimeout: Integer = -1;
-  ADocOperationTimeout: Integer = -1);
+{ TgtConnectionInfo }
+constructor TgtConnectionInfo.Create;
 begin
   FApiServerVersion := '';
   FPollInterval := 1000;
-  if AUri <> nil then
-    FApiServerUri := TIdURI.Create(AUri.Uri)
-  else
-    FApiServerUri := TIdURI.Create();
-  FAppKey := AAppKey;
-  FAppSecret := AAppSecret;
-  FServerTimeout := AServerTimeout;
-  FDocOperationTimeout := ADocOperationTimeout;
+  FApiServerUri := TIdURI.Create;
+  FApiKey := '';
+  FApiSecret := '';
+  FServerTimeout := -1;
+  FDocOperationTimeout := -1;
 end;
 
-procedure TgtxConnectionInfo.Assign(Source: TPersistent);
+procedure TgtConnectionInfo.Assign(Source: TPersistent);
 begin
-  if Source is TgtxConnectionInfo then
+  if Source is TgtConnectionInfo then
   begin
-    FApiServerVersion := TgtxConnectionInfo(Source).FApiServerVersion;
-    FPollInterval := TgtxConnectionInfo(Source).FPollInterval;
-    FApiServerUri.Uri := TgtxConnectionInfo(Source).FApiServerUri.Uri;
-    FAppKey := TgtxConnectionInfo(Source).FAppKey;
-    FAppSecret := TgtxConnectionInfo(Source).FAppSecret;
-    FServerTimeout := TgtxConnectionInfo(Source).FServerTimeout;
-    FDocOperationTimeout := TgtxConnectionInfo(Source).FDocOperationTimeout;
+    FApiServerVersion := TgtConnectionInfo(Source).FApiServerVersion;
+    FPollInterval := TgtConnectionInfo(Source).FPollInterval;
+    FApiServerUri.Uri := TgtConnectionInfo(Source).FApiServerUri.Uri;
+    FApiKey := TgtConnectionInfo(Source).FApiKey;
+    FApiSecret := TgtConnectionInfo(Source).FApiSecret;
+    FServerTimeout := TgtConnectionInfo(Source).FServerTimeout;
+    FDocOperationTimeout := TgtConnectionInfo(Source).FDocOperationTimeout;
     Exit;
-    // else
-    // TODO: Throw error
   end;
   inherited Assign(Source)
 end;
 
-destructor TgtxConnectionInfo.Destroy;
+destructor TgtConnectionInfo.Destroy;
 begin
   FApiServerUri.Free;
   inherited;
 end;
 
-{ TgtxDocPasswordSettings }
-constructor TgtxDocPasswordSettings.Create(AForceFullPermission: Boolean);
+{ TgtDocPasswordSettings }
+constructor TgtDocPasswordSettings.Create(AForceFullPermission: Boolean);
 begin
   FForceFullPermission := AForceFullPermission;
 end;
 
-procedure TgtxDocPasswordSettings.Assign(Source: TPersistent);
+destructor TgtDocPasswordSettings.Destroy;
 begin
-  if Source is TgtxDocPasswordSettings then
-  begin
-    FForceFullPermission := TgtxDocPasswordSettings(Source)
-      .FForceFullPermission;
-    Exit;
-  end;
-  inherited Assign(Source);
-  // else
-  // TODO: Throw error
-end;
-
-{ TgtxPreferences }
-constructor TgtxPreferences.Create(ADocPasswordSettings
-  : TgtxDocPasswordSettings);
-begin
-  FDocPasswordSettings := TgtxDocPasswordSettings.Create(False);
-  FDocPasswordSettings.Assign(ADocPasswordSettings);
-end;
-
-procedure TgtxPreferences.Assign(Source: TPersistent);
-begin
-  if Source is TgtxPreferences then
-  begin
-    FDocPasswordSettings.Assign(TgtxPreferences(Source).FDocPasswordSettings);
-    Exit;
-  end;
-  inherited Assign(Source);
-  // else
-  // TODO: Throw error
-end;
-
-destructor TgtxPreferences.Destroy;
-begin
-  FDocPasswordSettings.Free;
   inherited;
 end;
 
-function TgtxPreferences.GetDocPasswordSettings: TgtxDocPasswordSettings;
+procedure TgtDocPasswordSettings.Assign(Source: TPersistent);
+begin
+  if Source is TgtDocPasswordSettings then
+  begin
+    FForceFullPermission := TgtDocPasswordSettings(Source).FForceFullPermission;
+    Exit;
+  end;
+  inherited Assign(Source);
+end;
+
+{ TgtPreferences }
+constructor TgtPreferences.Create;
+begin
+  FDocPasswordSettings := TgtDocPasswordSettings.Create(False);
+end;
+
+procedure TgtPreferences.Assign(Source: TPersistent);
+begin
+  if Source is TgtPreferences then
+  begin
+    FDocPasswordSettings.Assign(TgtPreferences(Source).FDocPasswordSettings);
+    Exit;
+  end;
+  inherited Assign(Source);
+end;
+
+destructor TgtPreferences.Destroy;
+begin
+  FreeAndNil(FDocPasswordSettings);
+  inherited;
+end;
+
+function TgtPreferences.GetDocPasswordSettings: TgtDocPasswordSettings;
 begin
   Result := FDocPasswordSettings;
 end;
 
-procedure TgtxPreferences.SetDocPasswordSettings(const AValue
-  : TgtxDocPasswordSettings);
+procedure TgtPreferences.SetDocPasswordSettings(const AValue
+  : TgtDocPasswordSettings);
 begin
   FDocPasswordSettings.Assign(AValue);
 end;
 
-{ TgtxDocObject }
-constructor TgtxDocObject.Create(AApiResponse: TgtxRestAPIDocumentCommon);
+{ TgtDocObject }
+constructor TgtDocObject.Create(AApiResponse: TgtRestAPIDocumentCommon);
 var
-  LRemoteFileUri: TgtxRemoteFileUri;
+  LRemoteFileUri: TgtRemoteFileUri;
 begin
-  LRemoteFileUri := TgtxRemoteFileUri.Create(AApiResponse.Url);
+  LRemoteFileUri := TgtRemoteFileUri.Create(AApiResponse.Url);
   inherited Create(LRemoteFileUri);
   FFileName := AApiResponse.FileName;
   FFileSize := AApiResponse.FileSize;
@@ -1664,54 +1678,65 @@ begin
   FMimeType := ParseMimeType(AApiResponse.MimeType);
 end;
 
-function TgtxDocObject.ParseMimeType(AMimeType: string): TgtxMimeType;
-var
-  LMimeType: TgtxMimeType;
+destructor TgtDocObject.Destroy;
 begin
-  LMimeType := TgtxMimeType.mtUnrecognizable;
+
+  inherited;
+end;
+
+function TgtDocObject.ParseMimeType(AMimeType: string): TgtMimeType;
+var
+  LMimeType: TgtMimeType;
+begin
+  LMimeType := TgtMimeType.mtUnrecognizable;
   if AMimeType.Equals('application/pdf') then
-    LMimeType := TgtxMimeType.mtApplication_pdf
+    LMimeType := TgtMimeType.mtApplication_pdf
   else if AMimeType.Equals('image/bmp') then
-    LMimeType := TgtxMimeType.mtImage_bmp
+    LMimeType := TgtMimeType.mtImage_bmp
   else if AMimeType.Equals('image/gif') then
-    LMimeType := TgtxMimeType.mtImage_gif
+    LMimeType := TgtMimeType.mtImage_gif
   else if AMimeType.Equals('image/jpeg') then
-    LMimeType := TgtxMimeType.mtImage_jpeg
+    LMimeType := TgtMimeType.mtImage_jpeg
   else if AMimeType.Equals('image/png') then
-    LMimeType := TgtxMimeType.mtImage_png
+    LMimeType := TgtMimeType.mtImage_png
   else if AMimeType.Equals('image/tiff') then
-    LMimeType := TgtxMimeType.mtImage_tiff
+    LMimeType := TgtMimeType.mtImage_tiff
   else if AMimeType.Equals
     ('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
   then
     LMimeType :=
-      TgtxMimeType.
+      TgtMimeType.
       mtApplication_vnd_openxmlformats_officedocument_wordprocessingml_document;
   Result := LMimeType
 end;
 
-{ TgtxAuthResponse }
-constructor TgtxAuthResponse.Create(ARestAPIResponseAuth
-  : TgtxRestAPIResponseAuth);
+{ TgtAuthResponse }
+constructor TgtAuthResponse.Create(ARestAPIResponseAuth
+  : TgtRestAPIResponseAuth);
 begin
   FAccessToken := ARestAPIResponseAuth.AccessToken;
   FTokenType := ARestAPIResponseAuth.TokenType;
   FExpiresIn := ARestAPIResponseAuth.ExpiresIn;
 end;
 
-{ TgtxFileObject }
-constructor TgtxFileObject.Create(ARemoteFileUri: TgtxRemoteFileUri);
+destructor TgtAuthResponse.Destroy;
+begin
+  inherited;
+end;
+
+{ TgtFileObject }
+constructor TgtFileObject.Create(ARemoteFileUri: TgtRemoteFileUri);
 begin
   // Assume file is uploaded
   FStream := nil;
   FStreamFileName := '';
   FFileUploaded := True;
-  FRemoteFileUri := TgtxRemoteFileUri.Create('');
+  FRemoteFileUri := TgtRemoteFileUri.Create('');
   FRemoteFileUri.Assign(ARemoteFileUri);
   FLocalFilePath := '';
 end;
 
-constructor TgtxFileObject.Create(AStream: TStream; AStreamFileName: string);
+constructor TgtFileObject.Create(AStream: TStream; AStreamFileName: string);
 begin
   FStream := AStream;
   FStreamFileName := AStreamFileName;
@@ -1720,7 +1745,7 @@ begin
   FLocalFilePath := '';
 end;
 
-constructor TgtxFileObject.Create(ALocalFilePath: string);
+constructor TgtFileObject.Create(ALocalFilePath: string);
 begin
   FStream := nil;
   FStreamFileName := '';
@@ -1729,71 +1754,70 @@ begin
   FLocalFilePath := ALocalFilePath;
 end;
 
-destructor TgtxFileObject.Destroy;
+destructor TgtFileObject.Destroy;
 begin
   if FRemoteFileUri <> nil then
     FRemoteFileUri.Free;
   inherited;
 end;
 
-function TgtxFileObject.GetFileNameFromUri: string;
+function TgtFileObject.GetFileNameFromUri: string;
 begin
   Result := TIdURI.URLDecode(RemoteFileUri.FUri.Document);
 end;
 
-function TgtxFileObject.GetRemoteFileUri: TgtxRemoteFileUri;
+function TgtFileObject.GetRemoteFileUri: TgtRemoteFileUri;
 begin
   Result := FRemoteFileUri;
 end;
 
-function TgtxFileObject.GetStream: TStream;
+function TgtFileObject.GetStream: TStream;
 begin
   Result := FStream;
 end;
 
-procedure TgtxFileObject.SetRemoteFileUri(const AValue: TgtxRemoteFileUri);
+procedure TgtFileObject.SetRemoteFileUri(const AValue: TgtRemoteFileUri);
 begin
   FRemoteFileUri.Assign(AValue);
 end;
 
-procedure TgtxFileObject.SetStream(const AValue: TStream);
+procedure TgtFileObject.SetStream(const AValue: TStream);
 begin
   FStream := AValue;
 end;
 
 {
-  procedure TgtxFileObject.SetUploaded(AUri: string);
+  procedure TgtFileObject.SetUploaded(AUri: string);
   begin
   FFileUploaded := True;
-  FRemoteFileUri := TgtxRemoteFileUri.Create(AUri);
+  FRemoteFileUri := TgtRemoteFileUri.Create(AUri);
   end;
 }
 
-{ TgtxRemoteFileUri }
-constructor TgtxRemoteFileUri.Create(AUri: TIdURI);
+{ TgtRemoteFileUri }
+constructor TgtRemoteFileUri.Create(AUri: TIdURI);
 begin
   FUri := TIdURI.Create(AUri.Uri);
 end;
 
-constructor TgtxRemoteFileUri.Create(AUri: string);
+constructor TgtRemoteFileUri.Create(AUri: string);
 begin
   FUri := TIdURI.Create(AUri);
 end;
 
-destructor TgtxRemoteFileUri.Destroy;
+destructor TgtRemoteFileUri.Destroy;
 begin
   FUri.Free;
 end;
 
-procedure TgtxRemoteFileUri.Assign(Source: TgtxRemoteFileUri);
+procedure TgtRemoteFileUri.Assign(Source: TgtRemoteFileUri);
 begin
   if Source <> nil then
     FUri := Source.FUri;
-  // else
-  // TODO: Throw error
 end;
 
-constructor TgtxGetDocumentInfoResponse.Create(AApiResponse: TgtxRestAPIResponseGetDocumentInfo);
+constructor TgtGetDocumentInfoResponse.Create(AApiResponse
+  : TgtRestAPIResponseGetDocumentInfo);
 begin
   inherited Create(AApiResponse);
   FUnsupportedMimeTypeOrCorrupt := AApiResponse.UnsupportedMimeTypeOrCorrupt;
@@ -1802,8 +1826,8 @@ begin
 end;
 
 {
-  TgtxDocProperties
-  constructor TgtxDocProperties.Create(ATitle, AAuthor, ASubject, AKeywords,
+  TgtDocProperties
+  constructor TgtDocProperties.Create(ATitle, AAuthor, ASubject, AKeywords,
   ACreator: string);
   begin
   Title := ATitle;
@@ -1814,7 +1838,7 @@ end;
   Creator := ACreator;
   end;
 
-  procedure TgtxDocProperties.Assign(Source: TgtxDocProperties);
+  procedure TgtDocProperties.Assign(Source: TgtDocProperties);
   begin
   if Source <> nil then
   begin
@@ -1826,7 +1850,7 @@ end;
   end;
   end;
 
-  constructor TgtxDocProperties.Create(ATitle, AAuthor, ASubject: string;
+  constructor TgtDocProperties.Create(ATitle, AAuthor, ASubject: string;
   AKeywords: TStringList; ACreator: string);
   begin
   Title := ATitle;
@@ -1836,7 +1860,7 @@ end;
   Creator := ACreator;
   end;
 
-  function TgtxDocProperties.ToJson: string;
+  function TgtDocProperties.ToJson: string;
   var
   LJsonStr: string;
   begin
@@ -1851,7 +1875,7 @@ end;
   Result := LJsonStr;
   end;
 
-  constructor TgtxPDFDocProperties.Create(ATitle, AAuthor, ASubject: string;
+  constructor TgtPDFDocProperties.Create(ATitle, AAuthor, ASubject: string;
   AKeywords: TStringList; ACreator, AProducer: string;
   AHasExPropertySecurity: Boolean);
   begin
@@ -1861,12 +1885,12 @@ end;
   FHasExPropertySecurity := AHasExPropertySecurity;
   end;
 
-  TgtxGetPropertiesResponse
-  constructor TgtxGetPropertiesResponse.Create(AApiResponse
-  : TgtxRestAPIResponseGetPropertiesPDF);
+  TgtGetPropertiesResponse
+  constructor TgtGetPropertiesResponse.Create(AApiResponse
+  : TgtRestAPIResponseGetPropertiesPDF);
   var
-  LCommonProps: TgtxRestAPIDocPropertiesCommon;
-  LExProps: TgtxRestAPIDocExPropertiesPDF;
+  LCommonProps: TgtRestAPIDocPropertiesCommon;
+  LExProps: TgtRestAPIDocExPropertiesPDF;
   LKeywords: TStringList;
   begin
   inherited Create(AApiResponse.Documents[0]);
@@ -1877,96 +1901,112 @@ end;
   // Parse the semi-colon-seperated keywords into a list
   LKeywords := TStringList.Create;
   LKeywords.AddStrings(LCommonProps.Keywords.Split([';']));
-  FDocProperties := TgtxPDFDocProperties.Create(LCommonProps.Title,
+  FDocProperties := TgtPDFDocProperties.Create(LCommonProps.Title,
   LCommonProps.Author, LCommonProps.Subject, LKeywords, LCommonProps.Creator,
   LCommonProps.Producer, LExProps.HasBookmarks);
   end;
 
-  function TgtxGetPropertiesResponse.GetDocProperties: TgtxDocProperties;
+  function TgtGetPropertiesResponse.GetDocProperties: TgtDocProperties;
   begin
   Result := FDocProperties;
   end;
 
-  procedure TgtxGetPropertiesResponse.SetDocProperties(const AValue
-  : TgtxDocProperties);
+  procedure TgtGetPropertiesResponse.SetDocProperties(const AValue
+  : TgtDocProperties);
   begin
   FDocProperties.Assign(AValue);
   end;
 }
-{ TgtxDocErrorDetails }
-constructor TgtxDocErrorDetails.Create(AUri: string);
+{ TgtDocErrorDetails }
+constructor TgtDocErrorDetails.Create(AUri: string);
 begin
   FUri := AUri;
 end;
 
-{ EgtxStarDocsException }
-constructor EgtxStarDocsException.Create(AHttpStatusCode: Integer;
-  AErrorCode: TgtxExceptionStatusCode; const AMessage: string);
+destructor TgtDocErrorDetails.Destroy;
+begin
+
+  inherited;
+end;
+
+{ EgtStarDocsException }
+constructor EgtStarDocsException.Create(AHttpStatusCode: Integer;
+  AErrorCode: TgtExceptionStatusCode; const AMessage: string);
 begin
   inherited Create(AMessage);
   FHttpStatusCode := AHttpStatusCode;
   FErrorCode := AErrorCode;
 end;
 
-constructor EgtxStarDocsException.Create(AHttpStatusCode: Integer;
+constructor EgtStarDocsException.Create(AHttpStatusCode: Integer;
   AApiResponseStr: string);
 var
-  FRestAPIResponseError: TgtxRestAPIResponseError;
+  FRestAPIResponseError: TgtRestAPIResponseError;
 begin
   if (AApiResponseStr.Length > 0) then
   begin
-    FRestAPIResponseError := TJSON.JsonToObject<TgtxRestAPIResponseError>
+    FRestAPIResponseError := TJSON.JsonToObject<TgtRestAPIResponseError>
       (AApiResponseStr);
     Create(AHttpStatusCode, FRestAPIResponseError);
   end
   else
-    Create(AHttpStatusCode, TgtxExceptionStatusCode(0), '');
+    Create(AHttpStatusCode, TgtExceptionStatusCode(0), '');
 end;
 
-constructor EgtxStarDocsException.Create(AHttpStatusCode: Integer;
-  AApiResponse: TgtxRestAPIResponseError);
+constructor EgtStarDocsException.Create(AHttpStatusCode: Integer;
+  AApiResponse: TgtRestAPIResponseError);
 var
   Li: Integer;
   LNumDocs: Integer;
 begin
   inherited Create(AApiResponse.FErrorMessage);
   FHttpStatusCode := AHttpStatusCode;
-  FErrorCode := TgtxExceptionStatusCode(AApiResponse.ErrorCode);
-  FDocuments := TObjectList<TgtxDocErrorDetails>.Create();
+  FErrorCode := TgtExceptionStatusCode(AApiResponse.ErrorCode);
+  FDocuments := TObjectList<TgtDocErrorDetails>.Create();
   LNumDocs := Length(AApiResponse.Documents);
   for Li := 0 to LNumDocs - 1 do
-    FDocuments.Add(TgtxDocErrorDetails.Create(AApiResponse.FDocuments
-      [Li].FUrl));
+    FDocuments.Add(TgtDocErrorDetails.Create(AApiResponse.FDocuments[Li].FUrl));
 end;
 
-constructor EgtxStarDocsException.Create(AApiResponse
-  : TgtxRestAPIResponseError);
+destructor EgtStarDocsException.Destroy;
+begin
+
+  inherited;
+end;
+
+constructor EgtStarDocsException.Create(AApiResponse: TgtRestAPIResponseError);
 begin
 
 end;
 
-{ TgtxPageRange }
-constructor TgtxPageRange.Create(ARange: string);
+{ TgtPageRange }
+constructor TgtPageRange.Create(ARange: string);
 begin
-  FRange := ARange.Trim
+  FRange := ARange;
+end;
+
+destructor TgtPageRange.Destroy;
+begin
+
+  inherited;
 end;
 
 {
-  procedure TgtxPageRange.Assign(ASource: TgtxPageRange);
+  procedure TgtPageRange.Assign(ASource: TgtPageRange);
   begin
   if ASource <> nil then
   Range := ASource.Range.Trim;
   end;
 }
 
-procedure TgtxPageRange.AddPage(APage: Integer);
+procedure TgtPageRange.AddPage(APage: Integer);
 begin
   if Length(Range) > 0 then
     FRange := FRange + ',';
   FRange := FRange + IntToStr(APage);
 end;
 
-procedure TgtxPageRange.AddPages(APages: TList<Integer>);
+procedure TgtPageRange.AddPages(APages: TList<Integer>);
 var
   LIndex: Integer;
   LPageCount: Integer;
@@ -1984,30 +2024,22 @@ begin
   end;
 end;
 
-procedure TgtxPageRange.AddRange(AStartPage: Integer; AEndPage: Integer);
+procedure TgtPageRange.AddRange(AStartPage: Integer; AEndPage: Integer);
 begin
   if Length(FRange) > 0 then
     FRange := FRange + ',';
   FRange := FRange + IntToStr(AStartPage) + '-' + IntToStr(AEndPage);
 end;
 
-procedure TgtxPageRange.Clear();
+procedure TgtPageRange.Clear();
 begin
   FRange := '';
 end;
 
-{ TgtxPageRangeSettings }
-constructor TgtxPageRangeSettings.Create(APageRange: string;
-  APageSubRangeMode: TgtxPageSubRangeMode = TgtxPageSubRangeMode.psmAll;
-  AReverseOrder: Boolean = False);
-begin
-  FPageRange := TgtxPageRange.Create(APageRange.Trim);
-  FPageSubRangeMode := APageSubRangeMode;
-  FReverseOrder := AReverseOrder;
-end;
+{ TgtPageRangeSettings }
 
-constructor TgtxPageRangeSettings.Create(APageRange: TgtxPageRange;
-  APageSubRangeMode: TgtxPageSubRangeMode = TgtxPageSubRangeMode.psmAll;
+constructor TgtPageRangeSettings.Create(APageRange: TgtPageRange;
+  APageSubRangeMode: TgtPageSubRangeMode = TgtPageSubRangeMode.psmAll;
   AReverseOrder: Boolean = False);
 var
   LPageRange: string;
@@ -2015,56 +2047,79 @@ begin
   LPageRange := '';
   if APageRange <> nil then
     LPageRange := APageRange.FRange;
-  FPageRange := TgtxPageRange.Create(LPageRange);
+  FPageRange := TgtPageRange.Create(LPageRange);
   FPageSubRangeMode := APageSubRangeMode;
   FReverseOrder := AReverseOrder;
 end;
 
-function TgtxPageRangeSettings.GetPageRange: TgtxPageRange;
+constructor TgtPageRangeSettings.Create(APageRange: string;
+  APageSubRangeMode: TgtPageSubRangeMode; AReverseOrder: Boolean);
+begin
+  FPageRange := TgtPageRange.Create(APageRange.Trim);
+  FPageSubRangeMode := APageSubRangeMode;
+  FReverseOrder := AReverseOrder
+end;
+
+destructor TgtPageRangeSettings.Destroy;
+begin
+  FPageRange.Free;
+  inherited;
+end;
+
+function TgtPageRangeSettings.GetPageRange: TgtPageRange;
 begin
   Result := FPageRange;
 end;
 
-procedure TgtxPageRangeSettings.SetPageRange(const AValue: TgtxPageRange);
+procedure TgtPageRangeSettings.SetPageRange(const AValue: TgtPageRange);
 begin
   FPageRange := AValue;
 end;
 
-function TgtxPageRangeSettings.ToJson(AExcludeOrdering
-  : Boolean = False): string;
+function TgtPageRangeSettings.ToJson(AExcludeOrdering: Boolean = False): string;
 begin
   Result := '{"range":"' + FPageRange.FRange + '","subRangeMode":"' +
-    GetEnumName(TypeInfo(TgtxPageSubRangeMode), Integer(FPageSubRangeMode))
+    GetEnumName(TypeInfo(TgtPageSubRangeMode), Integer(FPageSubRangeMode))
     .Substring(3) + '"';
   if not AExcludeOrdering then
-    Result := Result + ',"reverseOrder":' + BooleanToStringName[FReverseOrder];
+    Result := Result + ',"reverseOrder":' + BooleanToString[FReverseOrder];
   Result := Result + '}';
 end;
 
-{ TgtxPageSeparator }
-constructor TgtxPageSeparator.Create(APageSeparatorType: TgtxPageSeparatorType);
+{ TgtPageSeparator }
+constructor TgtPageSeparator.Create;
 begin
-  FPageSeparatorType := APageSeparatorType;
+  FPageSeparatorType := pstEmptyPage;
 end;
 
-function TgtxPageSeparator.EncodeString: string;
+destructor TgtPageSeparator.Destroy;
 begin
-  Result := GetEnumName(TypeInfo(TgtxPageSubRangeMode),
+  inherited;
+end;
+
+function TgtPageSeparator.EncodeString: string;
+begin
+  Result := GetEnumName(TypeInfo(TgtPageSubRangeMode),
     Integer(FPageSeparatorType)).Substring(3)
 end;
 
-{ TgtxSearchText }
+{ TgtSearchText }
 
-constructor TgtxSearchText.Create(AText: string;
-  ACaseSensitive: Boolean = False; AWholeWord: Boolean = False);
+constructor TgtSearchText.Create(AText: string; ACaseSensitive: Boolean = False;
+  AWholeWord: Boolean = False);
 begin
   FText := AText;
   FCaseSensitive := ACaseSensitive;
   FWholeWord := AWholeWord;
 end;
 
-{ TgtxColor }
-procedure TgtxColor.Assign(Source: TgtxColor);
+destructor TgtSearchText.Destroy;
+begin
+  inherited;
+end;
+
+{ TgtColor }
+procedure TgtColor.Assign(Source: TgtColor);
 begin
   if Source <> nil then
   begin
@@ -2075,7 +2130,7 @@ begin
   end;
 end;
 
-constructor TgtxColor.Create(ARed: Byte; AGreen: Byte; ABlue: Byte;
+constructor TgtColor.Create(ARed: Byte; AGreen: Byte; ABlue: Byte;
   AAlpha: Byte = 100);
 begin
   FRed := ARed;
@@ -2084,7 +2139,12 @@ begin
   FAlpha := AAlpha;
 end;
 
-function TgtxColor.EncodeString(AEncodeAlpha: boolean): string;
+destructor TgtColor.Destroy;
+begin
+  inherited;
+end;
+
+function TgtColor.EncodeString(AEncodeAlpha: Boolean): string;
 begin
   // Convert each component to hex string and concatenate them as RRGGBBAA
   Result := '#' + IntToHex(Red, 2) + IntToHex(Green, 2) + IntToHex(Blue, 2);
@@ -2092,124 +2152,143 @@ begin
     Result := Result + IntToHex(Alpha, 2);
 end;
 
-{ TgtxPen }
-constructor TgtxPen.Create(AColor: TgtxColor = nil;
-  AStyle: TgtxPenStyle = TgtxPenStyle.pstSolid; AWidth: Integer = 1);
+{ TgtPen }
+constructor TgtPen.Create;
 begin
-  FColor := AColor;
-  if FColor = nil then
-    FColor := TgtxColor.Create(0, 0, 0);
-  FStyle := AStyle;
-  FWidth := AWidth;
+  FColor := TgtColor.Create(0, 0, 0);
+  FStyle := pstSolid;
+  FWidth := 1;
 end;
 
-function TgtxPen.GetColor: TgtxColor;
+destructor TgtPen.Destroy;
 begin
-  Result := FColor;
+  FColor.Free;
+  inherited;
 end;
 
-{ TgtxBrush }
-constructor TgtxBrush.Create(AColor: TgtxColor = nil;
-  APattern: TgtxBrushPattern = TgtxBrushPattern.bptSolid);
-begin
-  FColor := AColor;
-  if FColor = nil then
-    FColor := TgtxColor.Create(0, 0, 0);
-  FPattern := APattern;
-end;
-
-function TgtxBrush.GetColor: TgtxColor;
+function TgtPen.GetColor: TgtColor;
 begin
   Result := FColor;
 end;
 
-{ TgtxOutline }
-constructor TgtxOutline.Create(APenColoringMode
-  : TgtxColoringMode = TgtxColoringMode.cmoNone; APen: TgtxPen = nil);
+{ TgtBrush }
+constructor TgtBrush.Create;
 begin
-  FPenColoringMode := APenColoringMode;
-  FPen := APen;
-  if FPen = nil then
-    FPen := TgtxPen.Create();
+  FColor := TgtColor.Create(0, 0, 0);
+  FPattern := bptSolid;
 end;
 
-function TgtxOutline.GetPen: TgtxPen;
+destructor TgtBrush.Destroy;
+begin
+  FColor.Free;
+  inherited;
+end;
+
+function TgtBrush.GetColor: TgtColor;
+begin
+  Result := FColor;
+end;
+
+{ TgtOutline }
+constructor TgtOutline.Create;
+begin
+  FPenColoringMode := cmoNone;
+  FPen := TgtPen.Create();
+end;
+
+destructor TgtOutline.Destroy;
+begin
+  FPen.Free;
+  inherited;
+end;
+
+function TgtOutline.GetPen: TgtPen;
 begin
   Result := FPen;
 end;
 
-function TgtxOutline.ToJson: string;
+function TgtOutline.ToJson: string;
 begin
   Result := '"outline":{';
   // Encode Color
   Result := Result + '"color":';
-  if FPenColoringMode = TgtxColoringMode.cmUseColor then
+  if FPenColoringMode = TgtColoringMode.cmUseColor then
     Result := Result + ('"' + Pen.Color.EncodeString + '"')
   else
     Result := Result + '"none"';
   // Encode Width
   Result := Result + ',"width":' + IntToStr(Pen.Width);
   // Encode PenStyle
-  Result := Result + ',"style":"' + GetEnumName(TypeInfo(TgtxPenStyle),
+  Result := Result + ',"style":"' + GetEnumName(TypeInfo(TgtPenStyle),
     Integer(FPen.Style)).Substring(3) + '"';
   Result := Result + '}';
 end;
 
-{ TgtxFillRect }
-constructor TgtxFillRect.Create(ABrushColoringMode
-  : TgtxColoringMode = TgtxColoringMode.cmoNone; ABrush: TgtxBrush = nil);
+{ TgtFillRect }
+constructor TgtFillRect.Create;
 begin
-  FBrushColoringMode := ABrushColoringMode;
-  FBrush := ABrush;
-  if FBrush = nil then
-    FBrush := TgtxBrush.Create();
+  FBrushColoringMode := cmoNone;
+  FBrush := TgtBrush.Create();
 end;
 
-function TgtxFillRect.ToJson: string;
+destructor TgtFillRect.Destroy;
+begin
+  FBrush.Free;
+  inherited;
+end;
+
+function TgtFillRect.GetBrush: TgtBrush;
+begin
+  Result := FBrush;
+end;
+
+function TgtFillRect.ToJson: string;
 begin
   Result := '"fill":{';
   // Encode Color
   Result := Result + '"color":';
-  if FBrushColoringMode = TgtxColoringMode.cmUseColor then
+  if FBrushColoringMode = TgtColoringMode.cmUseColor then
     Result := Result + ('"' + FBrush.Color.EncodeString + '"')
   else
     Result := Result + '"none"';
   // Encode Pattern
-  Result := Result + ',"pattern":"' + GetEnumName(TypeInfo(TgtxBrushPattern),
+  Result := Result + ',"pattern":"' + GetEnumName(TypeInfo(TgtBrushPattern),
     Integer(FBrush.Pattern)).Substring(3) + '"';
   Result := Result + '}';
 end;
 
-{ TgtxFont }
-constructor TgtxFont.Create(AName: String; ASize: Integer;
-  AColor: TgtxColor = nil; AStyles: TgtxFontStyles = [];
-  AEffects: TgtxFontEffects = []);
+{ TgtFont }
+constructor TgtFont.Create;
 begin
-  FName := AName;
-  FSize := ASize;
-  FColor := AColor;
-  if FColor = nil then
-    FColor := FColor.Create(0, 0, 0);
-  FStyles := AStyles;
-  FEffects := AEffects;
+  FName := 'Arial';
+  FSize := 10;
+  FColor := TgtColor.Create(0, 0, 0, 100);
+  FStyles := [];
+  FEffects := [];
 end;
 
-function TgtxFont.GetColor: TgtxColor;
+destructor TgtFont.Destroy;
+begin
+  FColor.Free;
+  inherited;
+end;
+
+function TgtFont.GetColor: TgtColor;
 begin
   Result := FColor;
 end;
 
-function TgtxFont.ToJson(AFontSizingMode: TgtxFontSizingMode;
-  AFontColoringMode: TgtxFontColoringMode): string;
+function TgtFont.ToJson(AFontSizingMode: TgtFontSizingMode;
+  AFontColoringMode: TgtFontColoringMode): string;
 begin
   Result := '"font":{';
   // Encode Name
   Result := Result + '"name":"' + Name + '"';
   // Encode Style
   Result := Result + ',"style":{';
-  Result := Result + '"bold":' + BooleanToStringName[fstBold in FStyles];
-  Result := Result + ',"italic":' + BooleanToStringName[fstItalic in FStyles];
-  Result := Result + ',"underline":' + BooleanToStringName[fstUnderline in FStyles];
+  Result := Result + '"bold":' + BooleanToString[fstBold in FStyles];
+  Result := Result + ',"italic":' + BooleanToString[fstItalic in FStyles];
+  Result := Result + ',"underline":' + BooleanToString[fstUnderline in FStyles];
   Result := Result + '}';
   // Encode Size
   if AFontSizingMode = fsmUseFontSize then
@@ -2227,34 +2306,34 @@ begin
   Result := Result + '}';
 end;
 
-{ TgtxFillText }
-constructor TgtxFillText.Create(AReplaceText: String;
-  AFontSelectionMode: TgtxFontSelectionMode = TgtxFontSelectionMode.fsmUseFont;
-  AFontSizingMode: TgtxFontSizingMode = TgtxFontSizingMode.fsmAutoFit;
-  AFontColoringMode: TgtxFontColoringMode = TgtxFontColoringMode.fcmSource;
-  AFont: TgtxFont = nil);
+{ TgtFillText }
+constructor TgtFillText.Create;
 begin
-  FReplaceText := AReplaceText;
-  FFontSelectionMode := AFontSelectionMode;
-  FFontSizingMode := AFontSizingMode;
-  FFontColoringMode := AFontColoringMode;
-  FFont := AFont;
-  if FFont = nil then
-    FFont := TgtxFont.Create('Arial', 10, TgtxColor.Create(0, 0, 0));
+  FReplaceText := '';
+  FFontSelectionMode := fsmUseFont;
+  FFontSizingMode := fsmAutoFit;
+  FFontColoringMode := fcmSource;
+  FFont := TgtFont.Create;
 end;
 
-function TgtxFillText.GetFont: TgtxFont;
+destructor TgtFillText.Destroy;
+begin
+  FFont.Free;
+  inherited;
+end;
+
+function TgtFillText.GetFont: TgtFont;
 begin
   Result := FFont;
 end;
 
-function TgtxFillText.ToJson: string;
+function TgtFillText.ToJson: string;
 begin
   Result := '"text":{';
   // Encode Text
   Result := Result + '"replaceText":"' + ReplaceText + '"';
   // Encode Font
-  if FFontSelectionMode = TgtxFontSelectionMode.fsmUseFont then
+  if FFontSelectionMode = TgtFontSelectionMode.fsmUseFont then
     Result := Result + ',' + FFont.ToJson(FFontSizingMode, FFontColoringMode)
   else
     Result := Result + ',"font":"source"';
@@ -2267,38 +2346,40 @@ begin
   Result := Result + '}';
 end;
 
-{ TgtxRedactFillSettings }
+{ TgtRedactFillSettings }
 
-constructor TgtxRedactFillSettings.Create(AOutline: TgtxOutline = nil;
-  AFillRect: TgtxFillRect = nil; AFillText: TgtxFillText = nil);
+constructor TgtRedactFillSettings.Create;
 begin
-  FOutline := AOutline;
-  if FOutline = nil then
-    FOutline := TgtxOutline.Create();
-  FFillRect := AFillRect;
-  if FFillRect = nil then
-    FFillRect := TgtxFillRect.Create();
-  FFillText := AFillText;
-  if FFillText = nil then
-    FFillText := TgtxFillText.Create('');
+
+  FOutline := TgtOutline.Create;
+  FFillRect := TgtFillRect.Create;
+  FFillText := TgtFillText.Create;
 end;
 
-function TgtxRedactFillSettings.GetFillRect: TgtxFillRect;
+destructor TgtRedactFillSettings.Destroy;
+begin
+  FOutline.Free;
+  FFillRect.Free;
+  FFillText.Free;
+  inherited;
+end;
+
+function TgtRedactFillSettings.GetFillRect: TgtFillRect;
 begin
   Result := FFillRect;
 end;
 
-function TgtxRedactFillSettings.GetFillText: TgtxFillText;
+function TgtRedactFillSettings.GetFillText: TgtFillText;
 begin
   Result := FFillText;
 end;
 
-function TgtxRedactFillSettings.GetOutline: TgtxOutline;
+function TgtRedactFillSettings.GetOutline: TgtOutline;
 begin
   Result := FOutline;
 end;
 
-function TgtxRedactFillSettings.ToJson(): string;
+function TgtRedactFillSettings.ToJson(): string;
 begin
   Result := '"fillSettings":{';
   Result := Result + FOutline.ToJson;
@@ -2307,28 +2388,32 @@ begin
   Result := Result + '}';
 end;
 
-{ TgtxEncoderSettings }
-function TgtxEncoderSettings.ToJson: string;
+{ TgtEncoderSettings }
+function TgtEncoderSettings.ToJson: string;
 begin
   Result := '';
 end;
 
-{ TgtxDPI }
-constructor TgtxDPI.Create(AResolutionMode
-  : TgtxResolutionMode = TgtxResolutionMode.rmmUseSource; AX: Integer = 72;
-  AY: Integer = 72);
+{ TgtDPI }
+constructor TgtDPI.Create;
 begin
-  FResolutionMode := AResolutionMode;
-  FX := AX;
-  FY := AY;
+  FResolutionMode := rmmUseSource;
+  FX := 72;
+  FY := 72;
 end;
 
-function TgtxDPI.ToJson: String;
+destructor TgtDPI.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtDPI.ToJson: String;
 begin
   Result := '"dpi": {"resolutionMode":"' +
-    GetEnumName(TypeInfo(TgtxResolutionMode), Integer(FResolutionMode))
+    GetEnumName(TypeInfo(TgtResolutionMode), Integer(FResolutionMode))
     .Substring(3) + '"';
-  if FResolutionMode = TgtxResolutionMode.rmmUseSpecifiedDPI then
+  if FResolutionMode = TgtResolutionMode.rmmUseSpecifiedDPI then
   begin
     Result := Result + ',"x":' + IntToStr(FX);
     Result := Result + ',"y":' + IntToStr(FY);
@@ -2336,49 +2421,54 @@ begin
   Result := Result + '}';
 end;
 
-{ TgtxSize }
-constructor TgtxSize.Create(APaperSize: TgtxPaperSize = TgtxPaperSize.psiA4;
-  AWidth: Integer = 0; AHeight: Integer = 0;
-  AMeasurementUnit: TgtxMeasurementUnit = TgtxMeasurementUnit.munMillimeters);
+{ TgtSize }
+constructor TgtSize.Create;
 begin
-  FPaperSize := APaperSize;
-  FWidth := AWidth;
-  FHeight := AHeight;
-  FMeasurementUnit := AMeasurementUnit;
+  FPaperSize := psiA4;
+  FWidth := 0;
+  FHeight := 0;
+  FMeasurementUnit := munMillimeters;
 end;
 
-function TgtxSize.EncodeString: String;
+destructor TgtSize.Destroy;
 begin
-  if FPaperSize = TgtxPaperSize.psiCustom then
+
+  inherited;
+end;
+
+function TgtSize.EncodeString: String;
+begin
+  if FPaperSize = TgtPaperSize.psiCustom then
     Result := IntToStr(FWidth) + ';' + IntToStr(FHeight) + ';' +
-      GetEnumName(TypeInfo(TgtxPaperSize), Integer(FPaperSize)).Substring(3)
+      GetEnumName(TypeInfo(TgtPaperSize), Integer(FPaperSize)).Substring(3)
   else
-    Result := GetEnumName(TypeInfo(TgtxPaperSize), Integer(FPaperSize))
+    Result := GetEnumName(TypeInfo(TgtPaperSize), Integer(FPaperSize))
       .Substring(3);
 end;
 
-{ TgtxCanvasSize }
-constructor TgtxCanvasSize.Create(ASizingMode
-  : TgtxCanvasSizingMode = TgtxCanvasSizingMode.csmUseSource;
-  ASize: TgtxSize = nil; ARelativeSizeX: Integer = 100;
-  ARelativeSizeY: Integer = 100);
+{ TgtCanvasSize }
+constructor TgtCanvasSize.Create;
 begin
-  FSizingMode := ASizingMode;
-  FSize := ASize;
-  if FSize = nil then
-    FSize := TgtxSize.Create();
-  FRelativeSizeX := ARelativeSizeX;
-  FRelativeSizeY := ARelativeSizeY;
+  FSizingMode := csmUseSource;
+  FSize := TgtSize.Create();
+  FRelativeSizeX := 100;
+  FRelativeSizeY := 100;
 end;
 
-function TgtxCanvasSize.ToJson: String;
+destructor TgtCanvasSize.Destroy;
+begin
+  FSize.Free;
+  inherited;
+end;
+
+function TgtCanvasSize.ToJson: String;
 begin
   Result := '"canvasSize": { "sizingMode": "' +
-    GetEnumName(TypeInfo(TgtxCanvasSizingMode), Integer(FSizingMode))
+    GetEnumName(TypeInfo(TgtCanvasSizingMode), Integer(FSizingMode))
     .Substring(3) + '"';
-  if FSizingMode = TgtxCanvasSizingMode.csmUseSpecifiedSize then
+  if FSizingMode = TgtCanvasSizingMode.csmUseSpecifiedSize then
     Result := Result + ',"size": "' + FSize.EncodeString() + '"'
-  else if FSizingMode = TgtxCanvasSizingMode.csmUseSpecifiedRelativeSize then
+  else if FSizingMode = TgtCanvasSizingMode.csmUseSpecifiedRelativeSize then
   begin
     Result := Result + ',"relativeSizeX": ' + IntToStr(FRelativeSizeX);
     Result := Result + ',"relativeSizeY": ' + IntToStr(FRelativeSizeY);
@@ -2386,8 +2476,8 @@ begin
   Result := Result + '}';
 end;
 
-{ TgtxContentAlignment }
-procedure TgtxContentAlignment.Assign(Source: TgtxContentAlignment);
+{ TgtContentAlignment }
+procedure TgtContentAlignment.Assign(Source: TgtContentAlignment);
 begin
   if Source <> nil then
   begin
@@ -2398,152 +2488,163 @@ begin
   end;
 end;
 
-constructor TgtxContentAlignment.Create(AHorizontalAlignmentType
-  : TgtxHorizontalAlignmentType = TgtxHorizontalAlignmentType.hatCenter;
-  AHorizontalOffset: Integer = 0;
-  AVerticalAlignmentType: TgtxVerticalAlignmentType = TgtxVerticalAlignmentType.
-  vatCenter; AVerticalOffset: Integer = 0);
+constructor TgtContentAlignment.Create;
 begin
-  FHorizontalAlignmentType := AHorizontalAlignmentType;
-  FHorizontalOffset := AHorizontalOffset;
-  FVerticalAlignmentType := AVerticalAlignmentType;
-  FVerticalOffset := AVerticalOffset;
+  FHorizontalAlignmentType := hatCenter;
+  FHorizontalOffset := 0;
+  FVerticalAlignmentType := vatCenter;
+  FVerticalOffset := 0;
 end;
 
-function TgtxContentAlignment.ToJson: String;
+destructor TgtContentAlignment.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtContentAlignment.ToJson: String;
 begin
   Result := '"contentAlignment ": { "horizontalAlignment": "' +
-    GetEnumName(TypeInfo(TgtxHorizontalAlignmentType),
+    GetEnumName(TypeInfo(TgtHorizontalAlignmentType),
     Integer(FHorizontalAlignmentType)).Substring(3) + '"';
   Result := Result + ',"horizontalOffset": ' + IntToStr(FHorizontalOffset);
   Result := Result + ',"verticalAlignment": "' +
-    GetEnumName(TypeInfo(TgtxVerticalAlignmentType),
+    GetEnumName(TypeInfo(TgtVerticalAlignmentType),
     Integer(FVerticalAlignmentType)).Substring(3) + '"';
   Result := Result + ',"verticalOffset": ' + IntToStr(FVerticalOffset);
   Result := Result + '}';
 end;
 
-{ TgtxImageEncoderSettings }
-constructor TgtxImageEncoderSettings.Create(ADPI: TgtxDPI = nil;
-  AQuality: Byte = 80; ACanvasSize: TgtxCanvasSize = nil;
-  AScaling: TgtxContentScaling = TgtxContentScaling.cscFitWithAspect;
-  AAlignment: TgtxContentAlignment = nil);
+{ TgtImageEncoderSettings }
+constructor TgtImageEncoderSettings.Create;
 begin
-  FDPI := ADPI;
-  if FDPI = nil then
-    FDPI := TgtxDPI.Create();
-  FQuality := AQuality;
-  FCanvasSize := ACanvasSize;
-  if FCanvasSize = nil then
-    FCanvasSize := TgtxCanvasSize.Create();
-  FContentScaling := AScaling;
-  FContentAlignment := AAlignment;
-  if FContentAlignment = nil then
-    FContentAlignment := TgtxContentAlignment.Create();
+
+  FDPI := TgtDPI.Create();
+  FQuality := 80;
+  FCanvasSize := TgtCanvasSize.Create();
+  FContentScaling := cscFitWithAspect;
+  FContentAlignment := TgtContentAlignment.Create();
 end;
 
-function TgtxImageEncoderSettings.GetContentAlignment: TgtxContentAlignment;
+destructor TgtImageEncoderSettings.Destroy;
+begin
+  FDPI.Free;
+  FCanvasSize.Free;
+  FContentAlignment.Free;
+  inherited;
+end;
+
+function TgtImageEncoderSettings.GetContentAlignment: TgtContentAlignment;
 begin
   Result := FContentAlignment;
 end;
 
-procedure TgtxImageEncoderSettings.SetContentAlignment
-  (const AValue: TgtxContentAlignment);
-begin
-  FContentAlignment.Assign(AValue);
-end;
+// procedure TgtImageEncoderSettings.SetContentAlignment
+// (const AValue: TgtContentAlignment);
+// begin
+// FContentAlignment.Assign(AValue);
+// end;
 
-function TgtxImageEncoderSettings.ToJson(): string;
+function TgtImageEncoderSettings.ToJson(): string;
 begin
   Result := '"imageEncoderSettings":{';
   Result := Result + FDPI.ToJson();
   Result := Result + ',"quality":' + IntToStr(FQuality);
   Result := Result + ',' + FCanvasSize.ToJson();
   Result := Result + ',"contentScaling":"' +
-    GetEnumName(TypeInfo(TgtxContentScaling), Integer(FContentScaling))
+    GetEnumName(TypeInfo(TgtContentScaling), Integer(FContentScaling))
     .Substring(3) + '"';
   Result := Result + ',' + FContentAlignment.ToJson();
   Result := Result + '}';
 end;
 
-{ TgtxPDFPortfolioSettings }
-constructor TgtxPDFPortfolioSettings.Create(APDFPortfolioCreationMode
-  : TgtxPDFPortfolioCreationMode = TgtxPDFPortfolioCreationMode.
-  pcmWhenInputIsPortfolio; APDFPortfolioInitialLayout
-  : TgtxPDFPortfolioInitialLayout = TgtxPDFPortfolioInitialLayout.pilDetails);
+{ TgtPDFPortfolioSettings }
+constructor TgtPDFPortfolioSettings.Create;
 begin
-  FPDFPortfolioCreationMode := APDFPortfolioCreationMode;
-  FPDFPortfolioInitialLayout := APDFPortfolioInitialLayout;
+  FPDFPortfolioCreationMode := pcmWhenInputIsPortfolio;
+  FPDFPortfolioInitialLayout := pilDetails;
 end;
 
-function TgtxPDFPortfolioSettings.ToJson: String;
+destructor TgtPDFPortfolioSettings.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtPDFPortfolioSettings.ToJson: String;
 begin
   Result := '"portfolioSettings":{';
   Result := Result + '"creationMode": "' +
-    GetEnumName(TypeInfo(TgtxPDFPortfolioCreationMode),
+    GetEnumName(TypeInfo(TgtPDFPortfolioCreationMode),
     Integer(FPDFPortfolioCreationMode)).Substring(3) + '"';
   Result := Result + ',"initialLayout": "' +
-    GetEnumName(TypeInfo(TgtxPDFPortfolioInitialLayout),
+    GetEnumName(TypeInfo(TgtPDFPortfolioInitialLayout),
     Integer(FPDFPortfolioInitialLayout)).Substring(3) + '"';
   Result := Result + '}';
 end;
 
-{ TgtxPDFEncoderSettings }
-constructor TgtxPDFEncoderSettings.Create(APDFPortfolioSettings
-  : TgtxPDFPortfolioSettings;
-  AFontEmbeddingType: TgtxFontEmbeddingType = TgtxFontEmbeddingType.fetSubset;
-  AOverrideFontEmbeddingRestriction: Boolean = False);
+{ TgtPDFEncoderSettings }
+constructor TgtPDFEncoderSettings.Create;
 begin
-  FPDFPortfolioSettings := APDFPortfolioSettings;
-  if FPDFPortfolioSettings = nil then
-    FPDFPortfolioSettings := TgtxPDFPortfolioSettings.Create();
-  FFontEmbeddingType := AFontEmbeddingType;
-  FOverrideFontEmbeddingRestriction := AOverrideFontEmbeddingRestriction;
+  FPDFPortfolioSettings := TgtPDFPortfolioSettings.Create();
+  FFontEmbeddingType := fetSubset;
+  FOverrideFontEmbeddingRestriction := False;
 end;
 
-function TgtxPDFEncoderSettings.GetPDFPortfolioSettings
-  : TgtxPDFPortfolioSettings;
+destructor TgtPDFEncoderSettings.Destroy;
+begin
+  FPDFPortfolioSettings.Free;
+  inherited;
+end;
+
+function TgtPDFEncoderSettings.GetPDFPortfolioSettings: TgtPDFPortfolioSettings;
 begin
   Result := FPDFPortfolioSettings;
 end;
 
-procedure TgtxPDFEncoderSettings.SetPDFPortfolioSettings
-  (const AValue: TgtxPDFPortfolioSettings);
+procedure TgtPDFEncoderSettings.SetPDFPortfolioSettings
+  (const AValue: TgtPDFPortfolioSettings);
 begin
   FPDFPortfolioSettings := AValue;
 end;
 
-function TgtxPDFEncoderSettings.ToJson(): string;
+function TgtPDFEncoderSettings.ToJson(): string;
 begin
   Result := '"pdfEncoderSettings":{';
   Result := Result + FPDFPortfolioSettings.ToJson();
   Result := Result + '"fontEmbedding":"' +
-    GetEnumName(TypeInfo(TgtxFontEmbeddingType), Integer(FFontEmbeddingType))
+    GetEnumName(TypeInfo(TgtFontEmbeddingType), Integer(FFontEmbeddingType))
     .Substring(3) + '"';
-  Result := Result + ',"overrideFontEmbeddingRestriction":' +
-    BooleanToStringName[FOverrideFontEmbeddingRestriction];
+  Result := Result + ',"overrideFontEmbeddingRestriction":' + BooleanToString
+    [FOverrideFontEmbeddingRestriction];
   Result := Result + '}';
 end;
 
-{ TgtxAuth }
-constructor TgtxAuth.Create(AStarDocs: TgtxStarDocsSDK);
+{ TgtAuth }
+constructor TgtAuth.Create(AStarDocs: TgtStarDocsSDK);
 begin
   FStarDocs := AStarDocs;
 end;
 
-function TgtxAuth.loginApp(AEntity: string = ''): TgtxAuthResponse;
+destructor TgtAuth.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtAuth.loginApp(AEntity: string = ''): TgtAuthResponse;
 var
   LRestRequest: TRestRequest;
   LRestResp: THttpResponse;
-  LResponseError: TgtxRestAPIResponseAuthFailure;
-  LResponseSuccess: TgtxRestAPIResponseAuth;
+  LResponseError: TgtRestAPIResponseAuthFailure;
+  LResponseSuccess: TgtRestAPIResponseAuth;
 begin
   LRestRequest := TRestRequest.Create();
   Result := nil;
   try
     LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
-      .Path('auth/token').WithCredentials(FStarDocs.FConnectionInfo.FAppKey,
-      FStarDocs.FConnectionInfo.FAppSecret);
+      .Path('auth/token').WithCredentials(FStarDocs.FConnectionInfo.FApiKey,
+      FStarDocs.FConnectionInfo.FApiSecret);
     if AEntity <> '' then
     begin
       LRestRequest.UrlParam('entity_id', AEntity);
@@ -2553,40 +2654,40 @@ begin
     LRestResp := LRestRequest.Post('grant_type=client_credentials');
     if LRestResp.ResponseCode <> 200 then
     begin
-			FStarDocs.AuthResponse := nil;
+      FStarDocs.AuthResponse := nil;
       if LRestResp.ResponseContentType.Equals('application/json') = True then
       begin
-        LResponseError := TJSON.JsonToObject<TgtxRestAPIResponseAuthFailure>
+        LResponseError := TJSON.JsonToObject<TgtRestAPIResponseAuthFailure>
           (LRestResp.ResponseStr);
-        raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
-          TgtxExceptionStatusCode(0), LResponseError.Error + ':' +
+        raise EgtStarDocsException.Create(LRestResp.ResponseCode,
+          TgtExceptionStatusCode(0), LResponseError.Error + ':' +
           LResponseError.ErrorDescription + ':' + LResponseError.ErrorUri);
       end;
-      raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
-        TgtxExceptionStatusCode(0), LRestResp.ResponseStr);
+      raise EgtStarDocsException.Create(LRestResp.ResponseCode,
+        TgtExceptionStatusCode(0), LRestResp.ResponseStr);
     end;
-    LResponseSuccess := TJSON.JsonToObject<TgtxRestAPIResponseAuth>
+    LResponseSuccess := TJSON.JsonToObject<TgtRestAPIResponseAuth>
       (LRestResp.ResponseStr);
-    Result := TgtxAuthResponse.Create(LResponseSuccess);
-		FStarDocs.AuthResponse := Result;
+    Result := TgtAuthResponse.Create(LResponseSuccess);
+    FStarDocs.AuthResponse := Result;
   finally
     LRestRequest.Free;
   end;
 end;
 
-{ TgtxStorage }
-constructor TgtxStorage.Create(AStarDocs: TgtxStarDocsSDK);
+{ TgtStorage }
+constructor TgtStorage.Create(AStarDocs: TgtStarDocsSDK);
 begin
   FStarDocs := AStarDocs;
 end;
 
-function TgtxStorage.Upload(AFileNameWithPath: string; APassword: string = '')
-  : TgtxDocObject;
+function TgtStorage.Upload(AFileNameWithPath: string; APassword: string = '')
+  : TgtDocObject;
 var
   LRestResponse: THttpResponse;
   LRestRequest: TRestRequest;
-  LResponseCommon: TgtxRestAPIResponseCommon;
-  // LResponseError: TgtxRestAPIResponseError;
+  LResponseCommon: TgtRestAPIResponseCommon;
+  // LResponseError: TgtRestAPIResponseError;
 begin
   LRestRequest := TRestRequest.Create();
   Result := nil;
@@ -2597,26 +2698,27 @@ begin
     LRestRequest.FileParam('fileUpload', AFileNameWithPath);
     LRestRequest.BodyParam('password', APassword);
     LRestRequest.BodyParam('forceFullPermission',
-      BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
+      BooleanToString[FStarDocs.Preferences.DocPasswordSettings.
+      ForceFullPermission]);
     LRestResponse := LRestRequest.Post('');
     if LRestResponse.ResponseCode <> 200 then
-      raise EgtxStarDocsException.Create(LRestResponse.ResponseCode,
+      raise EgtStarDocsException.Create(LRestResponse.ResponseCode,
         LRestResponse.ResponseStr);
-    LResponseCommon := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LResponseCommon := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LRestResponse.ResponseStr);
-    Result := TgtxDocObject.Create(LResponseCommon.Documents[0]);
+    Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
   finally
     LRestRequest.Free;
   end;
 end;
 
-function TgtxStorage.Upload(AStream: TStream; AfileName: string;
-  APassword: string = ''): TgtxDocObject;
+function TgtStorage.Upload(AStream: TStream; AfileName: string;
+  APassword: string = ''): TgtDocObject;
 var
   LRestResp: THttpResponse;
   LRestRequest: TRestRequest;
-  LResponseCommon: TgtxRestAPIResponseCommon;
-  // LResponseError: TgtxRestAPIResponseError;
+  LResponseCommon: TgtRestAPIResponseCommon;
+  // LResponseError: TgtRestAPIResponseError;
 begin
   Result := nil;
   LRestRequest := TRestRequest.Create();
@@ -2627,20 +2729,21 @@ begin
     LRestRequest.FileParam('fileUpload', AfileName, AStream);
     LRestRequest.BodyParam('password', APassword);
     LRestRequest.BodyParam('forceFullPermission',
-      BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
+      BooleanToString[FStarDocs.Preferences.DocPasswordSettings.
+      ForceFullPermission]);
     LRestResp := LRestRequest.Post('');
     if LRestResp.ResponseCode <> 200 then
-      raise EgtxStarDocsException.Create(LRestResp.ResponseCode,
+      raise EgtStarDocsException.Create(LRestResp.ResponseCode,
         LRestResp.ResponseStr);
-    LResponseCommon := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LResponseCommon := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LRestResp.ResponseStr);
-    Result := TgtxDocObject.Create(LResponseCommon.Documents[0]);
+    Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
   finally
     LRestRequest.Free;
   end;
 end;
 
-procedure TgtxStorage.Download(AFile: TgtxFileObject; AFilePath: string);
+procedure TgtStorage.Download(AFile: TgtFileObject; AFilePath: string);
 var
   LOutStream: TFileStream;
   LFileName: string;
@@ -2661,8 +2764,8 @@ begin
   // Check if the file name is present in the path
   if ExtractFileName(AFilePath) = '' then
   begin
-    if AFile.ClassType = TgtxDocObject then
-      LFileName := TgtxDocObject(AFile).FileName
+    if AFile.ClassType = TgtDocObject then
+      LFileName := TgtDocObject(AFile).FileName
     else
       // Append file name from URI
       LFileName := AFile.GetFileNameFromUri;
@@ -2681,7 +2784,12 @@ begin
   end;
 end;
 
-procedure TgtxStorage.Download(AFile: TgtxFileObject; FOutStream: TStream);
+destructor TgtStorage.Destroy;
+begin
+  inherited;
+end;
+
+procedure TgtStorage.Download(AFile: TgtFileObject; FOutStream: TStream);
 var
   LRestRequest: TRestRequest;
   LRestResponse: THttpResponse;
@@ -2695,48 +2803,81 @@ begin
   try
     LRestResponse := LRestRequest.GetToStream(FOutStream);
     if LRestResponse.ResponseCode <> 200 then
-      raise EgtxStarDocsException.Create(LRestResponse.ResponseCode,
+      raise EgtStarDocsException.Create(LRestResponse.ResponseCode,
         LRestResponse.ResponseStr);
     if not LRestResponse.ResponseContentType.Equals('multipart/form-data') then
-      raise EgtxStarDocsException.Create(0,
-        TgtxExceptionStatusCode.escUnexpectedResponse,
+      raise EgtStarDocsException.Create(0,
+        TgtExceptionStatusCode.escUnexpectedResponse,
         'Unexpected response type during download');
   finally
     LRestRequest.Free;
   end;
 end;
 
-{ TgtxDocOperations }
-constructor TgtxDocOperations.Create(AStarDocs: TgtxStarDocsSDK);
+{ TgtDocOperations }
+constructor TgtDocOperations.Create(AStarDocs: TgtStarDocsSDK);
 begin
   FStarDocs := AStarDocs;
+  FRedactFillSettings := TgtRedactFillSettings.Create;
+  FPageSeparator := TgtPageSeparator.Create;
+  FImageEncoderSettings := TgtImageEncoderSettings.Create;
+  FPDFEncoderSettings := TgtPDFEncoderSettings.Create;
 end;
 
-function TgtxDocOperations.GetDocumentInfo(AFile: TgtxFileObject;
-  APassword: string = ''): TgtxGetDocumentInfoResponse;
+destructor TgtDocOperations.Destroy;
+begin
+  FRedactFillSettings.Free;
+  FPageSeparator.Free;
+  FImageEncoderSettings.Free;
+  FPDFEncoderSettings.Free;
+  inherited;
+end;
+
+function TgtDocOperations.GetDocumentInfo(AFile: TgtFileObject;
+  APassword: string = ''): TgtGetDocumentInfoResponse;
 var
   LUrl: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseGetDocumentInfo;
+  LJsonResponse: TgtRestAPIResponseGetDocumentInfo;
 begin
   LUrl := FStarDocs.GetDocUri(AFile) + '/info';
-  LUrl :=  LUrl + ('?force-full-permission=' +
-    BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
+  LUrl := LUrl + ('?force-full-permission=' + BooleanToString
+    [FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission]);
   if APassword <> '' then
-    LUrl :=  LUrl + ('&password=' + APassword);
+    LUrl := LUrl + ('&password=' + APassword);
   LJsonResponseStr := FStarDocs.IssueGetRequestAndPoll(LUrl);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseGetDocumentInfo>
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseGetDocumentInfo>
     (LJsonResponseStr);
-  Result := TgtxGetDocumentInfoResponse.Create(LJsonResponse);
+  Result := TgtGetDocumentInfoResponse.Create(LJsonResponse);
+end;
+
+function TgtDocOperations.GetImageEncoderSettings: TgtImageEncoderSettings;
+begin
+  Result := FImageEncoderSettings;
+end;
+
+function TgtDocOperations.GetPageSeparator: TgtPageSeparator;
+begin
+  Result := FPageSeparator;
+end;
+
+function TgtDocOperations.GetPDFEncoderSettings: TgtPDFEncoderSettings;
+begin
+  Result := FPDFEncoderSettings;
+end;
+
+function TgtDocOperations.GetRedactFillSettings: TgtRedactFillSettings;
+begin
+  Result := FRedactFillSettings;
 end;
 
 (*
-  function TgtxDocOperations.GetProperties(AFile: TgtxFileObject; APassword: string = ''): TgtxGetPropertiesResponse;
+  function TgtDocOperations.GetProperties(AFile: TgtFileObject; APassword: string = ''): TgtGetPropertiesResponse;
   var
   LDocUri: string;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseGetPropertiesPDF;
+  LJsonResponse: TgtRestAPIResponseGetPropertiesPDF;
   begin
   LDocUri := GetDocUri(AFile);
   LJsonStr := '{"operation":"getProperties","documents":[{"uri":"' + LDocUri + '"';
@@ -2744,17 +2885,17 @@ end;
   LJsonStr := LJsonStr + '}';
 
   LJsonResponseStr := IssueRequestAndPoll(LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseGetPropertiesPDF>(LJsonResponseStr);
-  Result := TgtxGetPropertiesResponse.Create(LJsonResponse);
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseGetPropertiesPDF>(LJsonResponseStr);
+  Result := TgtGetPropertiesResponse.Create(LJsonResponse);
   end;
 
-  function TgtxDocOperations.SetProperties(AFile: TgtxFileObject; APassword: string; AProperties: TgtxDocProperties)
-  : TgtxDocObject;
+  function TgtDocOperations.SetProperties(AFile: TgtFileObject; APassword: string; AProperties: TgtDocProperties)
+  : TgtDocObject;
   var
   LDocUri: string;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
   begin
   LDocUri := GetDocUri(AFile);
   LJsonStr := '{"operation":"setProperties","documents":[{"uri":"' + LDocUri + '"';
@@ -2766,14 +2907,14 @@ end;
   LJsonStr := LJsonStr + '}';
 
   LJsonResponseStr := IssueRequestAndPoll(LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>(LJsonResponseStr);
-  Result := TgtxDocObject.Create(LJsonResponse.Documents[0]);
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>(LJsonResponseStr);
+  Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
   end;
 *)
 
-function TgtxDocOperations.Merge(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.Merge(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil): TgtxDocObject;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil): TgtDocObject;
 var
   LUrl: string;
   LDocUris: TStringList;
@@ -2781,7 +2922,7 @@ var
   LIndex: Integer;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
@@ -2797,17 +2938,17 @@ begin
     LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri + '/docs/ops/merge';
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
       LJsonStr);
-    LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LJsonResponseStr);
-    Result := TgtxDocObject.Create(LJsonResponse.Documents[0]);
+    Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
   finally
     LDocUris.Free;
   end;
 end;
 
-function TgtxDocOperations.SplitByPageRange(AFile: TgtxFileObject;
-  APassword: string = ''; APageRanges: TObjectList<TgtxPageRangeSettings> = nil)
-  : TObjectList<TgtxDocObject>;
+function TgtDocOperations.SplitByPageRange(AFile: TgtFileObject;
+  APassword: string; APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+  : TObjectList<TgtDocObject>;
 var
   LDocUrl: string;
   LUrl: string;
@@ -2815,7 +2956,7 @@ var
   LJsonResponseStr: string;
   LNumFiles: Integer;
   LIndex: Integer;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
   LJsonStr := '{"documents":[{"url":"' + LDocUrl + '","password":"' +
@@ -2826,17 +2967,16 @@ begin
   LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri + '/docs/ops/split-range';
   LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
     LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
-  Result := TObjectList<TgtxDocObject>.Create;
+  Result := TObjectList<TgtDocObject>.Create;
   LNumFiles := Length(LJsonResponse.Documents);
   for LIndex := 0 to LNumFiles - 1 do
-    Result.Add(TgtxDocObject.Create(LJsonResponse.Documents[LIndex]));
+    Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
 end;
 
-function TgtxDocOperations.SplitBySeparatorPage(AFile: TgtxFileObject;
-  APassword: string = ''; APageSeparator: TgtxPageSeparator = nil)
-  : TObjectList<TgtxDocObject>;
+function TgtDocOperations.SplitBySeparatorPage(AFile: TgtFileObject;
+  APassword: string): TObjectList<TgtDocObject>;
 var
   LDocUrl: string;
   LUrl: string;
@@ -2844,44 +2984,43 @@ var
   LJsonResponseStr: string;
   LNumFiles: Integer;
   LIndex: Integer;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
   LJsonStr := '{"documents":[{"url":"' + LDocUrl + '","password":"' +
     APassword + '"';
-  if APageSeparator = nil then
-    APageSeparator := TgtxPageSeparator.Create
-      (TgtxPageSeparatorType.pstEmptyPage);
+  if FPageSeparator = nil then
+    FPageSeparator := TgtPageSeparator.Create();
   LJsonStr := LJsonStr + ',"separatorType":"' +
-    APageSeparator.EncodeString + '"';
+    FPageSeparator.EncodeString + '"';
   LJsonStr := LJsonStr + '}]}';
   LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri +
     '/docs/ops/split-separator';
   LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
     LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
-  Result := TObjectList<TgtxDocObject>.Create;
+  Result := TObjectList<TgtDocObject>.Create;
   LNumFiles := Length(LJsonResponse.Documents);
   for LIndex := 0 to LNumFiles - 1 do
-    Result.Add(TgtxDocObject.Create(LJsonResponse.Documents[LIndex]));
+    Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
 end;
 
-function TgtxDocOperations.Encrypt(AFile: TgtxFileObject; APassword: string;
-  APDFEncryptionLevel: TgtxPDFEncryptionLevel = TgtxPDFEncryptionLevel.
+function TgtDocOperations.Encrypt(AFile: TgtFileObject; APassword: string;
+  APDFEncryptionLevel: TgtPDFEncryptionLevel = TgtPDFEncryptionLevel.
   pelAES_128bit; ANewOpenPassword: string = '';
   ANewPermissionsPassword: string = '';
-  ANewPermissions: TgtxPDFDocPermissions = []): TgtxDocObject;
+  ANewPermissions: TgtPDFDocPermissions = []): TgtDocObject;
 var
   LUrl: string;
   LDocUrl: string;
   LEncryptionLevelStr: string;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
-  LEncryptionLevelStr := GetEnumName(TypeInfo(TgtxPDFEncryptionLevel),
+  LEncryptionLevelStr := GetEnumName(TypeInfo(TgtPDFEncryptionLevel),
     Integer(APDFEncryptionLevel)).Substring(3);
 
   LJsonStr := '{"encryptionLevel":"' + LEncryptionLevelStr + '"';
@@ -2899,57 +3038,60 @@ begin
   LUrl := LDocUrl + '/ops/encrypt';
   LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, False,
     LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
-  Result := TgtxDocObject.Create(LJsonResponse.Documents[0]);
+  Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
 end;
 
-function TgtxDocOperations.FillForm(AFile: TgtxFileObject; APassword: string;
-  AformFields: TObjectList<TgtxPDFFormFieldFillData>) : TgtxDocObject;
+function TgtDocOperations.FillForm(AFile: TgtFileObject; APassword: string;
+  AFormFields: TObjectList<TgtPDFFormFieldFillData>; AFlattenAllFields: Boolean): TgtDocObject;
 var
   LUrl: string;
   LDocUrl: string;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
 
   LJsonStr := '{';
-  LJsonStr := LJsonStr + '"forceFullPermission":' + BooleanToStringName[FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission];
+  LJsonStr := LJsonStr + '"forceFullPermission":' + BooleanToString
+    [FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission];
 
   if APassword <> '' then
     LJsonStr := LJsonStr + ',"password":"' + APassword + '"';
 
-  if AformFields <> Nil then
-    LJsonStr := LJsonStr + ',' + EncodeFormFieldFillData(AformFields);
+  if AFormFields <> Nil then
+    LJsonStr := LJsonStr + ',' + EncodeFormFieldFillData(AFormFields);
+
+  if AFlattenAllFields then
+    LJsonStr := LJsonStr + ',"flattenAllFields":' + BooleanToString[AFlattenAllFields];
 
   LJsonStr := LJsonStr + '}';
 
   LUrl := LDocUrl + '/ops/fill-form';
   LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, False,
     LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
-  Result := TgtxDocObject.Create(LJsonResponse.Documents[0]);
+  Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
 end;
 
-function TgtxDocOperations.RedactText(AFile: TgtxFileObject; APassword: string;
-  APageRange: TgtxPageRangeSettings; ATextSearchMode: TgtxTextSearchMode;
-  ASearchText: TObjectList<TgtxSearchText>;
-  AFillSettings: TgtxRedactFillSettings = nil;
-  AIncludeAdditionalItems: TgtxDocumentItems = [];
-  ACleanupSettings: TgtxRedactCleanupSettings = []): TgtxDocObject;
+function TgtDocOperations.RedactText(AFile: TgtFileObject; APassword: string;
+  APageRange: TgtPageRangeSettings; ATextSearchMode: TgtTextSearchMode;
+  ASearchText: TObjectList<TgtSearchText>;
+  AIncludeAdditionalItems: TgtDocumentItems = [];
+  ACleanupSettings: TgtRedactCleanupSettings = []): TgtDocObject;
 var
   LUrl: string;
   LDocUrl: string;
   LTextSearchModeStr: string;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LDocUrl := FStarDocs.GetDocUri(AFile);
-  LTextSearchModeStr := GetEnumName(TypeInfo(TgtxTextSearchMode),
+  LTextSearchModeStr := GetEnumName(TypeInfo(TgtTextSearchMode),
     Integer(ATextSearchMode)).Substring(3);
 
   LJsonStr := '{"searchMode":"' + LTextSearchModeStr + '"';
@@ -2963,8 +3105,8 @@ begin
 
   LJsonStr := LJsonStr + ',' + EncodeJsonSearchText(ASearchText);
 
-  if AFillSettings <> nil then
-    LJsonStr := LJsonStr + ',' + AFillSettings.ToJson();
+  if FRedactFillSettings <> nil then
+    LJsonStr := LJsonStr + ',' + FRedactFillSettings.ToJson();
 
   LJsonStr := LJsonStr + ', "includeAdditionalItems": {' +
     SetToCSV(AIncludeAdditionalItems) + '}';
@@ -2975,17 +3117,16 @@ begin
   LUrl := LDocUrl + '/ops/redact-text';
   LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, False,
     LJsonStr);
-  LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+  LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
-  Result := TgtxDocObject.Create(LJsonResponse.Documents[0]);
+  Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
 end;
 
-function TgtxDocOperations.ConvertToTIFF(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToTIFF(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  AImageEncoderSettings: TgtxImageEncoderSettings = nil;
-  ATIFFCompressionType: TgtxTIFFCompressionType = TgtxTIFFCompressionType.
-  tctDeflate): TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil;
+  ATIFFCompressionType: TgtTIFFCompressionType = TgtTIFFCompressionType.
+  tctDeflate): TObjectList<TgtDocObject>;
 var
   LUrl: string;
   LDocUris: TStringList;
@@ -2993,7 +3134,7 @@ var
   LIndex: Integer;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
@@ -3005,10 +3146,10 @@ begin
       APageRanges);
     if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
       LJsonStr := LJsonStr + ',"forceFullPermission":true';
-    if AImageEncoderSettings <> nil then
-      LJsonStr := LJsonStr + (',' + AImageEncoderSettings.ToJson());
+    if FImageEncoderSettings <> nil then
+      LJsonStr := LJsonStr + (',' + FImageEncoderSettings.ToJson());
     LJsonStr := LJsonStr + ',"tiffCompressionType":"' +
-      GetEnumName(TypeInfo(TgtxTIFFCompressionType),
+      GetEnumName(TypeInfo(TgtTIFFCompressionType),
       Integer(ATIFFCompressionType)).Substring(3) + '"';
     LJsonStr := LJsonStr + '}';
 
@@ -3016,25 +3157,23 @@ begin
       '/docs/ops/convert-tiff';
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
       LJsonStr);
-    LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LJsonResponseStr);
-    Result := TObjectList<TgtxDocObject>.Create;
+    Result := TObjectList<TgtDocObject>.Create;
     LNumFiles := Length(LJsonResponse.Documents);
     for LIndex := 0 to LNumFiles - 1 do
-      Result.Add(TgtxDocObject.Create(LJsonResponse.Documents[LIndex]));
+      Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
   end;
 end;
 
-function TgtxDocOperations.ConvertToMTIFF(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToMTIFF(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  AImageEncoderSettings: TgtxImageEncoderSettings = nil;
-  ATIFFCompressionType: TgtxTIFFCompressionType = TgtxTIFFCompressionType.
-  tctDeflate; AConversionMode
-  : TgtxMTIFFConversionMode = TgtxMTIFFConversionMode.tcmConvertToSeparateFiles)
-  : TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil;
+  ATIFFCompressionType: TgtTIFFCompressionType = TgtTIFFCompressionType.
+  tctDeflate; AConversionMode: TgtMTIFFConversionMode = TgtMTIFFConversionMode.
+  tcmConvertToSeparateFiles): TObjectList<TgtDocObject>;
 var
   LUrl: string;
   LDocUris: TStringList;
@@ -3042,7 +3181,7 @@ var
   LIndex: Integer;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
@@ -3054,13 +3193,13 @@ begin
       APageRanges);
     if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
       LJsonStr := LJsonStr + ',"forceFullPermission":true';
-    if AImageEncoderSettings <> nil then
-      LJsonStr := LJsonStr + (',' + AImageEncoderSettings.ToJson());
+    if FImageEncoderSettings <> nil then
+      LJsonStr := LJsonStr + (',' + FImageEncoderSettings.ToJson());
     LJsonStr := LJsonStr + ',"tiffCompressionType":"' +
-      GetEnumName(TypeInfo(TgtxTIFFCompressionType),
+      GetEnumName(TypeInfo(TgtTIFFCompressionType),
       Integer(ATIFFCompressionType)).Substring(3) + '"';
     LJsonStr := LJsonStr + ',"conversionMode":"' +
-      GetEnumName(TypeInfo(TgtxMTIFFConversionMode), Integer(AConversionMode))
+      GetEnumName(TypeInfo(TgtMTIFFConversionMode), Integer(AConversionMode))
       .Substring(3) + '"';
     LJsonStr := LJsonStr + '}';
 
@@ -3068,63 +3207,58 @@ begin
       '/docs/ops/convert-mtiff';
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
       LJsonStr);
-    LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LJsonResponseStr);
-    Result := TObjectList<TgtxDocObject>.Create;
+    Result := TObjectList<TgtDocObject>.Create;
     LNumFiles := Length(LJsonResponse.Documents);
     for LIndex := 0 to LNumFiles - 1 do
-      Result.Add(TgtxDocObject.Create(LJsonResponse.Documents[LIndex]));
+      Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
   end;
 end;
 
-function TgtxDocOperations.ConvertToJPEG(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToJPEG(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-  : TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+  : TObjectList<TgtDocObject>;
 begin
   Result := ConvertToImage('convert-jpeg', AFiles, APasswords, APageRanges,
-    AImageEncoderSettings);
+    FImageEncoderSettings);
 end;
 
-function TgtxDocOperations.ConvertToGIF(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToGIF(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-  : TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+  : TObjectList<TgtDocObject>;
 begin
   Result := ConvertToImage('convert-gif', AFiles, APasswords, APageRanges,
-    AImageEncoderSettings);
+    FImageEncoderSettings);
 end;
 
-function TgtxDocOperations.ConvertToBMP(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToBMP(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-  : TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+  : TObjectList<TgtDocObject>;
 begin
   Result := ConvertToImage('convert-bmp', AFiles, APasswords, APageRanges,
-    AImageEncoderSettings);
+    FImageEncoderSettings);
 end;
 
-function TgtxDocOperations.ConvertToPNG(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToPNG(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  AImageEncoderSettings: TgtxImageEncoderSettings = nil)
-  : TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil)
+  : TObjectList<TgtDocObject>;
 begin
   Result := ConvertToImage('convert-png', AFiles, APasswords, APageRanges,
-    AImageEncoderSettings);
+    FImageEncoderSettings);
 end;
 
-function TgtxDocOperations.ConvertToPDF(AFiles: TObjectList<TgtxFileObject>;
+function TgtDocOperations.ConvertToPDF(AFiles: TObjectList<TgtFileObject>;
   APasswords: TStringList = nil;
-  APageRanges: TObjectList<TgtxPageRangeSettings> = nil;
-  APDFEncoderSettings: TgtxPDFEncoderSettings = nil;
-  AConversionMode: TgtxPDFConversionMode = TgtxPDFConversionMode.
-  pcmConvertToSeparateFiles): TObjectList<TgtxDocObject>;
+  APageRanges: TObjectList<TgtPageRangeSettings> = nil;
+  AConversionMode: TgtPDFConversionMode = TgtPDFConversionMode.
+  pcmConvertToSeparateFiles): TObjectList<TgtDocObject>;
 var
   LUrl: string;
   LDocUris: TStringList;
@@ -3132,7 +3266,7 @@ var
   LIndex: Integer;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
@@ -3144,10 +3278,10 @@ begin
       APageRanges);
     if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
       LJsonStr := LJsonStr + ',"forceFullPermission":true';
-    if TgtxPDFEncoderSettings <> nil then
-      LJsonStr := LJsonStr + (',' + APDFEncoderSettings.ToJson);
+    if TgtPDFEncoderSettings <> nil then
+      LJsonStr := LJsonStr + (',' + FPDFEncoderSettings.ToJson);
     LJsonStr := LJsonStr + ',"conversionMode": ' +
-      GetEnumName(TypeInfo(TgtxPDFConversionMode), Integer(AConversionMode))
+      GetEnumName(TypeInfo(TgtPDFConversionMode), Integer(AConversionMode))
       .Substring(3) + '"';
     LJsonStr := LJsonStr + '}';
 
@@ -3155,21 +3289,21 @@ begin
       '/docs/ops/convert-pdf';
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
       LJsonStr);
-    LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LJsonResponseStr);
-    Result := TObjectList<TgtxDocObject>.Create;
+    Result := TObjectList<TgtDocObject>.Create;
     LNumFiles := Length(LJsonResponse.Documents);
     for LIndex := 0 to LNumFiles - 1 do
-      Result.Add(TgtxDocObject.Create(LJsonResponse.Documents[LIndex]));
+      Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
   end;
 end;
 
-function TgtxDocOperations.ConvertToImage(AUrlPath: string;
-  AFiles: TObjectList<TgtxFileObject>; APasswords: TStringList;
-  APageRanges: TObjectList<TgtxPageRangeSettings>;
-  AImageEncoderSettings: TgtxImageEncoderSettings): TObjectList<TgtxDocObject>;
+function TgtDocOperations.ConvertToImage(AUrlPath: string;
+  AFiles: TObjectList<TgtFileObject>; APasswords: TStringList;
+  APageRanges: TObjectList<TgtPageRangeSettings>;
+  AImageEncoderSettings: TgtImageEncoderSettings): TObjectList<TgtDocObject>;
 var
   LUrl: string;
   LDocUris: TStringList;
@@ -3177,7 +3311,7 @@ var
   LIndex: Integer;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCommon;
+  LJsonResponse: TgtRestAPIResponseCommon;
 begin
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
@@ -3197,43 +3331,44 @@ begin
       + AUrlPath;
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
       LJsonStr);
-    LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCommon>
+    LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
       (LJsonResponseStr);
-    Result := TObjectList<TgtxDocObject>.Create;
+    Result := TObjectList<TgtDocObject>.Create;
     LNumFiles := Length(LJsonResponse.Documents);
     for LIndex := 0 to LNumFiles - 1 do
-      Result.Add(TgtxDocObject.Create(LJsonResponse.Documents[LIndex]));
+      Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
   end;
 end;
 
-function TgtxDocOperations.EncodeFormFieldFillData
-  (AformFields: TObjectList<TgtxPDFFormFieldFillData>): string;
+function TgtDocOperations.EncodeFormFieldFillData
+  (AFormFields: TObjectList<TgtPDFFormFieldFillData>): string;
 var
   LJsonStr: String;
   I: Integer;
-  LformField: TgtxPDFFormFieldFillData;
+  LformField: TgtPDFFormFieldFillData;
 begin
   LJsonStr := '"fields": [';
-  for I := 0 to AformFields.Count - 1 do
+  for I := 0 to AFormFields.Count - 1 do
   begin
-    LformField := AformFields[I];
+    LformField := AFormFields[I];
     if (I > 0) then
       LJsonStr := LJsonStr + ',';
 
     LJsonStr := LJsonStr + '{';
     LJsonStr := LJsonStr + '"fieldName":"' + LformField.FieldName + '"';
     LJsonStr := LJsonStr + ',"fieldValue":"' + LformField.FieldValue + '"';
-    LJsonStr := LJsonStr + ',"flattenField":' + BooleanToStringName[LformField.FlattenField];
+    LJsonStr := LJsonStr + ',"flattenField":' + BooleanToString
+      [LformField.FlattenField];
     LJsonStr := LJsonStr + '}';
   end;
   LJsonStr := LJsonStr + ']';
   Result := LJsonStr;
 end;
 
-function TgtxDocOperations.EncodeJsonPageRanges(APageRanges
-  : TObjectList<TgtxPageRangeSettings>): string;
+function TgtDocOperations.EncodeJsonPageRanges(APageRanges
+  : TObjectList<TgtPageRangeSettings>): string;
 var
   LIndex: Integer;
 begin
@@ -3252,12 +3387,12 @@ begin
   Result := Result + ']';
 end;
 
-function TgtxDocOperations.EncodeJsonSearchText(ASearchText
-  : TObjectList<TgtxSearchText>): string;
+function TgtDocOperations.EncodeJsonSearchText(ASearchText
+  : TObjectList<TgtSearchText>): string;
 var
   LJsonStr: string;
   LIndex: Integer;
-  LSearchText: TgtxSearchText;
+  LSearchText: TgtSearchText;
 begin
   LJsonStr := '"searchText":[';
   for LIndex := 0 to ASearchText.Count - 1 do
@@ -3266,78 +3401,84 @@ begin
       LJsonStr := LJsonStr + ',';
     LSearchText := ASearchText[LIndex];
     LJsonStr := LJsonStr + '{"text":"' + LSearchText.Text + '","caseSensitive":'
-      + BooleanToStringName[LSearchText.CaseSensitive] + ',"wholeWord":' +
-      BooleanToStringName[LSearchText.WholeWord] + '}';
+      + BooleanToString[LSearchText.CaseSensitive] + ',"wholeWord":' +
+      BooleanToString[LSearchText.WholeWord] + '}';
   end;
   LJsonStr := LJsonStr + ']';
   Result := LJsonStr;
 end;
 
-function TgtxDocOperations.SetToCSV(ADocumentItems: TgtxDocumentItems): string;
+function TgtDocOperations.SetToCSV(ADocumentItems: TgtDocumentItems): string;
 begin
   Result := '';
-  Result := Result + '"documentProperties":' +
-    BooleanToStringName[ditDocumentProperties in ADocumentItems];
-  Result := Result + ',"bookmarks":' + BooleanToStringName[ditBookmarks in ADocumentItems];
-  Result := Result + ',"bookmarkActions":' +
-    BooleanToStringName[ditBookmarkActions in ADocumentItems];
-  Result := Result + ',"annotations":' +
-    BooleanToStringName[ditAnnotations in ADocumentItems];
-  Result := Result + ',"annotationActions":' +
-    BooleanToStringName[ditAnnotationActions in ADocumentItems];
+  Result := Result + '"documentProperties":' + BooleanToString
+    [ditDocumentProperties in ADocumentItems];
+  Result := Result + ',"bookmarks":' + BooleanToString
+    [ditBookmarks in ADocumentItems];
+  Result := Result + ',"bookmarkActions":' + BooleanToString
+    [ditBookmarkActions in ADocumentItems];
+  Result := Result + ',"annotations":' + BooleanToString
+    [ditAnnotations in ADocumentItems];
+  Result := Result + ',"annotationActions":' + BooleanToString
+    [ditAnnotationActions in ADocumentItems];
 end;
 
-function TgtxDocOperations.SetToCSV(ARedactCleanupSettings
-  : TgtxRedactCleanupSettings): string;
+function TgtDocOperations.SetToCSV(ARedactCleanupSettings
+  : TgtRedactCleanupSettings): string;
 begin
   Result := '';
-  Result := Result + '"removeEmptyBookmarks":' +
-    BooleanToStringName[rcsRemoveEmptyBookmarks in ARedactCleanupSettings];
-  Result := Result + ',"removeEmptyBookmarkActions":' +
-    BooleanToStringName[rcsRemoveEmptyBookmarkActions in ARedactCleanupSettings];
-  Result := Result + ',"removeEmptyAnnotations":' +
-    BooleanToStringName[rcsRemoveEmptyAnnotations in ARedactCleanupSettings];
-  Result := Result + ',"removeEmptyAnnotationActions":' +
-    BooleanToStringName[rcsRemoveEmptyAnnotationActions in ARedactCleanupSettings];
-  Result := Result + ',"removeAffectedLinkActions":' +
-    BooleanToStringName[rcsRemoveAffectedLinkActions in ARedactCleanupSettings];
+  Result := Result + '"removeEmptyBookmarks":' + BooleanToString
+    [rcsRemoveEmptyBookmarks in ARedactCleanupSettings];
+  Result := Result + ',"removeEmptyBookmarkActions":' + BooleanToString
+    [rcsRemoveEmptyBookmarkActions in ARedactCleanupSettings];
+  Result := Result + ',"removeEmptyAnnotations":' + BooleanToString
+    [rcsRemoveEmptyAnnotations in ARedactCleanupSettings];
+  Result := Result + ',"removeEmptyAnnotationActions":' + BooleanToString
+    [rcsRemoveEmptyAnnotationActions in ARedactCleanupSettings];
+  Result := Result + ',"removeAffectedLinkActions":' + BooleanToString
+    [rcsRemoveAffectedLinkActions in ARedactCleanupSettings];
 end;
 
-function TgtxDocOperations.SetToCSV(APDFDocPermissions
-  : TgtxPDFDocPermissions): string;
+function TgtDocOperations.SetToCSV(APDFDocPermissions
+  : TgtPDFDocPermissions): string;
 begin
   Result := '';
-  Result := Result + '"allowAccessibility":' +
-    BooleanToStringName[pdpAllowAccessibility in APDFDocPermissions];
-  Result := Result + ',"allowAssembly":' +
-    BooleanToStringName[pdpAllowAssembly in APDFDocPermissions];
-  Result := Result + ',"allowCopy":' +
-    BooleanToStringName[pdpAllowCopy in APDFDocPermissions];
-  Result := Result + ',"allowFormFill":' +
-    BooleanToStringName[pdpAllowFormFill in APDFDocPermissions];
-  Result := Result + ',"allowHighResPrint":' +
-    BooleanToStringName[pdpAllowHighResPrint in APDFDocPermissions];
-  Result := Result + ',"allowModifyAnnotations":' +
-    BooleanToStringName[pdpAllowModifyAnnotations in APDFDocPermissions];
-  Result := Result + ',"allowModifyContents":' +
-    BooleanToStringName[pdpAllowModifyContents in APDFDocPermissions];
-  Result := Result + ',"allowPrinting":' +
-    BooleanToStringName[pdpAllowPrinting in APDFDocPermissions];
+  Result := Result + '"allowAccessibility":' + BooleanToString
+    [pdpAllowAccessibility in APDFDocPermissions];
+  Result := Result + ',"allowAssembly":' + BooleanToString
+    [pdpAllowAssembly in APDFDocPermissions];
+  Result := Result + ',"allowCopy":' + BooleanToString
+    [pdpAllowCopy in APDFDocPermissions];
+  Result := Result + ',"allowFormFill":' + BooleanToString
+    [pdpAllowFormFill in APDFDocPermissions];
+  Result := Result + ',"allowHighResPrint":' + BooleanToString
+    [pdpAllowHighResPrint in APDFDocPermissions];
+  Result := Result + ',"allowModifyAnnotations":' + BooleanToString
+    [pdpAllowModifyAnnotations in APDFDocPermissions];
+  Result := Result + ',"allowModifyContents":' + BooleanToString
+    [pdpAllowModifyContents in APDFDocPermissions];
+  Result := Result + ',"allowPrinting":' + BooleanToString
+    [pdpAllowPrinting in APDFDocPermissions];
 end;
 
-{ TgtxViewResponse }
+{ TgtViewResponse }
 
-constructor TgtxViewResponse.Create(AApiResponse
-  : TgtxRestAPIResponseCreateView);
+constructor TgtViewResponse.Create(AApiResponse: TgtRestAPIResponseCreateView);
 begin
   FUrl := AApiResponse.Url;
   FTimeToLive := AApiResponse.FTimeToLive;
 end;
 
-{ TgtxVisibleNavigationControls }
+destructor TgtViewResponse.Destroy;
+begin
 
-procedure TgtxVisibleNavigationControls.Assign
-  (Source: TgtxVisibleNavigationControls);
+  inherited;
+end;
+
+{ TgtVisibleNavigationControls }
+
+procedure TgtVisibleNavigationControls.Assign
+  (Source: TgtVisibleNavigationControls);
 begin
   if (Source <> nil) then
   begin
@@ -3350,34 +3491,37 @@ begin
   end;
 end;
 
-constructor TgtxVisibleNavigationControls.Create(AFirstPage: Boolean = True;
-  ALastPage: Boolean = True; APrevPage: Boolean = True;
-  ANextPage: Boolean = True; APageIndicator: Boolean = True;
-  AGotoPage: Boolean = True);
+constructor TgtVisibleNavigationControls.Create;
 begin
-  FFirstPage := AFirstPage;
-  FLastPage := ALastPage;
-  FPrevPage := APrevPage;
-  FNextPage := ANextPage;
-  FPageIndicator := APageIndicator;
-  FGotoPage := AGotoPage;
+  FFirstPage := True;
+  FLastPage := True;
+  FPrevPage := True;
+  FNextPage := True;
+  FPageIndicator := True;
+  FGotoPage := True;
 end;
 
-function TgtxVisibleNavigationControls.ToJson: String;
+destructor TgtVisibleNavigationControls.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtVisibleNavigationControls.ToJson: String;
 begin
   Result := '"visibleNavigationControls":{';
-  Result := Result + '"firstPage":' + BooleanToStringName[FFirstPage];
-  Result := Result + ',"lastPage":' + BooleanToStringName[FLastPage];
-  Result := Result + ',"prevPage":' + BooleanToStringName[FPrevPage];
-  Result := Result + ',"nextPage":' + BooleanToStringName[FNextPage];
-  Result := Result + ',"pageIndicator":' + BooleanToStringName[FPageIndicator];
-  Result := Result + ',"gotoPage":' + BooleanToStringName[FGotoPage];
+  Result := Result + '"firstPage":' + BooleanToString[FFirstPage];
+  Result := Result + ',"lastPage":' + BooleanToString[FLastPage];
+  Result := Result + ',"prevPage":' + BooleanToString[FPrevPage];
+  Result := Result + ',"nextPage":' + BooleanToString[FNextPage];
+  Result := Result + ',"pageIndicator":' + BooleanToString[FPageIndicator];
+  Result := Result + ',"gotoPage":' + BooleanToString[FGotoPage];
   Result := Result + '}';
 end;
 
-{ TgtxVisibleZoomControls }
+{ TgtVisibleZoomControls }
 
-procedure TgtxVisibleZoomControls.Assign(Source: TgtxVisibleZoomControls);
+procedure TgtVisibleZoomControls.Assign(Source: TgtVisibleZoomControls);
 begin
   if (Source <> nil) then
   begin
@@ -3387,57 +3531,74 @@ begin
   end;
 end;
 
-constructor TgtxVisibleZoomControls.Create(AFixedSteps: Boolean = True;
-  AzoomIn: Boolean = True; AZoomout: Boolean = True);
+constructor TgtVisibleZoomControls.Create;
 begin
-  FFixedSteps := AFixedSteps;
-  FZoomIn := AzoomIn;
-  FZoomOut := AZoomout;
+  FFixedSteps := True;
+  FZoomIn := True;
+  FZoomOut := True;
 end;
 
-function TgtxVisibleZoomControls.ToJson: String;
+destructor TgtVisibleZoomControls.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtVisibleZoomControls.ToJson: String;
 begin
   Result := '"visibleZoomControls":{';
-  Result := Result + '"fixedSteps":' + BooleanToStringName[FFixedSteps];
-  Result := Result + ',"zoomIn":' + BooleanToStringName[FZoomIn];
-  Result := Result + ',"zoomOut":' + BooleanToStringName[FZoomOut];
+  Result := Result + '"fixedSteps":' + BooleanToString[FFixedSteps];
+  Result := Result + ',"zoomIn":' + BooleanToString[FZoomIn];
+  Result := Result + ',"zoomOut":' + BooleanToString[FZoomOut];
   Result := Result + '}';
 end;
 
-{ TgtxVisibleRotationControls }
+{ TgtVisibleRotationControls }
 
-constructor TgtxVisibleRotationControls.Create(AClockwise, ACounterClockwise
-  : Boolean);
+constructor TgtVisibleRotationControls.Create;
 begin
-  FClockwise := AClockwise;
-  FCounterClockwise := ACounterClockwise;
+  FClockwise := True;
+  FCounterClockwise := True;
 end;
 
-function TgtxVisibleRotationControls.ToJson: String;
+destructor TgtVisibleRotationControls.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtVisibleRotationControls.ToJson: String;
 begin
   Result := '"visibleRotationControls":{';
-  Result := Result + '"clockwise":' + BooleanToStringName[FClockwise];
-  Result := Result + ',"counterClockwise":' + BooleanToStringName[FCounterClockwise];
+  Result := Result + '"clockwise":' + BooleanToString[FClockwise];
+  Result := Result + ',"counterClockwise":' + BooleanToString
+    [FCounterClockwise];
   Result := Result + '}';
 end;
 
-{ TgtxVisibleColorInversionControls }
+{ TgtVisibleColorInversionControls }
 
-constructor TgtxVisibleColorInversionControls.Create(AAllPages: Boolean);
+constructor TgtVisibleColorInversionControls.Create;
 begin
-  FAllPages := AAllPages;
+  FAllPages := True;
 end;
 
-function TgtxVisibleColorInversionControls.ToJson: String;
+destructor TgtVisibleColorInversionControls.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtVisibleColorInversionControls.ToJson: String;
 begin
   Result := '"visibleColorInversionControls":{';
-  Result := Result + '"allPages":' + BooleanToStringName[FAllPages];
+  Result := Result + '"allPages":' + BooleanToString[FAllPages];
   Result := Result + '}';
 end;
 
-{ TgtxSearchControls }
+{ TgtSearchControls }
 
-procedure TgtxSearchControls.Assign(Source: TgtxSearchControls);
+procedure TgtSearchControls.Assign(Source: TgtSearchControls);
 begin
   if (Source <> nil) then
   begin
@@ -3446,137 +3607,129 @@ begin
   end;
 end;
 
-constructor TgtxSearchControls.Create(AEnableQuickSearch: Boolean;
-  AHighlightColor: TgtxColor);
+constructor TgtSearchControls.Create;
 begin
-  FEnableQuickSearch := AEnableQuickSearch;
-  if FHighlightColor <> nil then
-    FHighlightColor := AHighlightColor
-  else
-    FHighlightColor := TgtxColor.Create(255, 255, 0);
+  FEnableQuickSearch := True;
+  FHighlightColor := TgtColor.Create(255, 255, 0);
 end;
 
-function TgtxSearchControls.GetHighlightColor: TgtxColor;
+destructor TgtSearchControls.Destroy;
+begin
+  FHighlightColor.Free;
+  inherited;
+end;
+
+function TgtSearchControls.GetHighlightColor: TgtColor;
 begin
   Result := FHighlightColor;
 end;
 
-procedure TgtxSearchControls.SetHighlightColor(const AValue: TgtxColor);
+procedure TgtSearchControls.SetHighlightColor(const AValue: TgtColor);
 begin
   FHighlightColor.Assign(AValue);
 end;
 
-function TgtxSearchControls.ToJson: String;
+function TgtSearchControls.ToJson: String;
 begin
   Result := '"searchControls":{';
-  Result := Result + '"enableQuickSearch":' + BooleanToStringName[FEnableQuickSearch];
-  Result := Result + ',"highlightColor":"' + FHighlightColor.EncodeString(False) + '"';
+  Result := Result + '"enableQuickSearch":' + BooleanToString
+    [FEnableQuickSearch];
+  Result := Result + ',"highlightColor":"' + FHighlightColor.EncodeString
+    (False) + '"';
   Result := Result + '}';
 end;
 
-{ TgtxViewerSettings }
+{ TgtViewerSettings }
 
-constructor TgtxViewerSettings.Create(AEnableFormFilling: Boolean;
-  AToolbarVisible: Boolean;
-  AFullScreenVisible: Boolean;
-  AVisibleNavigationControls: TgtxVisibleNavigationControls;
-  AVisibleZoomControls: TgtxVisibleZoomControls;
-  AVisibleRotationControls: TgtxVisibleRotationControls;
-  AVisibleColorInversionControls: TgtxVisibleColorInversionControls;
-  ASearchControls: TgtxSearchControls);
+constructor TgtViewerSettings.Create;
 begin
-  FEnableFormFilling := AEnableFormFilling;
-  FToolbarVisible := AToolbarVisible;
-  FFullScreenVisible := AFullScreenVisible;
-  if AVisibleNavigationControls <> nil then
-    FVisibleNavigationControls := AVisibleNavigationControls
-  else
-    FVisibleNavigationControls := TgtxVisibleNavigationControls.Create(True,
-      True, True, True, True, True);
-  if AVisibleZoomControls <> nil then
-    FVisibleZoomControls := AVisibleZoomControls
-  else
-    FVisibleZoomControls := TgtxVisibleZoomControls.Create(True, True, True);
-  if AVisibleRotationControls <> nil then
-    FVisibleRotationControls := AVisibleRotationControls
-  else
-    FVisibleRotationControls := TgtxVisibleRotationControls.Create(True, True);
-  if AVisibleColorInversionControls <> nil then
-    FVisibleColorInversionControls := AVisibleColorInversionControls
-  else
-    FVisibleColorInversionControls :=
-      TgtxVisibleColorInversionControls.Create(True);
-  if ASearchControls <> nil then
-    FSearchControls := ASearchControls
-  else
-    FSearchControls := TgtxSearchControls.Create(True, nil);
+  FEnableFormFilling := True;
+  FToolbarVisible := True;
+  FFullScreenVisible := True;
+  FVisibleNavigationControls := TgtVisibleNavigationControls.Create;
+  FVisibleZoomControls := TgtVisibleZoomControls.Create;
+  FVisibleRotationControls := TgtVisibleRotationControls.Create;
+  FVisibleColorInversionControls := TgtVisibleColorInversionControls.Create;
+  FSearchControls := TgtSearchControls.Create;
 end;
 
-function TgtxViewerSettings.GetSearchControls: TgtxSearchControls;
+destructor TgtViewerSettings.Destroy;
+begin
+  FVisibleNavigationControls.Free;
+  FVisibleZoomControls.Free;
+  FVisibleRotationControls.Free;
+  FVisibleColorInversionControls.Free;
+  FSearchControls.Free;
+  inherited;
+end;
+
+function TgtViewerSettings.GetSearchControls: TgtSearchControls;
 begin
   Result := FSearchControls;
 end;
 
-function TgtxViewerSettings.GetVisibleColorInversionControls
-  : TgtxVisibleColorInversionControls;
+function TgtViewerSettings.GetVisibleColorInversionControls
+  : TgtVisibleColorInversionControls;
 begin
   Result := FVisibleColorInversionControls;
 end;
 
-function TgtxViewerSettings.GetVisibleNavigationControls
-  : TgtxVisibleNavigationControls;
+function TgtViewerSettings.GetVisibleNavigationControls
+  : TgtVisibleNavigationControls;
 begin
   Result := FVisibleNavigationControls;
 end;
 
-function TgtxViewerSettings.GetVisibleRotationControls
-  : TgtxVisibleRotationControls;
+function TgtViewerSettings.GetVisibleRotationControls
+  : TgtVisibleRotationControls;
 begin
   Result := FVisibleRotationControls;
 end;
 
-function TgtxViewerSettings.GetVisibleZoomControls: TgtxVisibleZoomControls;
+function TgtViewerSettings.GetVisibleZoomControls: TgtVisibleZoomControls;
 begin
   Result := FVisibleZoomControls;
 end;
 
-procedure TgtxViewerSettings.SetSearchControls(const AValue
-  : TgtxSearchControls);
-begin
+{
+  procedure TgtViewerSettings.SetSearchControls(const AValue: TgtSearchControls);
+  begin
   FSearchControls.Assign(AValue);
-end;
+  end;
 
-procedure TgtxViewerSettings.SetVisibleColorInversionControls
-  (const AValue: TgtxVisibleColorInversionControls);
-begin
+  procedure TgtViewerSettings.SetVisibleColorInversionControls
+  (const AValue: TgtVisibleColorInversionControls);
+  begin
   FVisibleColorInversionControls.AllPages := AValue.AllPages;
-end;
+  end;
 
-procedure TgtxViewerSettings.SetVisibleNavigationControls
-  (const AValue: TgtxVisibleNavigationControls);
-begin
+  procedure TgtViewerSettings.SetVisibleNavigationControls
+  (const AValue: TgtVisibleNavigationControls);
+  begin
   FVisibleNavigationControls.Assign(AValue);
-end;
+  end;
 
-procedure TgtxViewerSettings.SetVisibleRotationControls
-  (const AValue: TgtxVisibleRotationControls);
-begin
+  procedure TgtViewerSettings.SetVisibleRotationControls
+  (const AValue: TgtVisibleRotationControls);
+  begin
   FVisibleRotationControls.Clockwise := AValue.Clockwise;
   FVisibleRotationControls.CounterClockwise := AValue.CounterClockwise;
-end;
+  end;
 
-procedure TgtxViewerSettings.SetVisibleZoomControls(const AValue
-  : TgtxVisibleZoomControls);
-begin
+  procedure TgtViewerSettings.SetVisibleZoomControls(const AValue
+  : TgtVisibleZoomControls);
+  begin
   FVisibleZoomControls.Assign(AValue);
-end;
-
-function TgtxViewerSettings.ToJson: String;
+  end;
+}
+function TgtViewerSettings.ToJson: String;
 begin
   Result := '"viewerSettings":{';
-  Result := Result + '"enableFormFilling":' + BooleanToStringName[EnableFormFilling];
-  Result := Result + ',"toolbarVisible":' + BooleanToStringName[ToolbarVisible];
-  Result := Result + ',"fullScreenVisible":' + BooleanToStringName[FullScreenVisible];
+  Result := Result + '"enableFormFilling":' + BooleanToString
+    [EnableFormFilling];
+  Result := Result + ',"toolbarVisible":' + BooleanToString[ToolbarVisible];
+  Result := Result + ',"fullScreenVisible":' + BooleanToString
+    [FullScreenVisible];
   Result := Result + ',' + FVisibleNavigationControls.ToJson();
   Result := Result + ',' + FVisibleZoomControls.ToJson();
   Result := Result + ',' + FVisibleRotationControls.ToJson();
@@ -3585,32 +3738,33 @@ begin
   Result := Result + '}';
 end;
 
-{ TgtxViewer }
+{ TgtViewer }
 
-constructor TgtxViewer.Create(AStarDocs: TgtxStarDocsSDK);
+constructor TgtViewer.Create(AStarDocs: TgtStarDocsSDK);
 begin
   FStarDocs := AStarDocs;
+  FViewerSettings := TgtViewerSettings.Create;
 end;
 
-function TgtxViewer.CreateView(AFile: TgtxFileObject; APassword: string;
-  AViewerSettings: TgtxViewerSettings): TgtxViewResponse;
+function TgtViewer.CreateView(AFile: TgtFileObject; APassword: string)
+  : TgtViewResponse;
 var
   LUrl: string;
   LJsonStr: string;
   LJsonResponseStr: string;
-  LJsonResponse: TgtxRestAPIResponseCreateView;
+  LJsonResponse: TgtRestAPIResponseCreateView;
   LDocUris: TStringList;
   LPasswords: TStringList;
 begin
+  LDocUris := TStringList.Create;
+  LPasswords := TStringList.Create;
   try
-    LDocUris := TStringList.Create;
-    LPasswords := TStringList.Create;
     LDocUris.Add(FStarDocs.GetDocUri(AFile));
     LPasswords.Add(APassword);
     LJsonStr := '{' + FStarDocs.EncodeJsonDocuments(LDocUris, LPasswords, nil);
-    if (AViewerSettings <> nil) then
+    if (FViewerSettings <> nil) then
     begin
-      LJsonStr := LJsonStr + (',' + AViewerSettings.ToJson());
+      LJsonStr := LJsonStr + (',' + FViewerSettings.ToJson());
     end;
     if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
       LJsonStr := LJsonStr + ',"forceFullPermission":true';
@@ -3618,60 +3772,90 @@ begin
     LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri + '/viewsessions';
     LJsonResponseStr := FStarDocs.IssuePostPutRequestAndPoll(LUrl, True,
       LJsonStr);
-    LJsonResponse := TJSON.JsonToObject<TgtxRestAPIResponseCreateView>
+    LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCreateView>
       (LJsonResponseStr);
-    Result := TgtxViewResponse.Create(LJsonResponse);
+    Result := TgtViewResponse.Create(LJsonResponse);
   finally
     LDocUris.Free;
     LPasswords.Free;
   end;
 end;
 
-{ TgtxRestAPIResponseCommon }
+procedure TgtViewer.DeleteView(AResponse: TgtViewResponse);
+var
+  LRestResp: THttpResponse;
+  LRestRequest: TRestRequest;
+  LUrl: String;
+begin
+  LRestRequest := TRestRequest.Create();
+  LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri + '/viewsessions';
+  LRestRequest.Domain(LUrl);
+  LRestResp := LRestRequest.Delete;
+  if (LRestResp.ResponseCode <> 200) and (LRestResp.ResponseCode <> 204) then
+  begin
+    // Something went wrong
+    raise EgtStarDocsException.Create(LRestResp.ResponseCode,
+      LRestResp.ResponseStr);
+  end;
 
-function TgtxRestAPIResponseCommon.GetDocuments
-  : TArray<TgtxRestAPIDocumentCommon>;
+end;
+
+destructor TgtViewer.Destroy;
+begin
+  FViewerSettings.Free;
+  inherited;
+end;
+
+function TgtViewer.GetViewerSettings: TgtViewerSettings;
+begin
+  Result := FViewerSettings;
+end;
+
+{ TgtRestAPIResponseCommon }
+
+function TgtRestAPIResponseCommon.GetDocuments
+  : TArray<TgtRestAPIDocumentCommon>;
 begin
   Result := FDocuments;
 end;
 
-procedure TgtxRestAPIResponseCommon.SetDocuments(const AValue
-  : TArray<TgtxRestAPIDocumentCommon>);
+procedure TgtRestAPIResponseCommon.SetDocuments(const AValue
+  : TArray<TgtRestAPIDocumentCommon>);
 begin
   FDocuments := AValue;
 end;
 
-{ TgtxRestAPIDocumentGetPropertiesPDF }
+{ TgtRestAPIDocumentGetPropertiesPDF }
 
-function TgtxRestAPIDocumentGetPropertiesPDF.GetExtendedProperties
-  : TgtxRestAPIDocExPropertiesPDF;
+function TgtRestAPIDocumentGetPropertiesPDF.GetExtendedProperties
+  : TgtRestAPIDocExPropertiesPDF;
 begin
   Result := FExtendedProperties;
 end;
 
-function TgtxRestAPIDocumentGetPropertiesPDF.GetProperties
-  : TgtxRestAPIDocPropertiesCommon;
+function TgtRestAPIDocumentGetPropertiesPDF.GetProperties
+  : TgtRestAPIDocPropertiesCommon;
 begin
   Result := FProperties;
 end;
 
-procedure TgtxRestAPIDocumentGetPropertiesPDF.SetExtendedProperties
-  (const AValue: TgtxRestAPIDocExPropertiesPDF);
+procedure TgtRestAPIDocumentGetPropertiesPDF.SetExtendedProperties
+  (const AValue: TgtRestAPIDocExPropertiesPDF);
 begin
   FExtendedProperties.HasSecurity := AValue.HasSecurity;
   FExtendedProperties.HasBookmarks := AValue.HasBookmarks;
 end;
 
-procedure TgtxRestAPIDocumentGetPropertiesPDF.SetProperties
-  (const AValue: TgtxRestAPIDocPropertiesCommon);
+procedure TgtRestAPIDocumentGetPropertiesPDF.SetProperties
+  (const AValue: TgtRestAPIDocPropertiesCommon);
 begin
   FProperties.Assign(AValue);
 end;
 
-{ TgtxRestAPIDocPropertiesSecurity }
+{ TgtRestAPIDocPropertiesSecurity }
 
-procedure TgtxRestAPIDocPropertiesSecurity.Assign
-  (Source: TgtxRestAPIDocPropertiesSecurity);
+procedure TgtRestAPIDocPropertiesSecurity.Assign
+  (Source: TgtRestAPIDocPropertiesSecurity);
 begin
   if (Source <> nil) then
   begin
@@ -3684,36 +3868,36 @@ begin
   end;
 end;
 
-function TgtxRestAPIDocPropertiesSecurity.GetPermissions
-  : TgtxRestAPIDocPermissionsPDF;
+function TgtRestAPIDocPropertiesSecurity.GetPermissions
+  : TgtRestAPIDocPermissionsPDF;
 begin
   Result := FPermissions;
 end;
 
-procedure TgtxRestAPIDocPropertiesSecurity.SetPermissions
-  (const AValue: TgtxRestAPIDocPermissionsPDF);
+procedure TgtRestAPIDocPropertiesSecurity.SetPermissions
+  (const AValue: TgtRestAPIDocPermissionsPDF);
 begin
   FPermissions.Assign(AValue);
 end;
 
-{ TgtxRestAPIDocumentGetPropertiesSecurityPDF }
+{ TgtRestAPIDocumentGetPropertiesSecurityPDF }
 
-function TgtxRestAPIDocumentGetPropertiesSecurityPDF.
-  GetExtendedPropertiesSecurity: TgtxRestAPIDocPropertiesSecurity;
+function TgtRestAPIDocumentGetPropertiesSecurityPDF.
+  GetExtendedPropertiesSecurity: TgtRestAPIDocPropertiesSecurity;
 begin
   Result := FExtendedPropertiesSecurity;
 end;
 
-procedure TgtxRestAPIDocumentGetPropertiesSecurityPDF.
-  SetExtendedPropertiesSecurity(const AValue: TgtxRestAPIDocPropertiesSecurity);
+procedure TgtRestAPIDocumentGetPropertiesSecurityPDF.
+  SetExtendedPropertiesSecurity(const AValue: TgtRestAPIDocPropertiesSecurity);
 begin
   FExtendedPropertiesSecurity.Assign(AValue);
 end;
 
-{ TgtxRestAPIDocPropertiesCommon }
+{ TgtRestAPIDocPropertiesCommon }
 
-procedure TgtxRestAPIDocPropertiesCommon.Assign
-  (Source: TgtxRestAPIDocPropertiesCommon);
+procedure TgtRestAPIDocPropertiesCommon.Assign
+  (Source: TgtRestAPIDocPropertiesCommon);
 begin
   if Source <> nil then
   begin
@@ -3726,10 +3910,10 @@ begin
   end;
 end;
 
-{ TgtxRestAPIDocPermissionsPDF }
+{ TgtRestAPIDocPermissionsPDF }
 
-procedure TgtxRestAPIDocPermissionsPDF.Assign
-  (Source: TgtxRestAPIDocPermissionsPDF);
+procedure TgtRestAPIDocPermissionsPDF.Assign
+  (Source: TgtRestAPIDocPermissionsPDF);
 begin
   if Source <> nil then
   begin
@@ -3744,42 +3928,47 @@ begin
   end;
 end;
 
-{ TgtxRestAPIResponseGetPropertiesPDF }
+{ TgtRestAPIResponseGetPropertiesPDF }
 
-function TgtxRestAPIResponseGetPropertiesPDF.GetDocuments
-  : TArray<TgtxRestAPIDocumentGetPropertiesPDF>;
+function TgtRestAPIResponseGetPropertiesPDF.GetDocuments
+  : TArray<TgtRestAPIDocumentGetPropertiesPDF>;
 begin
   Result := FDocuments;
 end;
 
-procedure TgtxRestAPIResponseGetPropertiesPDF.SetDocuments
-  (const AValue: TArray<TgtxRestAPIDocumentGetPropertiesPDF>);
+procedure TgtRestAPIResponseGetPropertiesPDF.SetDocuments
+  (const AValue: TArray<TgtRestAPIDocumentGetPropertiesPDF>);
 begin
   FDocuments := AValue;
 end;
 
-{ TgtxRestAPIResponseGetPropertiesSecurityPDF }
+{ TgtRestAPIResponseGetPropertiesSecurityPDF }
 
-function TgtxRestAPIResponseGetPropertiesSecurityPDF.GetDocuments
-  : TArray<TgtxRestAPIDocumentGetPropertiesSecurityPDF>;
+function TgtRestAPIResponseGetPropertiesSecurityPDF.GetDocuments
+  : TArray<TgtRestAPIDocumentGetPropertiesSecurityPDF>;
 begin
   Result := FDocuments;
 end;
 
-procedure TgtxRestAPIResponseGetPropertiesSecurityPDF.SetDocuments
-  (const AValue: TArray<TgtxRestAPIDocumentGetPropertiesSecurityPDF>);
+procedure TgtRestAPIResponseGetPropertiesSecurityPDF.SetDocuments
+  (const AValue: TArray<TgtRestAPIDocumentGetPropertiesSecurityPDF>);
 begin
   FDocuments := AValue;
 end;
 
-{ TgtxPDFFormFieldFillData }
+{ TgtPDFFormFieldFillData }
 
-constructor TgtxPDFFormFieldFillData.Create(AFieldName, AFieldValue: string;
-  AFlattenField: Boolean);
+constructor TgtPDFFormFieldFillData.Create(AFieldName: string; AFieldValue: string; AFlattenField: Boolean);
 begin
   FFieldName := AFieldName;
   FFieldValue := AFieldValue;
   FFlattenField := AFlattenField;
+end;
+
+destructor TgtGetDocumentInfoResponse.Destroy;
+begin
+
+  inherited;
 end;
 
 end.
