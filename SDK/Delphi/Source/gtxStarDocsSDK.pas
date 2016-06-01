@@ -358,35 +358,22 @@ type
     mtImage_bmp, mtImage_tiff, mtImage_png,
     mtApplication_vnd_openxmlformats_officedocument_wordprocessingml_document);
 
-  TgtExceptionStatusCode = (
-    escHTTPBadRequest = 400,
-    escHTTPUnauthorized = 401,
-    escHTTPNotFound = 404,
-    escHTTPConflict = 500,
-    escGeneralError = 1000,
-    escBadRequest = 1010,
-    escBadDocument = 1011,
-    escPasswordRequired = 1020,
-    escUnsupportedDocumentFormat = 1030,
-    escInsufficientRights = 1040,
-    escUnknownJob = 1050,
-    escUnknownDocument = 1051,
-    escUnknownPage = 1052,
-    escUnknownUser = 1053,
-    escInvalidApiKey = 1054,
+  TgtExceptionStatusCode = (escHTTPBadRequest = 400, escHTTPUnauthorized = 401,
+    escHTTPNotFound = 404, escHTTPConflict = 500, escGeneralError = 1000,
+    escBadRequest = 1010, escBadDocument = 1011, escPasswordRequired = 1020,
+    escUnsupportedDocumentFormat = 1030, escInsufficientRights = 1040,
+    escUnknownJob = 1050, escUnknownDocument = 1051, escUnknownPage = 1052,
+    escUnknownUser = 1053, escInvalidApiKey = 1054,
     escUnsupportedOperationForFormat = 1060,
     escExhaustedStorageQuotaForLicense = 1070,
     escExhaustedStorageQuotaForUser = 1071,
     escExhaustedStorageQuotaForApp = 1072,
     escUploadSizeOverlimitForLicense = 1080,
-    escUploadSizeOverlimitForUser = 1081,
-    escUploadSizeOverlimitForApp = 1082,
+    escUploadSizeOverlimitForUser = 1081, escUploadSizeOverlimitForApp = 1082,
     escExhaustedUsageQuotaForApp = 1090,
     escExhaustedUsageQuotaForLicense = 1091,
-    escSubscriptionPaymentFailure = 1092,
-    escInternalError = 2000,
-    escUnexpectedResponse = 10000,
-    escOperationTimedOut = 10001);
+    escSubscriptionPaymentFailure = 1092, escInternalError = 2000,
+    escUnexpectedResponse = 10000, escOperationTimedOut = 10001);
 
   { TgtAuthResponse }
   TgtAuthResponse = class
@@ -1276,6 +1263,7 @@ type
     property ViewerSettings: TgtViewerSettings read GetViewerSettings;
     function CreateView(AFile: TgtFileObject; APassword: string = '')
       : TgtViewResponse;
+    function GetJavaScriptViewerObject(AResponse: TgtViewResponse): string;
     procedure DeleteView(AResponse: TgtViewResponse);
   end;
 
@@ -1286,7 +1274,8 @@ type
     FFieldValue: string;
     FFlattenField: Boolean;
   public
-    constructor Create(AFieldName: string; AFieldValue: string; AFlattenField: Boolean = False);
+    constructor Create(AFieldName: string; AFieldValue: string;
+      AFlattenField: Boolean = False);
     property FieldName: string read FFieldName write FFieldName;
     property FieldValue: string read FFieldValue write FFieldValue;
     property FlattenField: Boolean read FFlattenField write FFlattenField;
@@ -1328,6 +1317,7 @@ begin
   FStorage.Free;
   FDocOperations.Free;
   FViewer.Free;
+  FAuthResponse.Free;
   inherited;
 end;
 
@@ -1375,6 +1365,7 @@ end;
 function TgtStarDocsSDK.GetDocUri(AFile: TgtFileObject): string;
 var
   LOutDoc: TgtDocObject;
+
 begin
   LOutDoc := nil;
   if AFile.FFileUploaded then
@@ -1382,15 +1373,17 @@ begin
   else
   begin
     if AFile.FStream <> nil then
-      Result := Storage.Upload(AFile.Stream, AFile.FStreamFileName)
-        .FRemoteFileUri.FUri.Uri
+    begin
+      LOutDoc := Storage.Upload(AFile.Stream, AFile.FStreamFileName);
+      Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+    end
     else
-      try
-        LOutDoc := Storage.Upload(AFile.FLocalFilePath);
-        Result := LOutDoc.FRemoteFileUri.FUri.Uri;
-      finally
-        LOutDoc.Free;
-      end;
+    begin
+      LOutDoc := Storage.Upload(AFile.FLocalFilePath);
+      Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+    end;
+    LOutDoc.Free;
+
   end;
 
 end;
@@ -1667,11 +1660,9 @@ end;
 
 { TgtDocObject }
 constructor TgtDocObject.Create(AApiResponse: TgtRestAPIDocumentCommon);
-var
-  LRemoteFileUri: TgtRemoteFileUri;
 begin
-  LRemoteFileUri := TgtRemoteFileUri.Create(AApiResponse.Url);
-  inherited Create(LRemoteFileUri);
+  FRemoteFileUri := TgtRemoteFileUri.Create(AApiResponse.Url);
+  inherited Create(FRemoteFileUri);
   FFileName := AApiResponse.FileName;
   FFileSize := AApiResponse.FileSize;
   FPageCount := AApiResponse.PageCount;
@@ -1680,7 +1671,6 @@ end;
 
 destructor TgtDocObject.Destroy;
 begin
-
   inherited;
 end;
 
@@ -1717,6 +1707,7 @@ begin
   FAccessToken := ARestAPIResponseAuth.AccessToken;
   FTokenType := ARestAPIResponseAuth.TokenType;
   FExpiresIn := ARestAPIResponseAuth.ExpiresIn;
+
 end;
 
 destructor TgtAuthResponse.Destroy;
@@ -1731,8 +1722,7 @@ begin
   FStream := nil;
   FStreamFileName := '';
   FFileUploaded := True;
-  FRemoteFileUri := TgtRemoteFileUri.Create('');
-  FRemoteFileUri.Assign(ARemoteFileUri);
+  FRemoteFileUri := ARemoteFileUri;
   FLocalFilePath := '';
 end;
 
@@ -2638,6 +2628,7 @@ var
   LRestResp: THttpResponse;
   LResponseError: TgtRestAPIResponseAuthFailure;
   LResponseSuccess: TgtRestAPIResponseAuth;
+
 begin
   LRestRequest := TRestRequest.Create();
   Result := nil;
@@ -2672,6 +2663,8 @@ begin
     FStarDocs.AuthResponse := Result;
   finally
     LRestRequest.Free;
+    LResponseSuccess.Free;
+
   end;
 end;
 
@@ -2709,6 +2702,8 @@ begin
     Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
   finally
     LRestRequest.Free;
+    LResponseCommon.Documents[0].Free;
+    LResponseCommon.Free;
   end;
 end;
 
@@ -2740,6 +2735,8 @@ begin
     Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
   finally
     LRestRequest.Free;
+    LResponseCommon.Documents[0].Free;
+    LResponseCommon.Free;
   end;
 end;
 
@@ -2849,6 +2846,7 @@ begin
   LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseGetDocumentInfo>
     (LJsonResponseStr);
   Result := TgtGetDocumentInfoResponse.Create(LJsonResponse);
+  LJsonResponse.Free;
 end;
 
 function TgtDocOperations.GetImageEncoderSettings: TgtImageEncoderSettings;
@@ -2943,6 +2941,8 @@ begin
     Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
   finally
     LDocUris.Free;
+    LJsonResponse.Documents[0].Free;
+    LJsonResponse.Free;
   end;
 end;
 
@@ -2973,6 +2973,10 @@ begin
   LNumFiles := Length(LJsonResponse.Documents);
   for LIndex := 0 to LNumFiles - 1 do
     Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
+
+  for LIndex := 0 to LNumFiles - 1 do
+    LJsonResponse.Documents[LIndex].Free;
+  LJsonResponse.Free;
 end;
 
 function TgtDocOperations.SplitBySeparatorPage(AFile: TgtFileObject;
@@ -3004,6 +3008,9 @@ begin
   LNumFiles := Length(LJsonResponse.Documents);
   for LIndex := 0 to LNumFiles - 1 do
     Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
+  for LIndex := 0 to LNumFiles - 1 do
+    LJsonResponse.Documents[LIndex].Free;
+  LJsonResponse.Free;
 end;
 
 function TgtDocOperations.Encrypt(AFile: TgtFileObject; APassword: string;
@@ -3041,10 +3048,14 @@ begin
   LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
   Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
+
+  LJsonResponse.Documents[0].Free;
+  LJsonResponse.Free;
 end;
 
 function TgtDocOperations.FillForm(AFile: TgtFileObject; APassword: string;
-  AFormFields: TObjectList<TgtPDFFormFieldFillData>; AFlattenAllFields: Boolean): TgtDocObject;
+  AFormFields: TObjectList<TgtPDFFormFieldFillData>; AFlattenAllFields: Boolean)
+  : TgtDocObject;
 var
   LUrl: string;
   LDocUrl: string;
@@ -3065,7 +3076,8 @@ begin
     LJsonStr := LJsonStr + ',' + EncodeFormFieldFillData(AFormFields);
 
   if AFlattenAllFields then
-    LJsonStr := LJsonStr + ',"flattenAllFields":' + BooleanToString[AFlattenAllFields];
+    LJsonStr := LJsonStr + ',"flattenAllFields":' + BooleanToString
+      [AFlattenAllFields];
 
   LJsonStr := LJsonStr + '}';
 
@@ -3120,6 +3132,9 @@ begin
   LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
   Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
+
+  LJsonResponse.Documents[0].Free;
+  LJsonResponse.Free;
 end;
 
 function TgtDocOperations.ConvertToTIFF(AFiles: TObjectList<TgtFileObject>;
@@ -3165,6 +3180,9 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
+    for LIndex := 0 to LNumFiles - 1 do
+      LJsonResponse.Documents[LIndex].Free;
+    LJsonResponse.Free;
   end;
 end;
 
@@ -3215,6 +3233,9 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
+    for LIndex := 0 to LNumFiles - 1 do
+      LJsonResponse.Documents[LIndex].Free;
+    LJsonResponse.Free;
   end;
 end;
 
@@ -3278,7 +3299,7 @@ begin
       APageRanges);
     if FStarDocs.Preferences.DocPasswordSettings.ForceFullPermission then
       LJsonStr := LJsonStr + ',"forceFullPermission":true';
-    if TgtPDFEncoderSettings <> nil then
+    if FPDFEncoderSettings <> nil then
       LJsonStr := LJsonStr + (',' + FPDFEncoderSettings.ToJson);
     LJsonStr := LJsonStr + ',"conversionMode": ' +
       GetEnumName(TypeInfo(TgtPDFConversionMode), Integer(AConversionMode))
@@ -3297,6 +3318,9 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
+    for LIndex := 0 to LNumFiles - 1 do
+      LJsonResponse.Documents[LIndex].Free;
+    LJsonResponse.Free;
   end;
 end;
 
@@ -3339,6 +3363,9 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
+    for LIndex := 0 to LNumFiles - 1 do
+      LJsonResponse.Documents[LIndex].Free;
+    LJsonResponse.Free;
   end;
 end;
 
@@ -3775,21 +3802,29 @@ begin
     LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCreateView>
       (LJsonResponseStr);
     Result := TgtViewResponse.Create(LJsonResponse);
+
   finally
     LDocUris.Free;
     LPasswords.Free;
+    LJsonResponse.Free;
   end;
+end;
+
+function TgtViewer.GetJavaScriptViewerObject(AResponse: TgtViewResponse): string;
+var
+  LUrl: TIdUri;
+begin
+  LUrl := TIdUri.Create(AResponse.Url);
+  Result := 'docViewer' + LUrl.Document;
 end;
 
 procedure TgtViewer.DeleteView(AResponse: TgtViewResponse);
 var
   LRestResp: THttpResponse;
   LRestRequest: TRestRequest;
-  LUrl: String;
 begin
   LRestRequest := TRestRequest.Create();
-  LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri + '/viewsessions';
-  LRestRequest.Domain(LUrl);
+  LRestRequest.Domain(AResponse.Url);
   LRestResp := LRestRequest.Delete;
   if (LRestResp.ResponseCode <> 200) and (LRestResp.ResponseCode <> 204) then
   begin
@@ -3797,7 +3832,6 @@ begin
     raise EgtStarDocsException.Create(LRestResp.ResponseCode,
       LRestResp.ResponseStr);
   end;
-
 end;
 
 destructor TgtViewer.Destroy;
@@ -3958,7 +3992,8 @@ end;
 
 { TgtPDFFormFieldFillData }
 
-constructor TgtPDFFormFieldFillData.Create(AFieldName: string; AFieldValue: string; AFlattenField: Boolean);
+constructor TgtPDFFormFieldFillData.Create(AFieldName: string;
+  AFieldValue: string; AFlattenField: Boolean);
 begin
   FFieldName := AFieldName;
   FFieldValue := AFieldValue;
