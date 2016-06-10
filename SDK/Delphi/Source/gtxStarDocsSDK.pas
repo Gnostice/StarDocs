@@ -372,7 +372,8 @@ type
     escUploadSizeOverlimitForUser = 1081, escUploadSizeOverlimitForApp = 1082,
     escExhaustedUsageQuotaForApp = 1090,
     escExhaustedUsageQuotaForLicense = 1091,
-    escSubscriptionPaymentFailure = 1092, escInternalError = 2000,
+    escSubscriptionPaymentFailure = 1092, 
+		escTrialLicenseExpired = 1100, escInternalError = 2000,
     escUnexpectedResponse = 10000, escOperationTimedOut = 10001);
 
   { TgtAuthResponse }
@@ -1132,6 +1133,22 @@ type
     property TimeToLive: Longint read FTimeToLive write FTimeToLive;
   end;
 
+  { TgtVisibleFileOperationControls }
+  TgtVisibleFileOperationControls = class
+  private
+    FOpen: Boolean;
+    FDownload: Boolean;
+    FPrint: Boolean;
+    function ToJson: String;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtVisibleFileOperationControls);
+    property Open: Boolean read FOpen write FOpen;
+    property Download: Boolean read FDownload write FDownload;
+    property Print: Boolean read FPrint write FPrint;
+  end;
+
   { TgtVisibleNavigationControls }
   TgtVisibleNavigationControls = class
   private
@@ -1214,11 +1231,13 @@ type
     FEnableFormFilling: Boolean;
     FToolbarVisible: Boolean;
     FFullScreenVisible: Boolean;
+    FVisibleFileOperationControls: TgtVisibleFileOperationControls;
     FVisibleNavigationControls: TgtVisibleNavigationControls;
     FVisibleZoomControls: TgtVisibleZoomControls;
     FVisibleRotationControls: TgtVisibleRotationControls;
     FVisibleColorInversionControls: TgtVisibleColorInversionControls;
     FSearchControls: TgtSearchControls;
+    function GetVisibleFileOperationControls: TgtVisibleFileOperationControls;
     function GetVisibleNavigationControls: TgtVisibleNavigationControls;
     function GetVisibleZoomControls: TgtVisibleZoomControls;
     function GetVisibleRotationControls: TgtVisibleRotationControls;
@@ -1241,6 +1260,8 @@ type
     property ToolbarVisible: Boolean read FToolbarVisible write FToolbarVisible;
     property FullScreenVisible: Boolean read FFullScreenVisible
       write FFullScreenVisible;
+    property VisibleFileOperationControls: TgtVisibleFileOperationControls
+      read GetVisibleFileOperationControls;
     property VisibleNavigationControls: TgtVisibleNavigationControls
       read GetVisibleNavigationControls;
     property VisibleZoomControls: TgtVisibleZoomControls
@@ -1368,24 +1389,26 @@ var
 
 begin
   LOutDoc := nil;
-  if AFile.FFileUploaded then
-    Result := AFile.FRemoteFileUri.FUri.Uri
-  else
-  begin
-    if AFile.FStream <> nil then
-    begin
-      LOutDoc := Storage.Upload(AFile.Stream, AFile.FStreamFileName);
-      Result := LOutDoc.FRemoteFileUri.FUri.Uri;
-    end
+  try
+    if AFile.FFileUploaded then
+      Result := AFile.FRemoteFileUri.FUri.Uri
     else
     begin
-      LOutDoc := Storage.Upload(AFile.FLocalFilePath);
-      Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+      if AFile.FStream <> nil then
+      begin
+        LOutDoc := Storage.Upload(AFile.Stream, AFile.FStreamFileName);
+        Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+      end
+      else
+      begin
+        LOutDoc := Storage.Upload(AFile.FLocalFilePath);
+        Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+      end;
     end;
-    LOutDoc.Free;
-
+  finally
+    if LOutDoc <> nil then
+      LOutDoc.Free;
   end;
-
 end;
 
 function TgtStarDocsSDK.GetPreferences: TgtPreferences;
@@ -2602,7 +2625,7 @@ function TgtPDFEncoderSettings.ToJson(): string;
 begin
   Result := '"pdfEncoderSettings":{';
   Result := Result + FPDFPortfolioSettings.ToJson();
-  Result := Result + '"fontEmbedding":"' +
+  Result := Result + ',"fontEmbedding":"' +
     GetEnumName(TypeInfo(TgtFontEmbeddingType), Integer(FFontEmbeddingType))
     .Substring(3) + '"';
   Result := Result + ',"overrideFontEmbeddingRestriction":' + BooleanToString
@@ -2632,6 +2655,7 @@ var
 begin
   LRestRequest := TRestRequest.Create();
   Result := nil;
+  LResponseSuccess := nil;
   try
     LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
       .Path('auth/token').WithCredentials(FStarDocs.FConnectionInfo.FApiKey,
@@ -2663,8 +2687,8 @@ begin
     FStarDocs.AuthResponse := Result;
   finally
     LRestRequest.Free;
-    LResponseSuccess.Free;
-
+    if LResponseSuccess <> nil then
+      LResponseSuccess.Free;
   end;
 end;
 
@@ -2680,10 +2704,10 @@ var
   LRestResponse: THttpResponse;
   LRestRequest: TRestRequest;
   LResponseCommon: TgtRestAPIResponseCommon;
-  // LResponseError: TgtRestAPIResponseError;
 begin
   LRestRequest := TRestRequest.Create();
   Result := nil;
+  LResponseCommon := nil;
   try
     LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
       .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
@@ -2702,8 +2726,11 @@ begin
     Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
   finally
     LRestRequest.Free;
-    LResponseCommon.Documents[0].Free;
-    LResponseCommon.Free;
+    if LResponseCommon <> nil then
+    begin
+      LResponseCommon.Documents[0].Free;
+      LResponseCommon.Free;
+    end;
   end;
 end;
 
@@ -2713,9 +2740,9 @@ var
   LRestResp: THttpResponse;
   LRestRequest: TRestRequest;
   LResponseCommon: TgtRestAPIResponseCommon;
-  // LResponseError: TgtRestAPIResponseError;
 begin
   Result := nil;
+  LResponseCommon := nil;
   LRestRequest := TRestRequest.Create();
   try
     LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
@@ -2735,8 +2762,11 @@ begin
     Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
   finally
     LRestRequest.Free;
-    LResponseCommon.Documents[0].Free;
-    LResponseCommon.Free;
+    if LResponseCommon <> nil then
+    begin
+      LResponseCommon.Documents[0].Free;
+      LResponseCommon.Free;
+    end;
   end;
 end;
 
@@ -2922,6 +2952,7 @@ var
   LJsonResponseStr: string;
   LJsonResponse: TgtRestAPIResponseCommon;
 begin
+  LJsonResponse := nil;
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
   try
@@ -2941,8 +2972,11 @@ begin
     Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
   finally
     LDocUris.Free;
-    LJsonResponse.Documents[0].Free;
-    LJsonResponse.Free;
+    if LJsonResponse <> nil then
+    begin
+      LJsonResponse.Documents[0].Free;
+      LJsonResponse.Free;
+    end;
   end;
 end;
 
@@ -3087,6 +3121,8 @@ begin
   LJsonResponse := TJSON.JsonToObject<TgtRestAPIResponseCommon>
     (LJsonResponseStr);
   Result := TgtDocObject.Create(LJsonResponse.Documents[0]);
+  LJsonResponse.Documents[0].Free;
+  LJsonResponse.Free;
 end;
 
 function TgtDocOperations.RedactText(AFile: TgtFileObject; APassword: string;
@@ -3151,6 +3187,7 @@ var
   LJsonResponseStr: string;
   LJsonResponse: TgtRestAPIResponseCommon;
 begin
+  LJsonResponse := nil;
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
   try
@@ -3180,9 +3217,12 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
-    for LIndex := 0 to LNumFiles - 1 do
-      LJsonResponse.Documents[LIndex].Free;
-    LJsonResponse.Free;
+    if LJsonResponse <> nil then
+    begin
+      for LIndex := 0 to LNumFiles - 1 do
+        LJsonResponse.Documents[LIndex].Free;
+      LJsonResponse.Free;
+    end;
   end;
 end;
 
@@ -3201,6 +3241,7 @@ var
   LJsonResponseStr: string;
   LJsonResponse: TgtRestAPIResponseCommon;
 begin
+  LJsonResponse := nil;
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
   try
@@ -3233,9 +3274,12 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
-    for LIndex := 0 to LNumFiles - 1 do
-      LJsonResponse.Documents[LIndex].Free;
-    LJsonResponse.Free;
+    if LJsonResponse <> nil then
+    begin
+      for LIndex := 0 to LNumFiles - 1 do
+        LJsonResponse.Documents[LIndex].Free;
+      LJsonResponse.Free;
+    end;
   end;
 end;
 
@@ -3291,6 +3335,7 @@ var
 begin
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
+  LJsonResponse := nil;
   try
     for LIndex := 0 to LNumFiles - 1 do
       LDocUris.Add(FStarDocs.GetDocUri(AFiles[LIndex]));
@@ -3301,7 +3346,7 @@ begin
       LJsonStr := LJsonStr + ',"forceFullPermission":true';
     if FPDFEncoderSettings <> nil then
       LJsonStr := LJsonStr + (',' + FPDFEncoderSettings.ToJson);
-    LJsonStr := LJsonStr + ',"conversionMode": ' +
+    LJsonStr := LJsonStr + ',"conversionMode":"' +
       GetEnumName(TypeInfo(TgtPDFConversionMode), Integer(AConversionMode))
       .Substring(3) + '"';
     LJsonStr := LJsonStr + '}';
@@ -3318,9 +3363,12 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
-    for LIndex := 0 to LNumFiles - 1 do
-      LJsonResponse.Documents[LIndex].Free;
-    LJsonResponse.Free;
+    if LJsonResponse <> nil then
+    begin
+      for LIndex := 0 to LNumFiles - 1 do
+        LJsonResponse.Documents[LIndex].Free;
+      LJsonResponse.Free;
+    end;
   end;
 end;
 
@@ -3337,6 +3385,7 @@ var
   LJsonResponseStr: string;
   LJsonResponse: TgtRestAPIResponseCommon;
 begin
+  LJsonResponse := nil;
   LNumFiles := AFiles.Count;
   LDocUris := TStringList.Create;
   try
@@ -3363,9 +3412,12 @@ begin
       Result.Add(TgtDocObject.Create(LJsonResponse.Documents[LIndex]));
   finally
     LDocUris.Free;
-    for LIndex := 0 to LNumFiles - 1 do
-      LJsonResponse.Documents[LIndex].Free;
-    LJsonResponse.Free;
+    if LJsonResponse <> nil then
+    begin
+      for LIndex := 0 to LNumFiles - 1 do
+        LJsonResponse.Documents[LIndex].Free;
+      LJsonResponse.Free;
+    end;
   end;
 end;
 
@@ -3502,6 +3554,41 @@ begin
   inherited;
 end;
 
+{ TgtVisibleFileOperationControls }
+
+procedure TgtVisibleFileOperationControls.Assign
+  (Source: TgtVisibleFileOperationControls);
+begin
+  if (Source <> nil) then
+  begin
+    FOpen := Source.Open;
+    FDownload := Source.Download;
+    FPrint := Source.Print;
+  end;
+end;
+
+constructor TgtVisibleFileOperationControls.Create;
+begin
+  FOpen := False;
+  FDownload := False;
+  FPrint := False;
+end;
+
+destructor TgtVisibleFileOperationControls.Destroy;
+begin
+
+  inherited;
+end;
+
+function TgtVisibleFileOperationControls.ToJson: String;
+begin
+  Result := '"visibleFileOperationControls":{';
+  Result := Result + '"open":' + BooleanToString[Open];
+  Result := Result + ',"download":' + BooleanToString[Download];
+  Result := Result + ',"print":' + BooleanToString[Print];
+  Result := Result + '}';
+end;
+
 { TgtVisibleNavigationControls }
 
 procedure TgtVisibleNavigationControls.Assign
@@ -3607,7 +3694,7 @@ end;
 
 constructor TgtVisibleColorInversionControls.Create;
 begin
-  FAllPages := True;
+  FAllPages := False;
 end;
 
 destructor TgtVisibleColorInversionControls.Destroy;
@@ -3672,7 +3759,8 @@ constructor TgtViewerSettings.Create;
 begin
   FEnableFormFilling := True;
   FToolbarVisible := True;
-  FFullScreenVisible := True;
+  FFullScreenVisible := False;
+  FVisibleFileOperationControls := TgtVisibleFileOperationControls.Create;
   FVisibleNavigationControls := TgtVisibleNavigationControls.Create;
   FVisibleZoomControls := TgtVisibleZoomControls.Create;
   FVisibleRotationControls := TgtVisibleRotationControls.Create;
@@ -3682,12 +3770,18 @@ end;
 
 destructor TgtViewerSettings.Destroy;
 begin
+  FVisibleFileOperationControls.Free;
   FVisibleNavigationControls.Free;
   FVisibleZoomControls.Free;
   FVisibleRotationControls.Free;
   FVisibleColorInversionControls.Free;
   FSearchControls.Free;
   inherited;
+end;
+
+function TgtViewerSettings.GetVisibleFileOperationControls: TgtVisibleFileOperationControls;
+begin
+  Result := FVisibleFileOperationControls;
 end;
 
 function TgtViewerSettings.GetSearchControls: TgtSearchControls;
@@ -3757,6 +3851,7 @@ begin
   Result := Result + ',"toolbarVisible":' + BooleanToString[ToolbarVisible];
   Result := Result + ',"fullScreenVisible":' + BooleanToString
     [FullScreenVisible];
+  Result := Result + ',' + FVisibleFileOperationControls.ToJson();
   Result := Result + ',' + FVisibleNavigationControls.ToJson();
   Result := Result + ',' + FVisibleZoomControls.ToJson();
   Result := Result + ',' + FVisibleRotationControls.ToJson();
@@ -3783,6 +3878,7 @@ var
   LDocUris: TStringList;
   LPasswords: TStringList;
 begin
+  LJsonResponse := nil;
   LDocUris := TStringList.Create;
   LPasswords := TStringList.Create;
   try
@@ -3806,15 +3902,17 @@ begin
   finally
     LDocUris.Free;
     LPasswords.Free;
-    LJsonResponse.Free;
+    if LJsonResponse <> nil then
+      LJsonResponse.Free;
   end;
 end;
 
-function TgtViewer.GetJavaScriptViewerObject(AResponse: TgtViewResponse): string;
+function TgtViewer.GetJavaScriptViewerObject
+  (AResponse: TgtViewResponse): string;
 var
-  LUrl: TIdUri;
+  LUrl: TIdURI;
 begin
-  LUrl := TIdUri.Create(AResponse.Url);
+  LUrl := TIdURI.Create(AResponse.Url);
   Result := 'docViewer' + LUrl.Document;
 end;
 
