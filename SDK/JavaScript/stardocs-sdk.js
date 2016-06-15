@@ -173,15 +173,13 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	Storage.prototype.constructor = Storage;
 	
 	// Upload file(s)
-	// inputElementFileId - id of the <input> element of type 'file'
+	// fileObject - File selected by user taken from <input type="file"> element. See https://developer.mozilla.org/en-US/docs/Web/API/File
 	// password - Password if the document is encrypted
-	Storage.prototype.upload = function(inputElementFileId, password) {
-		var fileInput = document.getElementById(inputElementFileId);
+	Storage.prototype.upload = function(fileObject, password) {
 		// Currently we only support a single file upload at a time
-		var file = fileInput.files[0];
-		console.log('Uploading ' + file);
+		console.log('Uploading ' + fileObject);
 		var formData = new FormData();
-		formData.append('fileUpload', file);
+		formData.append('fileUpload', fileObject);
 		if (password != null) {
 			formData.append('password', password);
 		}
@@ -282,6 +280,18 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				}
 			);
 		}
+	};
+
+	// Get a download URI
+	Storage.prototype.getDownloadUrl = function(docUrl) {
+		var fileUrl = new URI(docUrl);
+		if (this.starDocs.auth.accessToken !== null) {
+			fileUrl = fileUrl.setQuery('bearer_token', this.starDocs.auth.accessToken);
+		}
+		else {
+			return $.Deferred().reject(401, 'You need to authenticate before calling this method.').promise();
+		}
+		return $.Deferred().resolve(fileUrl).promise();
 	};
 
 	// Delete file
@@ -732,9 +742,10 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	/* 
 	docUrl - String
 	password - String
-	pageRangeSettings - JS object having schema { range: <string>, subRangeMode: <string>, reverseOrder: <boolean> }
+	pageRangeSettings - JS object having schema { range: <string>, subRangeMode: <string> }
 	searchMode - String
-	searchText - Array of JS objects having schema { text: <string, caseSensitive: <boolean>, wholeWord: <boolean> }
+	searchText - Array of JS objects having schema { text: <string>, caseSensitive: <boolean>, wholeWord: <boolean> }
+	removeAssociatedAnnotations - Boolean to indicate whether annotations associated with the redacted text should also be removed. Default is false.
 	fillSettings - JS object having schema
 		{
 			outline: 
@@ -782,7 +793,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 			removeAffectedLinkActions: <boolean>
 		}
 	*/
-	DocOperations.prototype.redactText = function(docUrl, password, pageRangeSettings, searchMode, searchText, fillSettings, includeAdditionalItems, cleanupSettings) {
+	DocOperations.prototype.redactText = function(docUrl, password, pageRangeSettings, searchMode, searchText, removeAssociatedAnnotations, fillSettings, includeAdditionalItems, cleanupSettings) {
 		var docsOpsUri = docUrl + this.starDocs.uriSegOps + "/redact-text";
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
 		if (password != null) {
@@ -796,6 +807,9 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		}
 		if (searchText != null) {
 			jsonBody.searchText = searchText;
+		}
+		if (removeAssociatedAnnotations != null) {
+			jsonBody.removeAssociatedAnnotations = removeAssociatedAnnotations;
 		}
 		if (fillSettings != null) {
 			jsonBody.fillSettings = fillSettings;
@@ -825,15 +839,19 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	*		},
 	*		...
 	*	]
+	* @param {boolean} flattenAllFields Some comment
 	*/
-	DocOperations.prototype.fillForm = function(docUrl, password, fields) {
+	DocOperations.prototype.fillForm = function(docUrl, password, fields, flattenAllFields) {
 		var docsOpsUri = docUrl + this.starDocs.uriSegOps + "/fill-form";
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
 		if (password != null) {
-			jsonBody.password = passwords;
+			jsonBody.password = password;
 		}
 		if (fields != null) {
 			jsonBody.fields = fields;
+		}
+		if (flattenAllFields === true) {
+			jsonBody.flattenAllFields = flattenAllFields;
 		}
 		var body = JSON.stringify(jsonBody);
 		return this.starDocs.doAjaxWithBodyAndPoll('PUT', docsOpsUri, body, 'application/json; charset=utf-8');
@@ -874,15 +892,17 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 
 	// Get document info
 	DocOperations.prototype.getDocInfo = function(docUrl, password) {
-		docUrl = docUrl + this.starDocs.uriSegInfo;
-		docUrl = docUrl + "?force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		var docInfoUrl = new URI(docUrl).segment(this.starDocs.uriSegInfo)
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
 		if (password != null) {
-			docUrl = docUrl + "&password=" + encodeURIComponent(password);
+			docInfoUrl = docInfoUrl.setQuery("password", password);
 		}
 		else if (this.starDocs.documentPassword != null) {
-			docUrl = docUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+			docInfoUrl = docInfoUrl.setQuery("password", this.starDocs.documentPassword);
 		}
 
+		return this.starDocs.doAjaxAndPoll('GET', docInfoUrl.toString());
+		/*
 		var deferred = this.starDocs.doAjax('GET', docUrl);
 		var that = this;
 		return deferred.then(
@@ -910,18 +930,23 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				return $.Deferred().reject(jqXhr.status, errorThrown, jqXhr.responseJSON).promise();
 			}
 		);
+		*/
 	};
 	
 	// Get page image
 	DocOperations.prototype.getPageImage = function(pageUrl, dpi, password) {
-		pageUrl = pageUrl + "?dpi=" + dpi;
-		pageUrl = pageUrl + "&force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		var pageUrlObj = new URI(pageUrl)
+			.setQuery("dpi", dpi)
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
 		if (password != null) {
-			pageUrl = pageUrl + "&password=" + encodeURIComponent(password);
+			pageUrlObj = pageUrlObj.setQuery("password", password);
 		}
 		else if (this.starDocs.documentPassword != null) {
-			pageUrl = pageUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+			pageUrlObj = pageUrlObj.setQuery("password", this.starDocs.documentPassword);
 		}
+
+		return this.starDocs.doAjaxAndPoll('GET', pageUrlObj.toString());
+		/*
 		var deferred = this.starDocs.doAjax('GET', pageUrl);
 		var that = this;
 		return deferred.then(
@@ -952,18 +977,56 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				return $.Deferred().reject(jqXhr.status, errorThrown, jqXhr.responseJSON).promise();
 			}
 		);
+		*/
+	};
+	
+	// Get list of page image URLs for the given document. This is for use by the viewer for printingt the document.
+	DocOperations.prototype.getDocumentPrintImageURLs = function(docUrl, password) {
+		var docsOpsUrl = new URI(docUrl).segment(this.starDocs.uriSegOps).segment("prepare-print-images"); // Append "/ops/prepare-print-images"
+		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
+		if (password != null) {
+			jsonBody.password = passwords;
+		}
+		else if (this.starDocs.documentPassword != null) {
+			jsonBody.password = this.starDocs.documentPassword;
+		}
+
+		var body = JSON.stringify(jsonBody);
+		var returnDeferred = $.Deferred();
+		var that = this;
+		this.starDocs.doAjaxWithBodyAndPoll('POST', docsOpsUrl.toString(), body, 'application/json; charset=utf-8').done(function(response) {
+			// Construct page image URLs and return them
+			console.log("In getDocumentPrintImageURLs: Pages ready " + response);
+			var pageImageUrls = [];
+			var largestRenderedPageCount = response.largestRenderedPageCount;
+			var pagesUrl = new URI(docUrl).segment('pages');
+			for (var pageNum = 1; pageNum <= largestRenderedPageCount; ++pageNum) {
+				var pageImageUrl = pagesUrl.toString() + "/" + pageNum + "/image";
+				var pageImageDownloadUrl = new URI(pageImageUrl).setQuery('bearer_token', that.starDocs.auth.accessToken).toString();
+				pageImageUrls.push(pageImageDownloadUrl);
+			}
+			returnDeferred.resolve(pageImageUrls);
+		})
+		.fail(function(status, errorThrown, response) {
+			console.log("In getDocumentPrintImageURLs: fail event called");
+			returnDeferred.reject(status, errorThrown, response);
+		});
+		return returnDeferred.promise();
 	};
 
 	// Get page form fields
 	DocOperations.prototype.getPageFormFields = function(pageUrl, password) {
-		var pageTextUrl = pageUrl + "/formfields";
-		pageTextUrl = pageTextUrl + "?force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		var pageFormFieldsUrl = new URI(pageUrl).segment("formfields")
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
 		if (password != null) {
-			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(password);
+			pageFormFieldsUrl = pageFormFieldsUrl.setQuery("password", password);
 		}
 		else if (this.starDocs.documentPassword != null) {
-			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+			pageFormFieldsUrl = pageFormFieldsUrl.setQuery("password", this.starDocs.documentPassword);
 		}
+		return this.starDocs.doAjaxAndPoll('GET', pageFormFieldsUrl.toString());
+
+		/*
 		var deferred = this.starDocs.doAjax('GET', pageTextUrl);
 		var that = this;
 		return deferred.then(
@@ -991,18 +1054,24 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				return $.Deferred().reject(jqXhr.status, errorThrown, jqXhr.responseJSON).promise();
 			}
 		);
+		*/
 	};
 
 	// Get page text
 	DocOperations.prototype.getPageText = function(pageUrl, password) {
-		var pageTextUrl = pageUrl + "/text";
-		pageTextUrl = pageTextUrl + "?force-full-permission=" + this.starDocs.preferences.docPasswordSettings.forceFullPermission;
+		var pageTextUrl = new URI(pageUrl)
+			.segment("text")
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
 		if (password != null) {
-			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(password);
+			pageTextUrl = pageTextUrl.setQuery("password", password);
 		}
 		else if (this.starDocs.documentPassword != null) {
-			pageTextUrl = pageTextUrl + "&password=" + encodeURIComponent(this.starDocs.documentPassword);
+			pageTextUrl = pageTextUrl.setQuery("password", this.starDocs.documentPassword);
 		}
+		
+		return this.starDocs.doAjaxAndPoll('GET', pageTextUrl.toString());
+
+		/*
 		var deferred = this.starDocs.doAjax('GET', pageTextUrl);
 		var that = this;
 		return deferred.then(
@@ -1033,6 +1102,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 				return $.Deferred().reject(jqXhr.status, errorThrown, jqXhr.responseJSON).promise();
 			}
 		);
+		*/
 	};
 
 	/* User management related APIs */
@@ -1259,6 +1329,38 @@ Gnostice.StarDocs.prototype.doAjaxWithBody = function(method, uri, body, bodyCon
 		cache: false,
 		processData: false
 	});
+};
+
+Gnostice.StarDocs.prototype.doAjaxAndPoll = function(method, url, expectedDataType) {
+		var deferred = this.doAjax(method, url, expectedDataType);
+		var that = this;
+		return deferred.then(
+			function(response, textStatus, jqXhr) {
+				if (jqXhr.status === 200) {
+					return $.Deferred().resolve(response).promise();
+				}
+				else if (jqXhr.status === 202) {
+					// Result is not ready so we need to poll
+					var newDeferred = $.Deferred();
+					var pollUrl = new URI(jqXhr.getResponseHeader("location"));
+					if (that.preferences.docPasswordSettings.forceFullPermission) {
+						pollUrl = pollUrl.setQuery("force-full-permission", true);
+					}
+					if (that.documentPassword != null) {
+						pollUrl = pollUrl.setQuery("password", that.documentPassword);
+					}
+					setTimeout(that.doPoll, that.pollInterval, pollUrl.toString(), newDeferred, that, 1);
+					return newDeferred.promise();
+				}
+				else {
+					// Unexpected response
+					return $.Deferred().reject(jqXhr.status, textStatus, jqXhr.responseJSON).promise();
+				}
+			},
+			function(jqXhr, textStatus, errorThrown) {
+				return $.Deferred().reject(jqXhr.status, errorThrown, jqXhr.responseJSON).promise();
+			}
+		);
 };
 
 Gnostice.StarDocs.prototype.doAjaxWithBodyAndPoll = function(method, uri, body, bodyContentType, expectedDataType) {
