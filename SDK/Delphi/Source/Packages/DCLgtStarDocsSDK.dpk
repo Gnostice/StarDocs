@@ -1,4 +1,4 @@
-package gtStarDocsSDK;
+package DCLgtStarDocsSDK;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -25,23 +25,21 @@ package gtStarDocsSDK;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$RUNONLY}
+{$DESCRIPTION 'Gnostice StarDocs SDK'}
 {$IMPLICITBUILD ON}
 
 requires
   rtl,
-  IndySystem,
-  IndyProtocols,
-  IndyCore,
   xmlrtl,
   dbrtl,
   inet,
   soaprtl,
-  RESTComponents;
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  gtStarDocsSDK;
 
 contains
-  gtxStarDocsSDK in '..\gtxStarDocsSDK.pas',
-  RestRequest in '..\RestRequest.pas';
+  gtxRegControls in '..\gtxRegControls.pas';
 
 end.
-
