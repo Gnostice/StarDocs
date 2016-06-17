@@ -311,6 +311,7 @@ type
     function RedactText(AFile: TgtFileObject; APassword: string;
       APageRange: TgtPageRangeSettings; ATextSearchMode: TgtTextSearchMode;
       ASearchText: TObjectList<TgtSearchText>;
+      ARemoveAssociatedAnnotations: Boolean = True;
       AIncludeAdditionalItems: TgtDocumentItems = [];
       ACleanupSettings: TgtRedactCleanupSettings = []): TgtDocObject;
 
@@ -372,9 +373,9 @@ type
     escUploadSizeOverlimitForUser = 1081, escUploadSizeOverlimitForApp = 1082,
     escExhaustedUsageQuotaForApp = 1090,
     escExhaustedUsageQuotaForLicense = 1091,
-    escSubscriptionPaymentFailure = 1092, 
-		escTrialLicenseExpired = 1100, escInternalError = 2000,
-    escUnexpectedResponse = 10000, escOperationTimedOut = 10001);
+    escSubscriptionPaymentFailure = 1092, escTrialLicenseExpired = 1100,
+    escInternalError = 2000, escUnexpectedResponse = 10000,
+    escOperationTimedOut = 10001);
 
   { TgtAuthResponse }
   TgtAuthResponse = class
@@ -662,7 +663,7 @@ type
     destructor Destroy; override;
     property Color: TgtColor read GetColor;
     property Width: Integer read FWidth;
-    property Style: TgtPenStyle read FStyle;
+    property Style: TgtPenStyle read FStyle write FStyle;
   end;
 
   { TgtBrush }
@@ -675,7 +676,7 @@ type
     constructor Create;
     destructor Destroy; override;
     property Color: TgtColor read GetColor;
-    property Pattern: TgtBrushPattern read FPattern;
+    property Pattern: TgtBrushPattern read FPattern write FPattern;
   end;
 
   { TgtOutline }
@@ -1137,16 +1138,18 @@ type
   TgtVisibleFileOperationControls = class
   private
     FOpen: Boolean;
-    FDownload: Boolean;
+    FSave: Boolean;
     FPrint: Boolean;
+    FDownload: Boolean;
     function ToJson: String;
   public
     constructor Create;
     destructor Destroy; override;
     procedure Assign(Source: TgtVisibleFileOperationControls);
     property Open: Boolean read FOpen write FOpen;
-    property Download: Boolean read FDownload write FDownload;
+    property Save: Boolean read FSave write FSave;
     property Print: Boolean read FPrint write FPrint;
+    property Download: Boolean read FDownload write FDownload;
   end;
 
   { TgtVisibleNavigationControls }
@@ -3128,6 +3131,7 @@ end;
 function TgtDocOperations.RedactText(AFile: TgtFileObject; APassword: string;
   APageRange: TgtPageRangeSettings; ATextSearchMode: TgtTextSearchMode;
   ASearchText: TObjectList<TgtSearchText>;
+  ARemoveAssociatedAnnotations: Boolean = True;
   AIncludeAdditionalItems: TgtDocumentItems = [];
   ACleanupSettings: TgtRedactCleanupSettings = []): TgtDocObject;
 var
@@ -3152,6 +3156,9 @@ begin
     LJsonStr := LJsonStr + ',"forceFullPermission":true';
 
   LJsonStr := LJsonStr + ',' + EncodeJsonSearchText(ASearchText);
+
+  if ARemoveAssociatedAnnotations then
+    LJsonStr := LJsonStr + ',"removeAssociatedAnnotations":true';
 
   if FRedactFillSettings <> nil then
     LJsonStr := LJsonStr + ',' + FRedactFillSettings.ToJson();
@@ -3562,16 +3569,18 @@ begin
   if (Source <> nil) then
   begin
     FOpen := Source.Open;
-    FDownload := Source.Download;
+    FSave := Source.Save;
     FPrint := Source.Print;
+    FDownload := Source.Download;
   end;
 end;
 
 constructor TgtVisibleFileOperationControls.Create;
 begin
   FOpen := False;
-  FDownload := False;
+  FSave := False;
   FPrint := False;
+  FDownload := False;
 end;
 
 destructor TgtVisibleFileOperationControls.Destroy;
@@ -3584,8 +3593,9 @@ function TgtVisibleFileOperationControls.ToJson: String;
 begin
   Result := '"visibleFileOperationControls":{';
   Result := Result + '"open":' + BooleanToString[Open];
-  Result := Result + ',"download":' + BooleanToString[Download];
+  Result := Result + ',"save":' + BooleanToString[Save];
   Result := Result + ',"print":' + BooleanToString[Print];
+  Result := Result + ',"download":' + BooleanToString[Download];
   Result := Result + '}';
 end;
 
@@ -3779,7 +3789,8 @@ begin
   inherited;
 end;
 
-function TgtViewerSettings.GetVisibleFileOperationControls: TgtVisibleFileOperationControls;
+function TgtViewerSettings.GetVisibleFileOperationControls
+  : TgtVisibleFileOperationControls;
 begin
   Result := FVisibleFileOperationControls;
 end;
