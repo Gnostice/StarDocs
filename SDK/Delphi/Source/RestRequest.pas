@@ -105,6 +105,7 @@ uses
         FReadTimeout: Integer;
         FBeforeRequest: TBeforeRequest;
         FSslHandler: TIdSSLIOHandlerSocketOpenSSL;
+        FAlwaysMultipartFormData: boolean;
 
         procedure doBeforeRequest(AHttpInst: TIdHttp);
         function getHttpClientInstance: TIdHttp;
@@ -145,6 +146,8 @@ uses
         property Accept: string read getAccept write setAccept;
         property ContentType: string read getContentType write setContentType;
         property BeforeRequest: TBeforeRequest read GetBeforeRequest write SetBeforeRequest;
+        property AlwaysMultipartFormData: boolean read FAlwaysMultipartFormData
+          write FAlwaysMultipartFormData;
 
         function Get: THttpResponse;
         // Use for file downloads
@@ -494,7 +497,8 @@ end;
 function TRestRequest.multipartRequired: boolean;
 begin
   Result := false;
-  if (FFileParams.Count > 0) or (Length(FFileParamsStream) > 0) then
+  if (FFileParams.Count > 0) or (Length(FFileParamsStream) > 0)
+    or (FAlwaysMultipartFormData) then
   begin
     Result := true;
   end;

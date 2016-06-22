@@ -25,7 +25,6 @@ type
   TgtAuth = class;
   TgtStorage = class;
   TgtDocOperations = class;
-  TgtRemoteFileUri = class;
   TgtFileObject = class;
   TgtDocObject = class;
   TgtGetDocumentInfoResponse = class;
@@ -178,7 +177,6 @@ type
   TgtStorage = class
   private
     FStarDocs: TgtStarDocsSDK;
-
   public
     constructor Create(AStarDocs: TgtStarDocsSDK);
     destructor Destroy; override;
@@ -186,8 +184,13 @@ type
       : TgtDocObject; overload;
     function Upload(AStream: TStream; AfileName: string; APassword: string = '')
       : TgtDocObject; overload;
+    function UploadFromURL(AExternalURL: string; APassword: string = '')
+      : TgtDocObject;
+    function CopyFrom(ASourceFile: TgtFileObject; APassword: string = '')
+      : TgtDocObject;
     procedure Download(AFile: TgtFileObject; AFilePath: string); overload;
     procedure Download(AFile: TgtFileObject; FOutStream: TStream); overload;
+    procedure Delete(AFile: TgtFileObject);
   end;
 
   { TgtDocOperations }
@@ -391,42 +394,30 @@ type
     property ExpiresIn: Longint read FExpiresIn;
   end;
 
-  { TgtRemoteFileUri }
-  TgtRemoteFileUri = class
-  private
-    FUri: TIdURI;
-    procedure Assign(Source: TgtRemoteFileUri);
-  public
-    constructor Create(AUri: TIdURI); overload;
-    constructor Create(AUri: string); overload;
-    destructor Destroy; override;
-    property Uri: TIdURI read FUri;
-  end;
-
   { TgtFileObject }
   TgtFileObject = class
   private
     FFileUploaded: Boolean;
     FStream: TStream;
     FStreamFileName: string;
-    FRemoteFileUri: TgtRemoteFileUri;
+    FFileUrl: TIdUri;
     FLocalFilePath: string;
-    function GetFileNameFromUri: string;
+    function GetFileNameFromUrl: string;
     { procedure SetUploaded(AUri: string); }
     function GetStream: TStream;
     procedure SetStream(const AValue: TStream);
-    function GetRemoteFileUri: TgtRemoteFileUri;
-    procedure SetRemoteFileUri(const AValue: TgtRemoteFileUri);
+    function GetFileUrl: TIdUri;
+    procedure SetFileUrl(const AValue: TIdUri);
   public
-    constructor Create(ARemoteFileUri: TgtRemoteFileUri); overload;
+    constructor Create; overload;
     constructor Create(AStream: TStream; AStreamFileName: string); overload;
     constructor Create(ALocalFilePath: string); overload;
     destructor Destroy; override;
     property FileUploaded: Boolean read FFileUploaded;
     property Stream: TStream read GetStream Write SetStream;
     property StreamFileName: string read FStreamFileName;
-    property RemoteFileUri: TgtRemoteFileUri read GetRemoteFileUri
-      write SetRemoteFileUri;
+    property FileUrl: TIdUri read GetFileUrl
+      write SetFileUrl;
     property LocalFilePath: string read FLocalFilePath;
   end;
 
@@ -1389,23 +1380,22 @@ end;
 function TgtStarDocsSDK.GetDocUri(AFile: TgtFileObject): string;
 var
   LOutDoc: TgtDocObject;
-
 begin
   LOutDoc := nil;
   try
     if AFile.FFileUploaded then
-      Result := AFile.FRemoteFileUri.FUri.Uri
+      Result := AFile.FFileUrl.Uri
     else
     begin
       if AFile.FStream <> nil then
       begin
         LOutDoc := Storage.Upload(AFile.Stream, AFile.FStreamFileName);
-        Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+        Result := LOutDoc.FFileUrl.Uri;
       end
       else
       begin
         LOutDoc := Storage.Upload(AFile.FLocalFilePath);
-        Result := LOutDoc.FRemoteFileUri.FUri.Uri;
+        Result := LOutDoc.FFileUrl.Uri;
       end;
     end;
   finally
@@ -1686,9 +1676,13 @@ end;
 
 { TgtDocObject }
 constructor TgtDocObject.Create(AApiResponse: TgtRestAPIDocumentCommon);
+var
+  LFileUrl: TIdUri;
 begin
-  FRemoteFileUri := TgtRemoteFileUri.Create(AApiResponse.Url);
-  inherited Create(FRemoteFileUri);
+  inherited Create;
+  LFileUrl := TIdUri.Create(AApiResponse.Url);
+  Self.FileUrl := LFileUrl;
+  LFileUrl.Free;
   FFileName := AApiResponse.FileName;
   FFileSize := AApiResponse.FileSize;
   FPageCount := AApiResponse.PageCount;
@@ -1742,13 +1736,13 @@ begin
 end;
 
 { TgtFileObject }
-constructor TgtFileObject.Create(ARemoteFileUri: TgtRemoteFileUri);
+constructor TgtFileObject.Create;
 begin
   // Assume file is uploaded
   FStream := nil;
   FStreamFileName := '';
-  FFileUploaded := True;
-  FRemoteFileUri := ARemoteFileUri;
+  FFileUploaded := False;
+  FFileUrl := TIdUri.Create;
   FLocalFilePath := '';
 end;
 
@@ -1757,7 +1751,7 @@ begin
   FStream := AStream;
   FStreamFileName := AStreamFileName;
   FFileUploaded := False;
-  FRemoteFileUri := nil;
+  FFileUrl := nil;
   FLocalFilePath := '';
 end;
 
@@ -1766,25 +1760,25 @@ begin
   FStream := nil;
   FStreamFileName := '';
   FFileUploaded := False;
-  FRemoteFileUri := nil;
+  FFileUrl := nil;
   FLocalFilePath := ALocalFilePath;
 end;
 
 destructor TgtFileObject.Destroy;
 begin
-  if FRemoteFileUri <> nil then
-    FRemoteFileUri.Free;
+  if Assigned(FFileUrl) then
+    FFileUrl.Free;
   inherited;
 end;
 
-function TgtFileObject.GetFileNameFromUri: string;
+function TgtFileObject.GetFileNameFromUrl: string;
 begin
-  Result := TIdURI.URLDecode(RemoteFileUri.FUri.Document);
+  Result := TIdURI.URLDecode(FFileUrl.Document);
 end;
 
-function TgtFileObject.GetRemoteFileUri: TgtRemoteFileUri;
+function TgtFileObject.GetFileUrl: TIdUri;
 begin
-  Result := FRemoteFileUri;
+  Result := FFileUrl;
 end;
 
 function TgtFileObject.GetStream: TStream;
@@ -1792,44 +1786,17 @@ begin
   Result := FStream;
 end;
 
-procedure TgtFileObject.SetRemoteFileUri(const AValue: TgtRemoteFileUri);
+procedure TgtFileObject.SetFileUrl(const AValue: TIdUri);
 begin
-  FRemoteFileUri.Assign(AValue);
+  if FFileUrl = nil then
+    FFileUrl := TIdUri.Create;
+  FFileUrl.URI := AValue.URI;
+  FFileUploaded := True;
 end;
 
 procedure TgtFileObject.SetStream(const AValue: TStream);
 begin
   FStream := AValue;
-end;
-
-{
-  procedure TgtFileObject.SetUploaded(AUri: string);
-  begin
-  FFileUploaded := True;
-  FRemoteFileUri := TgtRemoteFileUri.Create(AUri);
-  end;
-}
-
-{ TgtRemoteFileUri }
-constructor TgtRemoteFileUri.Create(AUri: TIdURI);
-begin
-  FUri := TIdURI.Create(AUri.Uri);
-end;
-
-constructor TgtRemoteFileUri.Create(AUri: string);
-begin
-  FUri := TIdURI.Create(AUri);
-end;
-
-destructor TgtRemoteFileUri.Destroy;
-begin
-  FUri.Free;
-end;
-
-procedure TgtRemoteFileUri.Assign(Source: TgtRemoteFileUri);
-begin
-  if Source <> nil then
-    FUri := Source.FUri;
 end;
 
 constructor TgtGetDocumentInfoResponse.Create(AApiResponse
@@ -2773,15 +2740,63 @@ begin
   end;
 end;
 
+function TgtStorage.UploadFromURL(AExternalURL: string; APassword: string = '')
+  : TgtDocObject;
+var
+  LRestResp: THttpResponse;
+  LRestRequest: TRestRequest;
+  LResponseCommon: TgtRestAPIResponseCommon;
+begin
+  Result := nil;
+  LResponseCommon := nil;
+  LRestRequest := TRestRequest.Create();
+  try
+    LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
+      .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
+      .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
+    LRestRequest.BodyParam('fileURL', AExternalURL);
+    LRestRequest.BodyParam('password', APassword);
+    LRestRequest.BodyParam('forceFullPermission',
+      BooleanToString[FStarDocs.Preferences.DocPasswordSettings.
+      ForceFullPermission]);
+    // Force multipart/form-data
+    LRestRequest.AlwaysMultipartFormData := True;
+    LRestResp := LRestRequest.Post('');
+    if LRestResp.ResponseCode <> 200 then
+      raise EgtStarDocsException.Create(LRestResp.ResponseCode,
+        LRestResp.ResponseStr);
+    LResponseCommon := TJSON.JsonToObject<TgtRestAPIResponseCommon>
+      (LRestResp.ResponseStr);
+    Result := TgtDocObject.Create(LResponseCommon.Documents[0]);
+  finally
+    LRestRequest.Free;
+    if LResponseCommon <> nil then
+    begin
+      LResponseCommon.Documents[0].Free;
+      LResponseCommon.Free;
+    end;
+  end;
+end;
+
+function TgtStorage.CopyFrom(ASourceFile: TgtFileObject; APassword: string = '')
+  : TgtDocObject;
+begin
+  // Ensure we have a valid URL
+  if (not ASourceFile.FileUploaded) or (ASourceFile.FileUrl = nil) then
+    // Invalid URL
+    raise Exception.Create('File not on server or invalid URL');
+  Result := UploadFromURL(ASourceFile.FFileUrl.URI, APassword);
+end;
+
 procedure TgtStorage.Download(AFile: TgtFileObject; AFilePath: string);
 var
   LOutStream: TFileStream;
   LFileName: string;
 begin
-  // Ensure we have a valid URI
-  if (not AFile.FileUploaded) or (AFile.RemoteFileUri = nil) then
-    // Invalid URI
-    raise Exception.Create('File not on server or invalid URI');
+  // Ensure we have a valid URL
+  if (not AFile.FileUploaded) or (AFile.FileUrl = nil) then
+    // Invalid URL
+    raise Exception.Create('File not on server or invalid URL');
 
   AFilePath := AFilePath.Trim;
   if AFilePath = '' then
@@ -2798,7 +2813,7 @@ begin
       LFileName := TgtDocObject(AFile).FileName
     else
       // Append file name from URI
-      LFileName := AFile.GetFileNameFromUri;
+      LFileName := AFile.GetFileNameFromUrl;
     if AFilePath.EndsWith(PathDelim) then
       AFilePath := AFilePath + LFileName
     else
@@ -2825,7 +2840,7 @@ var
   LRestResponse: THttpResponse;
   LDocUri: string;
 begin
-  LDocUri := AFile.RemoteFileUri.Uri.Uri;
+  LDocUri := AFile.FileUrl.Uri;
   LRestRequest := TRestRequest.Create;
   LRestRequest.Domain(LDocUri).WithReadTimeout
     (FStarDocs.FConnectionInfo.FServerTimeout)
@@ -2839,6 +2854,27 @@ begin
       raise EgtStarDocsException.Create(0,
         TgtExceptionStatusCode.escUnexpectedResponse,
         'Unexpected response type during download');
+  finally
+    LRestRequest.Free;
+  end;
+end;
+
+procedure TgtStorage.Delete(AFile: TgtFileObject);
+var
+  LRestRequest: TRestRequest;
+  LRestResponse: THttpResponse;
+  LDocUri: string;
+begin
+  LDocUri := AFile.FFileUrl.URI;
+  LRestRequest := TRestRequest.Create;
+  LRestRequest.Domain(LDocUri).WithReadTimeout
+    (FStarDocs.FConnectionInfo.FServerTimeout)
+    .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
+  try
+    LRestResponse := LRestRequest.Delete;
+    if LRestResponse.ResponseCode <> 204 then
+      raise EgtStarDocsException.Create(LRestResponse.ResponseCode,
+        LRestResponse.ResponseStr);
   finally
     LRestRequest.Free;
   end;
