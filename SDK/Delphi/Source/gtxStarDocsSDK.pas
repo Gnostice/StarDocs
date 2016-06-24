@@ -1432,7 +1432,8 @@ begin
   LRestRequestGetPoll := TRestRequest.Create();
   LStopWatch := TStopWatch.Create;
   try
-    LRestRequestGet.Domain(AUrl).WithReadTimeout(FConnectionInfo.FServerTimeout)
+    LRestRequestGet.Domain(AUrl)
+      .WithReadTimeout(FConnectionInfo.FServerTimeout)
       .WithBearerToken(FAuthResponse.AccessToken);
     LRestResp := LRestRequestGet.Get;
     if (LRestResp.ResponseCode = 201) OR (LRestResp.ResponseCode = 200) then
@@ -1504,9 +1505,9 @@ begin
   LRestRequestGet := TRestRequest.Create();
   LStopWatch := TStopWatch.Create;
   try
-    LRestRequestPost.Domain(AUrl).WithReadTimeout
-      (FConnectionInfo.FServerTimeout).WithBearerToken
-      (FAuthResponse.AccessToken);
+    LRestRequestPost.Domain(AUrl)
+      .WithReadTimeout(FConnectionInfo.FServerTimeout)
+      .WithBearerToken(FAuthResponse.AccessToken);
     if APost then
       LRestResp := LRestRequestPost.Post(AJsonStr)
     else
@@ -1526,9 +1527,9 @@ begin
     // LJobsResponse := TJSON.JsonToObject<TgtRestAPIResponseJobs>(LRestResp.ResponseStr);
     // LFullJobUri := LJobsResponse.Jobs[0].Uri;
     LFullJobUri := LRestResp.LocationHeader;
-    LRestRequestGet.Domain(LFullJobUri).WithReadTimeout
-      (FConnectionInfo.FServerTimeout).WithBearerToken
-      (FAuthResponse.AccessToken);
+    LRestRequestGet.Domain(LFullJobUri)
+      .WithReadTimeout(FConnectionInfo.FServerTimeout)
+      .WithBearerToken(FAuthResponse.AccessToken);
     LSleepTime := ConnectionInfo.PollInterval;
     LStopWatch.Start;
     while True do
@@ -1594,7 +1595,7 @@ begin
   FApiServerUri := TIdURI.Create;
   FApiKey := '';
   FApiSecret := '';
-  FServerTimeout := -1;
+  FServerTimeout := 30000;
   FDocOperationTimeout := -1;
 end;
 
@@ -2627,9 +2628,11 @@ begin
   Result := nil;
   LResponseSuccess := nil;
   try
-    LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
+    LRestRequest
+      .Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
       .Path('auth/token').WithCredentials(FStarDocs.FConnectionInfo.FApiKey,
-      FStarDocs.FConnectionInfo.FApiSecret);
+        FStarDocs.FConnectionInfo.FApiSecret)
+      .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout);
     if AEntity <> '' then
     begin
       LRestRequest.UrlParam('entity_id', AEntity);
@@ -2679,8 +2682,10 @@ begin
   Result := nil;
   LResponseCommon := nil;
   try
-    LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
-      .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
+    LRestRequest
+      .Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
+      .Path('docs')
+      .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.FileParam('fileUpload', AFileNameWithPath);
     LRestRequest.BodyParam('password', APassword);
@@ -2715,8 +2720,10 @@ begin
   LResponseCommon := nil;
   LRestRequest := TRestRequest.Create();
   try
-    LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
-      .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
+    LRestRequest
+      .Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
+      .Path('docs')
+      .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.FileParam('fileUpload', AfileName, AStream);
     LRestRequest.BodyParam('password', APassword);
@@ -2751,8 +2758,10 @@ begin
   LResponseCommon := nil;
   LRestRequest := TRestRequest.Create();
   try
-    LRestRequest.Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
-      .Path('docs').WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
+    LRestRequest
+      .Domain(FStarDocs.FConnectionInfo.FApiServerUri.Uri)
+      .Path('docs')
+      .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
       .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
     LRestRequest.BodyParam('fileURL', AExternalURL);
     LRestRequest.BodyParam('password', APassword);
@@ -2842,8 +2851,9 @@ var
 begin
   LDocUri := AFile.FileUrl.Uri;
   LRestRequest := TRestRequest.Create;
-  LRestRequest.Domain(LDocUri).WithReadTimeout
-    (FStarDocs.FConnectionInfo.FServerTimeout)
+  LRestRequest
+    .Domain(LDocUri)
+    .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
     .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
   try
     LRestResponse := LRestRequest.GetToStream(FOutStream);
@@ -2867,8 +2877,9 @@ var
 begin
   LDocUri := AFile.FFileUrl.URI;
   LRestRequest := TRestRequest.Create;
-  LRestRequest.Domain(LDocUri).WithReadTimeout
-    (FStarDocs.FConnectionInfo.FServerTimeout)
+  LRestRequest
+    .Domain(LDocUri)
+    .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout)
     .WithBearerToken(FStarDocs.FAuthResponse.AccessToken);
   try
     LRestResponse := LRestRequest.Delete;
@@ -3969,7 +3980,9 @@ var
   LRestRequest: TRestRequest;
 begin
   LRestRequest := TRestRequest.Create();
-  LRestRequest.Domain(AResponse.Url);
+  LRestRequest
+    .Domain(AResponse.Url)
+    .WithReadTimeout(FStarDocs.FConnectionInfo.FServerTimeout);
   LRestResp := LRestRequest.Delete;
   if (LRestResp.ResponseCode <> 200) and (LRestResp.ResponseCode <> 204) then
   begin

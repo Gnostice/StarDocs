@@ -440,7 +440,7 @@ end;
 function TRestRequest.getHttpClientInstance: TIdHttp;
 begin
   Result := TIdHttp.Create(nil);
-  Result.ConnectTimeout := 5000;
+  Result.ConnectTimeout := 30000;
   Result.ReadTimeout := Self.FReadTimeout;
   Result.OnAuthorization := httpAuthorisation;
   Result.MaxAuthRetries := 0;
