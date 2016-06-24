@@ -1,6 +1,6 @@
 object frmAuthentication: TfrmAuthentication
-  Left = 0
-  Top = 0
+  Left = 500
+  Top = 381
   Caption = 'Authentication'
   ClientHeight = 192
   ClientWidth = 485
@@ -11,6 +11,7 @@ object frmAuthentication: TfrmAuthentication
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -62,7 +63,7 @@ object frmAuthentication: TfrmAuthentication
     TabOrder = 1
   end
   object btnOK: TButton
-    Left = 288
+    Left = 304
     Top = 153
     Width = 75
     Height = 25
@@ -82,7 +83,7 @@ object frmAuthentication: TfrmAuthentication
     OnClick = btnCancelClick
   end
   object LinkLabel1: TLinkLabel
-    Left = 8
+    Left = 24
     Top = 153
     Width = 123
     Height = 17

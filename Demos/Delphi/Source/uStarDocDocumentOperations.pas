@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ComCtrls, CheckLst, ExtCtrls, UInit, gtxStarDocsSDK,
-  ShellApi, System.Generics.Collections,
-  System.Actions, Vcl.ActnList, Vcl.StdActns, TypInfo, SHDocVw, Vcl.OleCtrls;
+  ShellApi, Generics.Collections, Actions, ActnList, StdActns, TypInfo,
+  SHDocVw, OleCtrls, Contnrs;
 
 type
   TForm1 = class(TForm)
@@ -93,9 +93,7 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     WebBrowser1: TWebBrowser;
-    gtStarDocsSDK1: TgtStarDocsSDK;
-    btnSplitByRange: TButton;
-    btnSplitBySeperator: TButton;
+    btnSplit: TButton;
     btnRedactLoad: TButton;
     Label7: TLabel;
     edReadctLoad: TEdit;
@@ -121,15 +119,16 @@ type
     edIspasswordcorrect: TEdit;
     edPageCount: TEdit;
     edMIMEType: TEdit;
+    gtStarDocsSDK1: TgtStarDocsSDK;
+    Label11: TLabel;
+    ComboBox2: TComboBox;
 
     procedure btnMergeOpen1Click(Sender: TObject);
     procedure btnViewLoadClick(Sender: TObject);
     procedure btnSplitloadClick(Sender: TObject);
     procedure BrowseForFolder1Accept(Sender: TObject);
-    procedure btnSplitByRangeClick(Sender: TObject);
     procedure BrowseForFolder5Accept(Sender: TObject);
     procedure btnMergeClick(Sender: TObject);
-    procedure btnSplitBySeperatorClick(Sender: TObject);
     procedure btnConvertloadClick(Sender: TObject);
     procedure btnConvertClick(Sender: TObject);
     procedure BrowseForFolder2Accept(Sender: TObject);
@@ -142,20 +141,21 @@ type
     procedure btnDocInfoloadClick(Sender: TObject);
     procedure btnGetInfoClick(Sender: TObject);
     procedure btnViewClick(Sender: TObject);
-
+    procedure ComboBox2Change(Sender: TObject);
+    procedure btnSplitClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
 
   public
     { Public declarations }
-    LSplitInFileStream: TFileStream;
     LSplitInFile: TgtFileObject;
     LConverterInFiles: TObjectList<TgtFileObject>;
-    LRedactInFileStream: TFileStream;
     LRedactInFile: TgtFileObject;
-    LEncryptInFileStream: TFileStream;
     LEncryptInFile: TgtFileObject;
     LMergeInFiles: TObjectList<TgtFileObject>;
     LDocInfoInFile: TgtFileObject;
+    LLoadedFileList: TObjectList;
   end;
 
 const
@@ -199,41 +199,45 @@ var
   LOutFiles: TObjectList<TgtDocObject>;
   LIndex: Integer;
 begin
+  LOutFiles := nil;
+  LPageRanges := nil;
   btnConvert.Enabled := False;
   LPageRanges := TObjectList<TgtPageRangeSettings>.Create;
   LPageRanges.Add(TgtPageRangeSettings.Create(edConvertpagerange.Text));
-  case ComboBox1.ItemIndex of
-    0:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToPDF(LConverterInFiles,
-        nil, LPageRanges);
-    1:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToTIFF(LConverterInFiles,
-        nil, LPageRanges);
-    2:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToMTIFF
-        (LConverterInFiles, nil, LPageRanges);
-    3:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToJpeg(LConverterInFiles,
-        nil, LPageRanges);
-    4:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToGIF(LConverterInFiles,
-        nil, LPageRanges);
-    5:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToPNG(LConverterInFiles,
-        nil, LPageRanges);
-    6:
-      LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToBMP(LConverterInFiles,
-        nil, LPageRanges)
+  try
+    case ComboBox1.ItemIndex of
+      0:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToPDF(LConverterInFiles,
+          nil, LPageRanges);
+      1:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToTIFF(LConverterInFiles,
+          nil, LPageRanges);
+      2:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToMTIFF
+          (LConverterInFiles, nil, LPageRanges);
+      3:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToJpeg(LConverterInFiles,
+          nil, LPageRanges);
+      4:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToGIF(LConverterInFiles,
+          nil, LPageRanges);
+      5:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToPNG(LConverterInFiles,
+          nil, LPageRanges);
+      6:
+        LOutFiles := gtStarDocsSDK1.DocOperations.ConvertToBMP(LConverterInFiles,
+          nil, LPageRanges)
+    end;
+
+    for LIndex := 0 to LOutFiles.Count - 1 do
+      gtStarDocsSDK1.Storage.Download(LOutFiles[LIndex], edConvertoutput.Text);
+  finally
+    if Assigned(LOutFiles) then
+      LOutFiles.Free;
+    if Assigned(LPageRanges) then
+      LPageRanges.Free;
+    btnConvert.Enabled := True;
   end;
-
-  for LIndex := 0 to LOutFiles.Count - 1 do
-    gtStarDocsSDK1.Storage.Download(LOutFiles[LIndex], edConvertoutput.Text);
-
-  LOutFiles.Free;
-  LConverterInFiles.Free;
-  LPageRanges.Free;
-  btnConvert.Enabled := True;
-
 end;
 
 procedure TForm1.btnConvertloadClick(Sender: TObject);
@@ -259,6 +263,7 @@ begin
     for Li := 0 to LOpnDlg.Files.Count - 1 do
     begin
       LConverterInFiles.Add(TgtFileObject.Create(LOpnDlg.Files[Li]));
+      LLoadedFileList.Add(LConverterInFiles);
     end;
   end;
   LOpnDlg.Free;
@@ -270,6 +275,7 @@ begin
   begin
     edDocInfoLoad.Text := OpenDialog1.FileName;
     LDocInfoInFile := TgtFileObject.Create(OpenDialog1.FileName);
+    LLoadedFileList.Add(LDocInfoInFile);
     GroupBox3.Visible := False;
     btnGetInfo.Enabled := True;
   end;
@@ -320,16 +326,18 @@ begin
     LUserPermissions := LUserPermissions + [pdpAllowHighResPrint];
 
   btnEncrypt.Enabled := False;
-  LOutFile := gtStarDocsSDK1.DocOperations.Encrypt(LEncryptInFile, '',
-    LEncryptionLevel, LUserPassword, LOwnerPassword, LUserPermissions);
+  LOutFile := nil;
+  try
+    LOutFile := gtStarDocsSDK1.DocOperations.Encrypt(LEncryptInFile, '',
+      LEncryptionLevel, LUserPassword, LOwnerPassword, LUserPermissions);
 
-  // Download the file
-  gtStarDocsSDK1.Storage.Download(LOutFile, edEncryptOutput.Text);
-
-  LOutFile.Free;
-  LEncryptInFileStream.Free;
-  LEncryptInFile.Free;
-  btnEncrypt.Enabled := True;
+    // Download the file
+    gtStarDocsSDK1.Storage.Download(LOutFile, edEncryptOutput.Text);
+  finally
+    if Assigned(LOutFile) then
+      LOutFile.Free;
+    btnEncrypt.Enabled := True;
+  end;
 end;
 
 procedure TForm1.btnEncryptLoadClick(Sender: TObject);
@@ -337,10 +345,8 @@ begin
   if OpenDialog1.Execute then
   begin
     edEncryptLoad.Text := OpenDialog1.FileName;
-    LEncryptInFileStream := TFileStream.Create(OpenDialog1.FileName,
-      fmOpenRead);
-    LEncryptInFile := TgtFileObject.Create(LEncryptInFileStream,
-      ExtractFileName(OpenDialog1.FileName));
+    LEncryptInFile := TgtFileObject.Create(OpenDialog1.FileName);
+    LLoadedFileList.Add(LEncryptInFile);
     edEncryptOutput.Text := ExtractFilePath(OpenDialog1.FileName) +
       'Encrypted\';
     btnEncrypt.Enabled := True;
@@ -352,26 +358,28 @@ var
   LGetDocumentInfoResponse: TgtGetDocumentInfoResponse;
 begin
   btnGetInfo.Enabled := False;
-  LGetDocumentInfoResponse := gtStarDocsSDK1.DocOperations.GetDocumentInfo
-    (LDocInfoInFile, '');
-  GroupBox3.Visible := True;
-  edFileName.Text := LGetDocumentInfoResponse.FileName;
-  edFileSize.Text := Inttostr(LGetDocumentInfoResponse.FileSize) + ' Bytes';
+  LGetDocumentInfoResponse := nil;
+  try
+    LGetDocumentInfoResponse := gtStarDocsSDK1.DocOperations.GetDocumentInfo
+      (LDocInfoInFile, '');
+    GroupBox3.Visible := True;
+    edFileName.Text := LGetDocumentInfoResponse.FileName;
+    edFileSize.Text := Inttostr(LGetDocumentInfoResponse.FileSize) + ' Bytes';
 
-  edIsCorrupt.Text := BooleanToStringName
-    [LGetDocumentInfoResponse.UnsupportedMimeTypeOrCorrupt];
-  edISPasswordProtected.Text := BooleanToStringName
-    [LGetDocumentInfoResponse.PasswordProtected];
-  edIspasswordcorrect.Text := BooleanToStringName
-    [LGetDocumentInfoResponse.PasswordCorrect];
-  edPageCount.Text := Inttostr(LGetDocumentInfoResponse.PageCount);
-  edMIMEType.Text := GetEnumName(TypeInfo(TgtMimeType),
-    Integer(LGetDocumentInfoResponse.MimeType));
-
-  LGetDocumentInfoResponse.Free;
-  LDocInfoInFile.Free;
-  btnGetInfo.Enabled := True;
-
+    edIsCorrupt.Text := BooleanToStringName
+      [LGetDocumentInfoResponse.UnsupportedMimeTypeOrCorrupt];
+    edISPasswordProtected.Text := BooleanToStringName
+      [LGetDocumentInfoResponse.PasswordProtected];
+    edIspasswordcorrect.Text := BooleanToStringName
+      [LGetDocumentInfoResponse.PasswordCorrect];
+    edPageCount.Text := Inttostr(LGetDocumentInfoResponse.PageCount);
+    edMIMEType.Text := GetEnumName(TypeInfo(TgtMimeType),
+      Integer(LGetDocumentInfoResponse.MimeType));
+  finally
+    if Assigned(LGetDocumentInfoResponse) then
+      LGetDocumentInfoResponse.Free;
+    btnGetInfo.Enabled := True;
+  end;
 end;
 
 procedure TForm1.btnMergeClick(Sender: TObject);
@@ -379,11 +387,15 @@ var
   LOutFile: TgtDocObject;
 begin
   btnMerge.Enabled := False;
-  LOutFile := gtStarDocsSDK1.DocOperations.Merge(LMergeInFiles);
-  gtStarDocsSDK1.Storage.Download(LOutFile, edMergeoutput.Text);
-  LOutFile.Free;
-  LMergeInFiles.Free;
-  btnMerge.Enabled := True;
+  LOutFile := nil;
+  try
+    LOutFile := gtStarDocsSDK1.DocOperations.Merge(LMergeInFiles);
+    gtStarDocsSDK1.Storage.Download(LOutFile, edMergeoutput.Text);
+  finally
+    if Assigned(LOutFile) then
+      LOutFile.Free;
+    btnMerge.Enabled := True;
+  end;
 end;
 
 procedure TForm1.btnMergeOpen1Click(Sender: TObject);
@@ -404,6 +416,7 @@ begin
     for Li := 0 to LOpnDlg.Files.Count - 1 do
     begin
       LMergeInFiles.Add(TgtFileObject.Create(LOpnDlg.Files[Li]));
+      LLoadedFileList.Add(LMergeInFiles);
     end;
   end;
   LOpnDlg.Free;
@@ -414,6 +427,8 @@ var
   LOutFile: TgtDocObject;
   LSearchText: TObjectList<TgtSearchText>;
 begin
+  LOutFile := nil;
+  LSearchText := nil;
   btnRedact.Enabled := False;
   LSearchText := TObjectList<TgtSearchText>.Create;
   LSearchText.Add(TgtSearchText.Create(edSearchText.Text, True, False));
@@ -431,17 +446,19 @@ begin
     Blue := 0;
   gtStarDocsSDK1.DocOperations.RedactFillSettings.FillText.ReplaceText :=
     edReplaceText.Text;
-  LOutFile := gtStarDocsSDK1.DocOperations.RedactText(LRedactInFile, '', nil,
-    tsmLiteral, LSearchText);
 
-  // Download the file
-  gtStarDocsSDK1.Storage.Download(LOutFile, edRedactOutput.Text);
-
-  LOutFile.Free;
-  LRedactInFileStream.Free;
-  LRedactInFile.Free;
-  LSearchText.Free;
-  btnRedact.Enabled := True;
+  try
+    LOutFile := gtStarDocsSDK1.DocOperations.RedactText(LRedactInFile, '', nil,
+      tsmLiteral, LSearchText);
+    // Download the file
+    gtStarDocsSDK1.Storage.Download(LOutFile, edRedactOutput.Text);
+  finally
+    if Assigned(LOutFile) then
+      LOutFile.Free;
+    if Assigned(LSearchText) then
+      LSearchText.Free;
+    btnRedact.Enabled := True;
+  end;
 end;
 
 procedure TForm1.btnRedactLoadClick(Sender: TObject);
@@ -450,56 +467,42 @@ begin
   if OpenDialog1.Execute then
   begin
     edReadctLoad.Text := OpenDialog1.FileName;
-    LRedactInFileStream := TFileStream.Create(OpenDialog1.FileName, fmOpenRead);
-    LRedactInFile := TgtFileObject.Create(LRedactInFileStream,
-      ExtractFileName(OpenDialog1.FileName));
+    LRedactInFile := TgtFileObject.Create(OpenDialog1.FileName);
+    LLoadedFileList.Add(LRedactInFile);
     edRedactOutput.Text := ExtractFilePath(OpenDialog1.FileName) + 'Redacted\';
   end;
 end;
 
-procedure TForm1.btnSplitByRangeClick(Sender: TObject);
+procedure TForm1.btnSplitClick(Sender: TObject);
 var
   LPageRanges: TObjectList<TgtPageRangeSettings>;
   LOutFiles: TObjectList<TgtDocObject>;
   LIndex: Integer;
 begin
-  btnSplitByRange.Enabled := False;
-  btnSplitBySeperator.Enabled := False;
-  LPageRanges := TObjectList<TgtPageRangeSettings>.Create;
-  LPageRanges.Add(TgtPageRangeSettings.Create(edPageRange.Text));
-  LOutFiles := gtStarDocsSDK1.DocOperations.SplitByPageRange(LSplitInFile, '',
-    LPageRanges);
-
-  // Download the files
-  for LIndex := 0 to LOutFiles.Count - 1 do
-    gtStarDocsSDK1.Storage.Download(LOutFiles[LIndex], edSplitOutput.Text);
-  LSplitInFileStream.Free;
-  LSplitInFile.Free;
-  LPageRanges.Free;
-  LOutFiles.Free;
-  btnSplitByRange.Enabled := True;
-  btnSplitBySeperator.Enabled := True;
-end;
-
-procedure TForm1.btnSplitBySeperatorClick(Sender: TObject);
-var
-  LOutFiles: TObjectList<TgtDocObject>;
-  LIndex: Integer;
-begin
-  btnSplitByRange.Enabled := False;
-  btnSplitBySeperator.Enabled := False;
-  LOutFiles := gtStarDocsSDK1.DocOperations.SplitBySeparatorPage
-    (LSplitInFile, '');
-
-  // Download the files
-  for LIndex := 0 to LOutFiles.Count - 1 do
-    gtStarDocsSDK1.Storage.Download(LOutFiles[LIndex], edSplitOutput.Text);
-
-  LSplitInFileStream.Free;
-  LSplitInFile.Free;
-  LOutFiles.Free;
-  btnSplitByRange.Enabled := True;
-  btnSplitBySeperator.Enabled := True;
+  btnSplit.Enabled := False;
+  LOutFiles := nil;
+  try
+    case ComboBox2.ItemIndex of
+      0:
+        begin
+          LPageRanges := TObjectList<TgtPageRangeSettings>.Create;
+          LPageRanges.Add(TgtPageRangeSettings.Create(edPageRange.Text));
+          LOutFiles := gtStarDocsSDK1.DocOperations.SplitByPageRange(LSplitInFile,
+            '', LPageRanges);
+          LPageRanges.Free;
+        end;
+      1:
+        LOutFiles := gtStarDocsSDK1.DocOperations.SplitBySeparatorPage
+          (LSplitInFile, '');
+    end;
+    // Download the files
+    for LIndex := 0 to LOutFiles.Count - 1 do
+      gtStarDocsSDK1.Storage.Download(LOutFiles[LIndex], edSplitOutput.Text);
+  finally
+    if Assigned(LOutFiles) Then
+      LOutFiles.Free;
+    btnSplit.Enabled := True;
+  end;
 end;
 
 procedure TForm1.btnSplitloadClick(Sender: TObject);
@@ -507,12 +510,10 @@ begin
   if OpenDialog1.Execute then
   begin
     edSplitLoad.Text := OpenDialog1.FileName;
-    LSplitInFileStream := TFileStream.Create(OpenDialog1.FileName, fmOpenRead);
-    LSplitInFile := TgtFileObject.Create(LSplitInFileStream,
-      ExtractFileName(OpenDialog1.FileName));
+    LSplitInFile := TgtFileObject.Create(OpenDialog1.FileName);
     edSplitOutput.Text := ExtractFilePath(OpenDialog1.FileName) + 'Splited\';
-    btnSplitByRange.Enabled := True;
-    btnSplitBySeperator.Enabled := True;
+    btnSplit.Enabled := True;
+    LLoadedFileList.Add(LSplitInFile);
   end;
 end;
 
@@ -524,22 +525,35 @@ var
 begin
   btnView.Enabled := False;
   DocObject := gtStarDocsSDK1.Storage.Upload(edViewLoad.Text, '');
-  gtStarDocsSDK1.Viewer.ViewerSettings.EnableFormFilling := False;
+  gtStarDocsSDK1.Viewer.ViewerSettings.EnableFormFilling := True;
   gtStarDocsSDK1.Viewer.ViewerSettings.FullScreenVisible := False;
   gtStarDocsSDK1.Viewer.ViewerSettings.VisibleNavigationControls.
-    GotoPage := False;
+    GotoPage := True;
   gtStarDocsSDK1.Viewer.ViewerSettings.VisibleColorInversionControls.
     AllPages := True;
+  gtStarDocsSDK1.Viewer.ViewerSettings.VisibleFileOperationControls.
+    Open := True;
+  gtStarDocsSDK1.Viewer.ViewerSettings.VisibleFileOperationControls.
+    Save := True;
+  gtStarDocsSDK1.Viewer.ViewerSettings.VisibleFileOperationControls.
+    Download := True;
+  gtStarDocsSDK1.Viewer.ViewerSettings.VisibleFileOperationControls.
+    Print := True;
+  gtStarDocsSDK1.Viewer.ViewerSettings.SearchControls.EnableQuickSearch := True;
   HighlightColor := TgtColor.Create(255, 255, 0);
   gtStarDocsSDK1.Viewer.ViewerSettings.SearchControls.HighlightColor.Assign
     (HighlightColor);
   HighlightColor.Free;
 
-  LResponse := gtStarDocsSDK1.Viewer.CreateView(DocObject, '');
-
-  WebBrowser1.Navigate(LResponse.URL);
-  LResponse.Free;
-  DocObject.Free;
+  LResponse := nil;
+  try
+    LResponse := gtStarDocsSDK1.Viewer.CreateView(DocObject, '');
+    WebBrowser1.Navigate(LResponse.URL);
+  finally
+    if Assigned(LResponse) then
+      LResponse.Free;
+    DocObject.Free;
+  end;
 end;
 
 procedure TForm1.btnViewLoadClick(Sender: TObject);
@@ -549,6 +563,33 @@ begin
     edViewLoad.Text := OpenDialog1.FileName;
     btnView.Enabled := True;
   end;
+end;
+
+procedure TForm1.ComboBox2Change(Sender: TObject);
+begin
+  if ComboBox2.ItemIndex = 0 then
+  begin
+    Label22.Enabled := True;
+    Label9.Enabled := True;
+    edPageRange.Enabled := True;
+  end;
+
+  if ComboBox2.ItemIndex = 1 then
+  begin
+    Label22.Enabled := False;
+    Label9.Enabled := False;
+    edPageRange.Enabled := False;
+  end;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  LLoadedFileList.Free;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  LLoadedFileList := TObjectList.Create;
 end;
 
 end.
