@@ -25,7 +25,7 @@ package gtStarDocsSDK;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$RUNONLY}
+{$DESCRIPTION 'Gnostice StarDocs SDK'}
 {$IMPLICITBUILD ON}
 
 requires
@@ -41,7 +41,8 @@ requires
 
 contains
   gtxStarDocsSDK in '..\gtxStarDocsSDK.pas',
-  RestRequest in '..\RestRequest.pas';
+  RestRequest in '..\RestRequest.pas',
+  gtxRegControls in '..\gtxRegControls.pas';
 
 end.
 
