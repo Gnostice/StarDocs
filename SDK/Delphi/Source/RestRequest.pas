@@ -290,6 +290,10 @@ end;
 function TRestRequest.Domain(aDomain: string): TRestRequest;
 begin
   Self.FDomain := Trim(aDomain);
+  if FDomain.LowerCase(FDomain).StartsWith('https') then
+  begin
+    Self.Scheme('https');
+  end;
   Result := Self;
 end;
 
