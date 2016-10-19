@@ -7,6 +7,53 @@
 
 'use strict';
 
+
+/*\
+|*|
+|*|  Polyfill which enables the passage of arbitrary arguments to the
+|*|  callback functions of JavaScript timers (HTML5 standard syntax).
+|*|
+|*|  https://developer.mozilla.org/en-US/docs/DOM/window.setInterval
+|*|
+|*|  Syntax:
+|*|  var timeoutID = window.setTimeout(func, delay[, param1, param2, ...]);
+|*|  var timeoutID = window.setTimeout(code, delay);
+|*|  var intervalID = window.setInterval(func, delay[, param1, param2, ...]);
+|*|  var intervalID = window.setInterval(code, delay);
+|*|
+\*/
+
+(function() {
+  setTimeout(function(arg1) {
+    if (arg1 === 'test') {
+      // feature test is passed, no need for polyfill
+      return;
+    }
+    var __nativeST__ = window.setTimeout;
+    window.setTimeout = function(vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */ ) {
+      var aArgs = Array.prototype.slice.call(arguments, 2);
+      return __nativeST__(vCallback instanceof Function ? function() {
+        vCallback.apply(null, aArgs);
+      } : vCallback, nDelay);
+    };
+  }, 0, 'test');
+
+  var interval = setInterval(function(arg1) {
+    clearInterval(interval);
+    if (arg1 === 'test') {
+      // feature test is passed, no need for polyfill
+      return;
+    }
+    var __nativeSI__ = window.setInterval;
+    window.setInterval = function(vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */ ) {
+      var aArgs = Array.prototype.slice.call(arguments, 2);
+      return __nativeSI__(vCallback instanceof Function ? function() {
+        vCallback.apply(null, aArgs);
+      } : vCallback, nDelay);
+    };
+  }, 0, 'test');
+}())
+
 /* Namespace: Gnostice */
 var Gnostice = Gnostice || {};
 
@@ -63,6 +110,10 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	this.setDocumentPassword = function(password) {
 		this.documentPassword = password;
 	};
+	this.viewSessionId = null;
+	this.setViewSessionId = function(sessionId) {
+		this.viewSessionId = sessionId;
+	};
 	
 	/* Authentication related APIs */
 	var Auth = function(starDocs) {
@@ -82,14 +133,20 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		console.log("In Auth.login: " + username);
 		// Use OAuth2 to request access token (grant type: password)
 		var self = this;
+		var encodedHeader;
+		if (window.btoa) {
+			encodedHeader = "Basic " + btoa(self.starDocs.connectionInfo.apiKey + ":" + self.starDocs.connectionInfo.apiSecret);
+		}
+		else {	// for IE9
+			encodedHeader = "Basic " + jQuery.base64.encode(self.starDocs.connectionInfo.apiKey + ":" + self.starDocs.connectionInfo.apiSecret);
+		}
 		var deferred = $.ajax({
 			url: authTokenUrl,
 			type: 'POST',
 			dataType: 'json',	// Expected
 			beforeSend: function(xhr) { 
 				xhr.setRequestHeader(
-					"Authorization", 
-					"Basic " + btoa(self.starDocs.connectionInfo.apiKey + ":" + self.starDocs.connectionInfo.apiSecret)
+					"Authorization", encodedHeader
 				);
 			},
 			headers: {
@@ -121,19 +178,25 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		this.loggedInUserName = null;
 		this.grantType = null;
 		var authTokenUrl = this.starDocs.connectionInfo.apiServerUrl + this.starDocs.urlSegAuthToken;
-		if (entityId !== null) {
+		if (entityId != null) {
 			authTokenUrl += '?entity_id=' + entityId;
 		}
 		console.log("In loginApp");
 		var self = this;
+		var encodedHeader;
+		if (window.btoa) {
+			encodedHeader = "Basic " + btoa(self.starDocs.connectionInfo.apiKey + ":" + self.starDocs.connectionInfo.apiSecret);
+		}
+		else {	// for IE9
+			encodedHeader = "Basic " + jQuery.base64.encode(self.starDocs.connectionInfo.apiKey + ":" + self.starDocs.connectionInfo.apiSecret);
+		}
 		var deferred = $.ajax({
 			url: authTokenUrl,
 			type: 'POST',
 			dataType: 'json',	// Expected
 			beforeSend: function(xhr) { 
 				xhr.setRequestHeader(
-					"Authorization", 
-					"Basic " + btoa(self.starDocs.connectionInfo.apiKey + ":" + self.starDocs.connectionInfo.apiSecret)
+					"Authorization", encodedHeader
 				);
 			},
 			headers: {
@@ -175,7 +238,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	// Upload file(s)
 	// fileObject - File selected by user taken from <input type="file"> element. See https://developer.mozilla.org/en-US/docs/Web/API/File
 	// password - Password if the document is encrypted
-	Storage.prototype.upload = function(fileObject, password) {
+	Storage.prototype.upload = function(fileObject, password, uploadFromViewer) {
 		// Currently we only support a single file upload at a time
 		console.log('Uploading ' + fileObject);
 		var formData = new FormData();
@@ -184,6 +247,9 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 			formData.append('password', password);
 		}
 		formData.append('forceFullPermission', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (uploadFromViewer && this.starDocs.viewSessionId != null) {
+			formData.append('viewSessionId', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		}
 		var docsUrl = this.starDocs.connectionInfo.apiServerUrl + this.starDocs.urlSegDocs;
 		var self = this;
 		var deferred = this.starDocs.doAjaxWithBody('POST', docsUrl, formData);
@@ -200,7 +266,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	// Upload file(s) using external URL
 	// fileUrl - External URL to file
 	// password - Password if the document is encrypted
-	Storage.prototype.uploadFromURL = function(fileUrl, password) {
+	Storage.prototype.uploadFromURL = function(fileUrl, password, uploadFromViewer) {
 		console.log('Uploading ' + fileUrl);
 		var formData = new FormData();
 		formData.append('fileURL', fileUrl);
@@ -208,6 +274,9 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 			formData.append('password', password);
 		}
 		formData.append('forceFullPermission', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (uploadFromViewer && this.starDocs.viewSessionId != null) {
+			formData.append('viewSessionId', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		}
 		var docsUrl = this.starDocs.connectionInfo.apiServerUrl + this.starDocs.urlSegDocs;
 		var self = this;
 		var deferred = this.starDocs.doAjaxWithBody('POST', docsUrl, formData);
@@ -693,38 +762,41 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	docUrls - Array of strings
 	passwords - Array of strings 
 	pageRangeSettings - JS array each item being an object having schema { range: <string>, subRangeMode: <string>, reverseOrder: <boolean> }
-	imageEncoderSettings - JS object having schema 
+	pdfEncoderSettings - JS object having schema 
 		{
-			imageEncoderSettings: 
+			portfolioSettings: 
 			{
-				dpi: 
-				{
-					resolutionMode: <string>, 
-					x: <int>, 
-					y: <int> 
-				}, 
-				quality: <int>, 
-				canvasSize: 
-				{
-					sizingMode: <string>,
-					size: <string>,
-					relativeSizeX: <int>,
-					relativeSizeY: 0
-				},
-				contentScaling: <string>,
-				contentAlignment: 
-				{
-					horizontalAlignment: <string>,
-					horizontalOffset: <int>,
-					verticalAlignment: <string>,
-					verticalOffset: <int>
-				}
-			}	
+				creationMode: <string>,
+				initialLayout: <string>
+			},
+			fontEmbedding: <string>,
+			overrideFontEmbeddingRestriction: <boolean>
 		}
-	tiffCompressionType - String
+	digitizerSettings - JS object having schema 
+		{
+			digitizationMode: <string>,
+			documentLanguages: 
+			[
+				<string>, ...
+			],
+			recognizeElements: 
+			[
+				<string>, ...
+			],
+			skewCorrection: <boolean>,
+			imageEnhancementSettings: 
+			{
+				enhancementMode: <string>,
+				enhancementTechniques: 
+				[
+					<string>, ...
+				],
+				scalingFactor: <float>
+			}
+		}
 	*/
-	DocOperations.prototype.convertToPDF = function(conversionMode, docUrls, passwords, pageRangeSettings, pdfEncoderSettings) {
-		return this.convertToImage("convert-pdf", docUrls, passwords, pageRangeSettings, null, null, conversionMode, pdfEncoderSettings);
+	DocOperations.prototype.convertToPDF = function(conversionMode, docUrls, passwords, pageRangeSettings, pdfEncoderSettings, digitizerSettings) {
+		return this.convertToImage("convert-pdf", docUrls, passwords, pageRangeSettings, null, null, conversionMode, pdfEncoderSettings, digitizerSettings);
 	};
 
 	// Encrypt PDF files
@@ -889,7 +961,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	};
 
 	// Internal method, do not use!
-	DocOperations.prototype.convertToImage = function(urlPart, docUrls, passwords, pageRangeSettings, imageEncoderSettings, tiffCompressionType, conversionMode, pdfEncoderSettings) {
+	DocOperations.prototype.convertToImage = function(urlPart, docUrls, passwords, pageRangeSettings, imageEncoderSettings, tiffCompressionType, conversionMode, pdfEncoderSettings, digitizerSettings) {
 		var docsOpsUrl = this.starDocs.connectionInfo.apiServerUrl + this.starDocs.urlSegDocsOps + "/" + urlPart;
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission, 'documents':[]};
 		for (var i = 0; i < docUrls.length; ++i) {
@@ -917,6 +989,9 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		if (pdfEncoderSettings != null) {
 			jsonBody.pdfEncoderSettings = pdfEncoderSettings;
 		}
+		if (digitizerSettings != null) {
+			jsonBody.digitizerSettings = digitizerSettings;
+		}
 		var body = JSON.stringify(jsonBody);
 		return this.starDocs.doAjaxWithBodyAndPoll('POST', docsOpsUrl, body, 'application/json; charset=utf-8');
 	};
@@ -936,10 +1011,16 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	};
 	
 	// Get page image
-	DocOperations.prototype.getPageImage = function(pageUrl, dpi, password) {
+	DocOperations.prototype.getPageImage = function(pageUrl, renderingSettings, password) {
+		renderingSettings = renderingSettings || {};
 		var pageUrlObj = new URI(pageUrl)
-			.setQuery("dpi", dpi)
 			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (renderingSettings.dpi != null) {
+			pageUrlObj = pageUrlObj.setQuery("dpi", renderingSettings.dpi)
+		}
+		if (renderingSettings.renderFormFields != null) {
+			pageUrlObj = pageUrlObj.setQuery("render-form-fields", renderingSettings.renderFormFields)
+		}
 		if (password != null) {
 			pageUrlObj = pageUrlObj.setQuery("password", password);
 		}
@@ -950,9 +1031,10 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		return this.starDocs.doAjaxAndPoll('GET', pageUrlObj.toString());
 	};
 	
-	// Get list of page image URLs for the given document. This is for use by the viewer for printingt the document.
+	// Note: For internal viewer use only!
+	// Get list of page image URLs for the given document. This is for use by the viewer for printing the document.
 	DocOperations.prototype.getDocumentPrintImageURLs = function(docUrl, password) {
-		var docsOpsUrl = new URI(docUrl).segment(this.starDocs.urlSegOps).segment("prepare-print-images"); // Append "/ops/prepare-print-images"
+		var docOpsUrl = new URI(docUrl).segment(this.starDocs.urlSegOps).segment("prepare-print-images"); // Append "/ops/prepare-print-images"
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
 		if (password != null) {
 			jsonBody.password = passwords;
@@ -964,7 +1046,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		var body = JSON.stringify(jsonBody);
 		var returnDeferred = $.Deferred();
 		var that = this;
-		this.starDocs.doAjaxWithBodyAndPoll('POST', docsOpsUrl.toString(), body, 'application/json; charset=utf-8').done(function(response) {
+		this.starDocs.doAjaxWithBodyAndPoll('POST', docOpsUrl.toString(), body, 'application/json; charset=utf-8').done(function(response) {
 			// Construct page image URLs and return them
 			console.log("In getDocumentPrintImageURLs: Pages ready " + response);
 			var pageImageUrls = [];
