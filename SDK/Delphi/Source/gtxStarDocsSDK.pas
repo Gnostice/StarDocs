@@ -45,6 +45,8 @@ type
   TgtImageEncoderSettings = class;
   TgtPDFPortfolioSettings = class;
   TgtPDFEncoderSettings = class;
+  TgtImageEnhancementSettings = class;
+  TgtConverterDigitizerSettings = class;
   TgtSearchText = class;
   TgtColor = class;
   TgtFont = class;
@@ -188,7 +190,7 @@ type
       : TgtDocObject;
     function CopyFrom(ASourceFile: TgtFileObject; APassword: string = '')
       : TgtDocObject;
-    procedure Download(AFile: TgtFileObject; AFilePath: string); overload;
+    procedure Download(AFile: TgtFileObject; AFilePath: string; AOverWriteFiles: boolean = False); overload;
     procedure Download(AFile: TgtFileObject; FOutStream: TStream); overload;
     procedure Delete(AFile: TgtFileObject);
   end;
@@ -238,6 +240,11 @@ type
     pcmOnlyWhenAttachmentsExist);
   TgtPDFPortfolioInitialLayout = (pilDetails, pilTile, pilHidden);
   TgtFontEmbeddingType = (fetNone, fetSubset, fetFull);
+  TgtDigitizationMode = (dmoOff, dmoAllImages);
+  TgtRecognizableElementType = (retText);
+  TgtRecognizableElementTypes = set of TgtRecognizableElementType;
+  TgtImageEnhancementMode = (iemOff, iemAuto, iemUseSpecified);
+  TgtImageEnhancementTechnique = (ietGray, ietBinarization, ietScaling);
 
   TgtDocOperations = class
   private
@@ -246,6 +253,7 @@ type
     FPageSeparator: TgtPageSeparator;
     FImageEncoderSettings: TgtImageEncoderSettings;
     FPDFEncoderSettings: TgtPDFEncoderSettings;
+    FConverterDigitizerSettings: TgtConverterDigitizerSettings;
 
     function EncodeJsonPageRanges(APageRanges
       : TObjectList<TgtPageRangeSettings>): string;
@@ -268,6 +276,7 @@ type
     function GetPageSeparator: TgtPageSeparator;
     function GetImageEncoderSettings: TgtImageEncoderSettings;
     function GetPDFEncoderSettings: TgtPDFEncoderSettings;
+    function GetConverterDigitizerSettings: TgtConverterDigitizerSettings;
 
   public
     constructor Create(AStarDocs: TgtStarDocsSDK);
@@ -280,6 +289,8 @@ type
       read GetImageEncoderSettings;
     property PDFEncoderSettings: TgtPDFEncoderSettings
       read GetPDFEncoderSettings;
+    property ConverterDigitizerSettings: TgtConverterDigitizerSettings
+      read GetConverterDigitizerSettings;
     { GetProperties }
     // function GetProperties(AFile: TgtFileObject; APassword: string = ''): TgtGetPropertiesResponse;
 
@@ -870,6 +881,55 @@ type
     property OverrideFontEmbeddingRestriction: Boolean
       read FOverrideFontEmbeddingRestriction
       write FOverrideFontEmbeddingRestriction;
+  end;
+
+  { TgtImageEnhancementSettings }
+  TgtImageEnhancementSettings = class(TPersistent)
+  private
+    FImageEnhancementMode: TgtImageEnhancementMode;
+    FImageEnhancementTechniques: TArray<TgtImageEnhancementTechnique>;
+    FScalingFactor: double;
+    function GetImageEnhancementTechniques: TArray<TgtImageEnhancementTechnique>;
+    procedure SetImageEnhancementTechniques(AValue: TArray<TgtImageEnhancementTechnique>);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    function ToJson: string;
+    property ImageEnhancementMode: TgtImageEnhancementMode
+      read FImageEnhancementMode write FImageEnhancementMode;
+    property ImageEnhancementTechniques: TArray<TgtImageEnhancementTechnique>
+      read GetImageEnhancementTechniques write SetImageEnhancementTechniques;
+    property ScalingFactor: double
+      read FScalingFactor write FScalingFactor;
+  end;
+
+  { TgtConverterDigitizerSettings }
+  TgtConverterDigitizerSettings = class
+  private
+    FDigitizationMode: TgtDigitizationMode;
+    FDocumentLanguages: TArray<String>;
+    FRecognizeElements: TgtRecognizableElementTypes;
+    FSkewCorrection: Boolean;
+    FImageEnhancementSettings: TgtImageEnhancementSettings;
+    function GetDocumentLanguages: TArray<String>;
+    procedure SetDocumentLanguages(AValue: TArray<String>);
+    function GetImageEnhancementSettings: TgtImageEnhancementSettings;
+    procedure SetImageEnhancementSettings(const AValue: TgtImageEnhancementSettings);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function ToJson: string;
+    property DigitizationMode: TgtDigitizationMode
+      read FDigitizationMode write FDigitizationMode;
+    property DocumentLanguages: TArray<String>
+      read GetDocumentLanguages write SetDocumentLanguages;
+    property RecognizeElements: TgtRecognizableElementTypes
+      read FRecognizeElements write FRecognizeElements;
+    property SkewCorrection: Boolean
+      read FSkewCorrection write FSkewCorrection;
+    property ImageEnhancementSettings: TgtImageEnhancementSettings
+      read GetImageEnhancementSettings write SetImageEnhancementSettings;
   end;
 
   // Classes for accepting parsed JSON responses
@@ -2604,6 +2664,131 @@ begin
   Result := Result + '}';
 end;
 
+{ TgtImageEnhancementSettings }
+constructor TgtImageEnhancementSettings.Create;
+begin
+  FImageEnhancementMode := iemOff;
+  FImageEnhancementTechniques := TArray<TgtImageEnhancementTechnique>.Create();
+  FScalingFactor := 1;
+end;
+
+destructor TgtImageEnhancementSettings.Destroy;
+begin
+  inherited;
+  SetLength(FImageEnhancementTechniques, 0);
+end;
+
+procedure TgtImageEnhancementSettings.Assign(Source: TPersistent);
+begin
+  if Source is TgtImageEnhancementSettings then
+  begin
+    FImageEnhancementMode := TgtImageEnhancementSettings(Source).FImageEnhancementMode;
+    FImageEnhancementTechniques := Copy(
+      TgtImageEnhancementSettings(Source).FImageEnhancementTechniques, 0, MaxInt);
+  end;
+  inherited Assign(Source);
+end;
+
+function TgtImageEnhancementSettings.GetImageEnhancementTechniques: TArray<TgtImageEnhancementTechnique>;
+begin
+  Result := FImageEnhancementTechniques;
+end;
+
+procedure TgtImageEnhancementSettings.SetImageEnhancementTechniques(AValue: TArray<TgtImageEnhancementTechnique>);
+begin
+  FImageEnhancementTechniques := Copy(AValue, 0, MaxInt);
+end;
+
+function TgtImageEnhancementSettings.ToJson: string;
+var
+  LIndex: integer;
+begin
+  Result := '"imageEnhancementSettings":{';
+  Result := Result + '"enhancementMode":"' +
+    GetEnumName(TypeInfo(TgtImageEnhancementMode), Integer(FImageEnhancementMode))
+    .Substring(3) + '"';
+  if Length(FImageEnhancementTechniques) > 0 then
+  begin
+    Result := Result + ',"enhancementTechniques":[';
+    for LIndex := 0 to Length(FImageEnhancementTechniques) - 1 do
+    begin
+      if LIndex > 0 then Result := Result + ',';
+      Result := Result + '"' +
+        GetEnumName(TypeInfo(TgtImageEnhancementTechnique), Integer(FImageEnhancementTechniques[LIndex]))
+        .Substring(3) + '"';
+    end;
+    Result := Result + ']';
+  end;
+  Result := Result + ',"scalingFactor":' + FScalingFactor.ToString;
+  Result := Result + '}';
+end;
+
+{ TgtConverterDigitizerSettings }
+constructor TgtConverterDigitizerSettings.Create;
+begin
+  FDigitizationMode := TgtDigitizationMode.dmoOff;
+  FDocumentLanguages := TArray<String>.Create();
+  FRecognizeElements := [TgtRecognizableElementType.retText];
+  FSkewCorrection := True;
+  FImageEnhancementSettings := TgtImageEnhancementSettings.Create;
+end;
+
+destructor TgtConverterDigitizerSettings.Destroy;
+begin
+  inherited;
+  SetLength(FDocumentLanguages, 0);
+  FreeAndNil(FImageEnhancementSettings);
+end;
+
+function TgtConverterDigitizerSettings.GetDocumentLanguages: TArray<String>;
+begin
+  Result := FDocumentLanguages;
+end;
+
+procedure TgtConverterDigitizerSettings.SetDocumentLanguages(AValue: TArray<String>);
+begin
+  FDocumentLanguages := Copy(AValue, 0, MaxInt);
+end;
+
+function TgtConverterDigitizerSettings.GetImageEnhancementSettings: TgtImageEnhancementSettings;
+begin
+  Result := FImageEnhancementSettings;
+end;
+
+procedure TgtConverterDigitizerSettings.SetImageEnhancementSettings(const AValue: TgtImageEnhancementSettings);
+begin
+  FImageEnhancementSettings.Assign(AValue);
+end;
+
+function TgtConverterDigitizerSettings.ToJson: string;
+var
+  LIndex: integer;
+begin
+  Result := '"digitizerSettings":{';
+  Result := Result + '"digitizationMode":"' +
+    GetEnumName(TypeInfo(TgtDigitizationMode), Integer(FDigitizationMode))
+    .Substring(3) + '"';
+  if Length(FDocumentLanguages) > 0 then
+  begin
+    Result := Result + ',"documentLanguages":[';
+    for LIndex := 0 to Length(FDocumentLanguages) - 1 do
+    begin
+      if LIndex > 0 then Result := Result + ',';
+      Result := Result + '"' + FDocumentLanguages[LIndex] + '"';
+    end;
+    Result := Result + ']';
+  end;
+  Result := Result + ',"recognizeElements":[';
+  if retText in FRecognizeElements then
+  begin
+    Result := Result + '"text"';
+  end;
+  Result := Result + ']';
+  Result := Result + ',"skewCorrection":' + BooleanToString[FSkewCorrection];
+  Result := Result + ',' + FImageEnhancementSettings.ToJson;
+  Result := Result + '}';
+end;
+
 { TgtAuth }
 constructor TgtAuth.Create(AStarDocs: TgtStarDocsSDK);
 begin
@@ -2797,10 +2982,14 @@ begin
   Result := UploadFromURL(ASourceFile.FFileUrl.URI, APassword);
 end;
 
-procedure TgtStorage.Download(AFile: TgtFileObject; AFilePath: string);
+procedure TgtStorage.Download(AFile: TgtFileObject; AFilePath: string;
+  AOverWriteFiles: boolean = False);
 var
   LOutStream: TFileStream;
   LFileName: string;
+  LExt: string;
+  LGuid: TGUID;
+  LGuidStr: string;
 begin
   // Ensure we have a valid URL
   if (not AFile.FileUploaded) or (AFile.FileUrl = nil) then
@@ -2816,7 +3005,7 @@ begin
       CreateDir(AFilePath);
 
   // Check if the file name is present in the path
-  if ExtractFileName(AFilePath) = '' then
+  if SysUtils.ExtractFileName(AFilePath) = '' then
   begin
     if AFile.ClassType = TgtDocObject then
       LFileName := TgtDocObject(AFile).FileName
@@ -2827,6 +3016,19 @@ begin
       AFilePath := AFilePath + LFileName
     else
       AFilePath := AFilePath + PathDelim + LFileName
+  end;
+  // Check if the file already exists and cannot be overwritten
+  if SysUtils.FileExists('\\?\' + AFilePath) and not AOverWriteFiles then
+  begin
+    // Append a GUID to make the file name unique
+    LExt := SysUtils.ExtractFileExt(AFilePath);
+    SetLength(AFilePath, Length(AFilePath) - Length(LExt));
+    CreateGUID(LGuid);
+    LGuidStr := SysUtils.StringReplace(GUIDToString(LGuid), '{', '', [rfReplaceAll]);
+    LGuidStr := SysUtils.StringReplace(LGuidStr, '}', '', [rfReplaceAll]);
+    LGuidStr := SysUtils.StringReplace(LGuidStr, '-', '', [rfReplaceAll]);
+    LGuidStr := SysUtils.LowerCase(LGuidStr);
+    AFilePath := (AFilePath + '_' + LGuidStr + LExt);
   end;
 
   LOutStream := nil;
@@ -2899,6 +3101,7 @@ begin
   FPageSeparator := TgtPageSeparator.Create;
   FImageEncoderSettings := TgtImageEncoderSettings.Create;
   FPDFEncoderSettings := TgtPDFEncoderSettings.Create;
+  FConverterDigitizerSettings := TgtConverterDigitizerSettings.Create;
 end;
 
 destructor TgtDocOperations.Destroy;
@@ -2907,6 +3110,7 @@ begin
   FPageSeparator.Free;
   FImageEncoderSettings.Free;
   FPDFEncoderSettings.Free;
+  FConverterDigitizerSettings.Free;
   inherited;
 end;
 
@@ -2942,6 +3146,11 @@ end;
 function TgtDocOperations.GetPDFEncoderSettings: TgtPDFEncoderSettings;
 begin
   Result := FPDFEncoderSettings;
+end;
+
+function TgtDocOperations.GetConverterDigitizerSettings: TgtConverterDigitizerSettings;
+begin
+  Result := FConverterDigitizerSettings;
 end;
 
 function TgtDocOperations.GetRedactFillSettings: TgtRedactFillSettings;
@@ -3403,6 +3612,8 @@ begin
     LJsonStr := LJsonStr + ',"conversionMode":"' +
       GetEnumName(TypeInfo(TgtPDFConversionMode), Integer(AConversionMode))
       .Substring(3) + '"';
+    if FConverterDigitizerSettings <> nil then
+      LJsonStr := LJsonStr + (',' + FConverterDigitizerSettings.ToJson);
     LJsonStr := LJsonStr + '}';
 
     LUrl := FStarDocs.FConnectionInfo.FApiServerUri.Uri +
