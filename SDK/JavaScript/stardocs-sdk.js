@@ -996,6 +996,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		return this.starDocs.doAjaxWithBodyAndPoll('POST', docsOpsUrl, body, 'application/json; charset=utf-8');
 	};
 
+	
 	// Get document info
 	DocOperations.prototype.getDocInfo = function(docUrl, password) {
 		var docInfoUrl = new URI(docUrl).segment(this.starDocs.urlSegInfo)
@@ -1009,7 +1010,21 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 
 		return this.starDocs.doAjaxAndPoll('GET', docInfoUrl.toString());
 	};
-	
+
+	// Get bookmarks
+	DocOperations.prototype.getDocBookmarks = function(docUrl, password) {
+		var docBookmarksUrl = new URI(docUrl).segment("bookmarks")
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (password != null) {
+			docBookmarksUrl = docBookmarksUrl.setQuery("password", password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			docBookmarksUrl = docBookmarksUrl.setQuery("password", this.starDocs.documentPassword);
+		}
+
+		return this.starDocs.doAjaxAndPoll('GET', docBookmarksUrl.toString());
+	};
+
 	// Get page image
 	DocOperations.prototype.getPageImage = function(pageUrl, renderingSettings, password) {
 		renderingSettings = renderingSettings || {};
@@ -1031,6 +1046,27 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		return this.starDocs.doAjaxAndPoll('GET', pageUrlObj.toString());
 	};
 	
+	// Get page image
+	DocOperations.prototype.getPageThumbnail = function(pageUrl, renderingSettings, password) {
+		renderingSettings = renderingSettings || {};
+		var pageThumbnailUrl = new URI(pageUrl).segment("thumbnail")
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (renderingSettings.dpi != null) {
+			pageThumbnailUrl = pageThumbnailUrl.setQuery("dpi", renderingSettings.dpi)
+		}
+		if (renderingSettings.renderFormFields != null) {
+			pageThumbnailUrl = pageThumbnailUrl.setQuery("render-form-fields", renderingSettings.renderFormFields)
+		}
+		if (password != null) {
+			pageThumbnailUrl = pageThumbnailUrl.setQuery("password", password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			pageThumbnailUrl = pageThumbnailUrl.setQuery("password", this.starDocs.documentPassword);
+		}
+
+		return this.starDocs.doAjaxAndPoll('GET', pageThumbnailUrl.toString());
+	};
+
 	// Note: For internal viewer use only!
 	// Get list of page image URLs for the given document. This is for use by the viewer for printing the document.
 	DocOperations.prototype.getDocumentPrintImageURLs = function(docUrl, password) {
