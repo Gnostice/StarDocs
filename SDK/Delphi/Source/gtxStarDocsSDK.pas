@@ -65,6 +65,9 @@ type
   TgtVisibleRotationControls = class;
   TgtVisibleColorInversionControls = class;
   TgtSearchControls = class;
+  TgtViewerNavigationPane = class;
+  TgtViewerInteractiveElements = class;
+  TgtViewerFormFields = class;
   TgtViewerSettings = class;
   TgtViewer = class;
   TgtPDFFormFieldFillData = class;
@@ -245,6 +248,7 @@ type
   TgtRecognizableElementTypes = set of TgtRecognizableElementType;
   TgtImageEnhancementMode = (iemOff, iemAuto, iemUseSpecified);
   TgtImageEnhancementTechnique = (ietGray, ietBinarization, ietScaling);
+  TgtNavigationPanePosition = (nppFixed, nppFloat, nppAuto);
 
   TgtDocOperations = class
   private
@@ -370,7 +374,7 @@ type
 
   { Enumerations }
   TgtMimeType = (mtUnrecognizable, mtApplication_pdf, mtImage_jpeg, mtImage_gif,
-    mtImage_bmp, mtImage_tiff, mtImage_png,
+    mtImage_bmp, mtImage_tiff, mtImage_png, mtApplication_msword,
     mtApplication_vnd_openxmlformats_officedocument_wordprocessingml_document);
 
   TgtExceptionStatusCode = (escHTTPBadRequest = 400, escHTTPUnauthorized = 401,
@@ -1280,9 +1284,60 @@ type
       write SetHighlightColor;
   end;
 
-  TgtViewerSettings = class
+  TgtViewerNavigationPane = class
+  private
+    FVisible: Boolean;
+    FEnableBookmarks: Boolean;
+    FEnableThumbnails: Boolean;
+    FPosition: TgtNavigationPanePosition;
+    FWidth: integer;
+    function ToJson(): String;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    property Visible: Boolean read FVisible
+      write FVisible;
+    property EnableBookmarks: Boolean read FEnableBookmarks
+      write FEnableBookmarks;
+    property EnableThumbnails: Boolean read FEnableThumbnails
+      write FEnableThumbnails;
+    property Position: TgtNavigationPanePosition read FPosition
+      write FPosition;
+    property Width: integer read FWidth
+      write FWidth;
+  end;
+
+  TgtViewerFormFields = class
   private
     FEnableFormFilling: Boolean;
+    FHighlightColor: TgtColor;
+    function ToJson(): String;
+    function GetHighlightColor: TgtColor;
+    procedure SetHighlightColor(const AValue: TgtColor);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtViewerFormFields);
+    property EnableFormFilling: Boolean read FEnableFormFilling
+      write FEnableFormFilling;
+    property HighlightColor: TgtColor read GetHighlightColor
+      write SetHighlightColor;
+  end;
+
+  TgtViewerInteractiveElements = class
+  private
+    FFormFields: TgtViewerFormFields;
+    function ToJson(): String;
+    function GetFormFields: TgtViewerFormFields;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TgtViewerInteractiveElements);
+    property FormFields: TgtViewerFormFields read GetFormFields;
+  end;
+
+  TgtViewerSettings = class
+  private
     FToolbarVisible: Boolean;
     FFullScreenVisible: Boolean;
     FVisibleFileOperationControls: TgtVisibleFileOperationControls;
@@ -1291,26 +1346,20 @@ type
     FVisibleRotationControls: TgtVisibleRotationControls;
     FVisibleColorInversionControls: TgtVisibleColorInversionControls;
     FSearchControls: TgtSearchControls;
+    FNavigationPane: TgtViewerNavigationPane;
+    FInteractiveElements: TgtViewerInteractiveElements;
     function GetVisibleFileOperationControls: TgtVisibleFileOperationControls;
     function GetVisibleNavigationControls: TgtVisibleNavigationControls;
     function GetVisibleZoomControls: TgtVisibleZoomControls;
     function GetVisibleRotationControls: TgtVisibleRotationControls;
     function GetVisibleColorInversionControls: TgtVisibleColorInversionControls;
     function GetSearchControls: TgtSearchControls;
-    // procedure SetVisibleNavigationControls(const AValue
-    // : TgtVisibleNavigationControls);
-    // procedure SetVisibleZoomControls(const AValue: TgtVisibleZoomControls);
-    // procedure SetVisibleRotationControls(const AValue
-    // : TgtVisibleRotationControls);
-    // procedure SetVisibleColorInversionControls(const AValue
-    // : TgtVisibleColorInversionControls);
-    // procedure SetSearchControls(const AValue: TgtSearchControls);
+    function GetNavigationPane: TgtViewerNavigationPane;
+    function GetInteractiveElements: TgtViewerInteractiveElements;
     function ToJson(): String;
   public
     constructor Create;
     destructor Destroy; override;
-    property EnableFormFilling: Boolean read FEnableFormFilling
-      write FEnableFormFilling;
     property ToolbarVisible: Boolean read FToolbarVisible write FToolbarVisible;
     property FullScreenVisible: Boolean read FFullScreenVisible
       write FFullScreenVisible;
@@ -1325,6 +1374,8 @@ type
     property VisibleColorInversionControls: TgtVisibleColorInversionControls
       read GetVisibleColorInversionControls;
     property SearchControls: TgtSearchControls read GetSearchControls;
+    property NavigationPane: TgtViewerNavigationPane read GetNavigationPane;
+    property InteractiveElements: TgtViewerInteractiveElements read GetInteractiveElements;
   end;
 
   TgtViewer = class
@@ -1772,6 +1823,8 @@ begin
     LMimeType := TgtMimeType.mtImage_png
   else if AMimeType.Equals('image/tiff') then
     LMimeType := TgtMimeType.mtImage_tiff
+  else if AMimeType.Equals('application/msword') then
+    LMimeType := TgtMimeType.mtApplication_msword
   else if AMimeType.Equals
     ('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
   then
@@ -4021,11 +4074,112 @@ begin
   Result := Result + '}';
 end;
 
+{ TgtViewerNavigationPane }
+
+constructor TgtViewerNavigationPane.Create;
+begin
+  FVisible := True;
+  FEnableBookmarks := True;
+  FEnableThumbnails := True;
+  FPosition := TgtNavigationPanePosition.nppAuto;
+  FWidth := 200;
+end;
+
+destructor TgtViewerNavigationPane.Destroy;
+begin
+  inherited;
+end;
+
+function TgtViewerNavigationPane.ToJson: String;
+begin
+  Result := '"navigationPane":{';
+  Result := Result + '"visible":' + BooleanToString[FVisible];
+  Result := Result + ', "enableBookmarks":' + BooleanToString[FEnableBookmarks];
+  Result := Result + ', "enableThumbnails":' + BooleanToString[FEnableThumbnails];
+  Result := Result + ', "position":"' + GetEnumName(TypeInfo(TgtNavigationPanePosition),
+    Integer(FPosition)).Substring(3) + '"';
+  Result := Result + ', "width":' + IntToStr(FWidth);
+  Result := Result + '}';
+end;
+
+{ TgtViewerFormFields }
+procedure TgtViewerFormFields.Assign(Source: TgtViewerFormFields);
+begin
+  if (Source <> nil) then
+  begin
+    FEnableFormFilling := Source.FEnableFormFilling;
+    FHighlightColor.Assign(Source.FHighlightColor);
+  end;
+end;
+
+constructor TgtViewerFormFields.Create;
+begin
+  FEnableFormFilling := True;
+  FHighlightColor := TgtColor.Create(204, 215, 255, 50);
+end;
+
+destructor TgtViewerFormFields.Destroy;
+begin
+  FHighlightColor.Free;
+  inherited;
+end;
+
+function TgtViewerFormFields.GetHighlightColor: TgtColor;
+begin
+  Result := FHighlightColor;
+end;
+
+procedure TgtViewerFormFields.SetHighlightColor(const AValue: TgtColor);
+begin
+  FHighlightColor.Assign(AValue);
+end;
+
+function TgtViewerFormFields.ToJson: String;
+begin
+  Result := '"formFields":{';
+  Result := Result + '"enableFormFilling":' + BooleanToString
+    [FEnableFormFilling];
+  Result := Result + ',"highlightColor":"' + FHighlightColor.EncodeString
+    (False) + '"';
+  Result := Result + '}';
+end;
+
+{ TgtViewerInteractiveElements }
+procedure TgtViewerInteractiveElements.Assign(Source: TgtViewerInteractiveElements);
+begin
+  if (Source <> nil) then
+  begin
+    FFormFields.Assign(Source.FFormFields);
+  end;
+end;
+
+constructor TgtViewerInteractiveElements.Create;
+begin
+  FFormFields := TgtViewerFormFields.Create();
+end;
+
+destructor TgtViewerInteractiveElements.Destroy;
+begin
+  FFormFields.Free;
+  inherited;
+end;
+
+function TgtViewerInteractiveElements.GetFormFields: TgtViewerFormFields;
+begin
+  Result := FFormFields;
+end;
+
+function TgtViewerInteractiveElements.ToJson: String;
+begin
+  Result := '"interactiveElements":{';
+  Result := Result + FFormFields.ToJson;
+  Result := Result + '}';
+end;
+
 { TgtViewerSettings }
 
 constructor TgtViewerSettings.Create;
 begin
-  FEnableFormFilling := True;
   FToolbarVisible := True;
   FFullScreenVisible := False;
   FVisibleFileOperationControls := TgtVisibleFileOperationControls.Create;
@@ -4034,6 +4188,8 @@ begin
   FVisibleRotationControls := TgtVisibleRotationControls.Create;
   FVisibleColorInversionControls := TgtVisibleColorInversionControls.Create;
   FSearchControls := TgtSearchControls.Create;
+  FNavigationPane := TgtViewerNavigationPane.Create;
+  FInteractiveElements := TgtViewerInteractiveElements.Create;
 end;
 
 destructor TgtViewerSettings.Destroy;
@@ -4044,6 +4200,8 @@ begin
   FVisibleRotationControls.Free;
   FVisibleColorInversionControls.Free;
   FSearchControls.Free;
+  FNavigationPane.Free;
+  FInteractiveElements.Free;
   inherited;
 end;
 
@@ -4081,43 +4239,20 @@ begin
   Result := FVisibleZoomControls;
 end;
 
-{
-  procedure TgtViewerSettings.SetSearchControls(const AValue: TgtSearchControls);
-  begin
-  FSearchControls.Assign(AValue);
-  end;
+function TgtViewerSettings.GetNavigationPane: TgtViewerNavigationPane;
+begin
+  Result := FNavigationPane;
+end;
 
-  procedure TgtViewerSettings.SetVisibleColorInversionControls
-  (const AValue: TgtVisibleColorInversionControls);
-  begin
-  FVisibleColorInversionControls.AllPages := AValue.AllPages;
-  end;
+function TgtViewerSettings.GetInteractiveElements: TgtViewerInteractiveElements;
+begin
+  Result := FInteractiveElements;
+end;
 
-  procedure TgtViewerSettings.SetVisibleNavigationControls
-  (const AValue: TgtVisibleNavigationControls);
-  begin
-  FVisibleNavigationControls.Assign(AValue);
-  end;
-
-  procedure TgtViewerSettings.SetVisibleRotationControls
-  (const AValue: TgtVisibleRotationControls);
-  begin
-  FVisibleRotationControls.Clockwise := AValue.Clockwise;
-  FVisibleRotationControls.CounterClockwise := AValue.CounterClockwise;
-  end;
-
-  procedure TgtViewerSettings.SetVisibleZoomControls(const AValue
-  : TgtVisibleZoomControls);
-  begin
-  FVisibleZoomControls.Assign(AValue);
-  end;
-}
 function TgtViewerSettings.ToJson: String;
 begin
   Result := '"viewerSettings":{';
-  Result := Result + '"enableFormFilling":' + BooleanToString
-    [EnableFormFilling];
-  Result := Result + ',"toolbarVisible":' + BooleanToString[ToolbarVisible];
+  Result := Result + '"toolbarVisible":' + BooleanToString[ToolbarVisible];
   Result := Result + ',"fullScreenVisible":' + BooleanToString
     [FullScreenVisible];
   Result := Result + ',' + FVisibleFileOperationControls.ToJson();
@@ -4126,6 +4261,8 @@ begin
   Result := Result + ',' + FVisibleRotationControls.ToJson();
   Result := Result + ',' + FVisibleColorInversionControls.ToJson();
   Result := Result + ',' + FSearchControls.ToJson();
+  Result := Result + ',' + FNavigationPane.ToJson();
+  Result := Result + ',' + FInteractiveElements.ToJson();
   Result := Result + '}';
 end;
 
