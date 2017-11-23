@@ -1,6 +1,6 @@
 /* 
- * Gnostice StarDocs v2
- * Copyright © 2002-2016 Gnostice Information Technologies Private Limited, Bangalore, India
+ * Gnostice StarDocs
+ * Copyright © 2002-2017 Gnostice Information Technologies Private Limited, Bangalore, India
  * http://www.gnostice.com
  * 
 */
@@ -1475,4 +1475,214 @@ Gnostice.StarDocs.prototype.parsePageRangeSettings = function(pageRangeSetting) 
 	ret['subRangeMode'] = pageRangeSetting.substring(tpos + 1, tpos1);
 	ret['reverseOrder'] = pageRangeSetting.substring(tpos1 + 1).toLowerCase() === "true";
 	return ret;
+};
+
+Gnostice.bindInterFrameFunctions = function(chan, docViewerObj) {
+
+	// WARNING: Deprecated. Use Forms.submitForm instead.
+	// submitForm method
+	chan.bind("submitForm", function(trans, params) {
+		params = params || {};
+		docViewerObj.forms.submitForm(params.submitUrl, params.submitMethod, params.includeNoValueFields, params.submitFields, params.isIncludeList)
+		.done(function(data, textStatus, jqXHR){
+			trans.complete(data);
+		})
+		.fail(function(jqXhr, textStatus, errorThrown) {
+			trans.error(textStatus, errorThrown);
+		});
+		trans.delayReturn(true);
+	});
+
+	// WARNING: Deprecated. Use Forms.resetForm instead.
+	// resetForm method
+	chan.bind("resetForm", function(context, params) {
+		params = params || {};
+		return docViewerObj.forms.resetForm(params.resetFields, params.isIncludeList);
+	});
+
+	// Clone the properties of the form field excluding few
+	var simplifyFormField = function(formField) {
+		if (formField == null) {
+			return null;
+		}
+		var retFormField = {};
+		var excludeProps = ["_formsModule", "_widget"];
+		for (var key in formField) {
+			if (formField.hasOwnProperty(key) && !excludeProps.includes(key)) {
+				if (key === "radioButtons") {
+					retFormField[key] = [];
+					for (var i = 0; i < formField[key].length; ++i) {
+						retFormField[key].push(simplifyFormField(formField[key][i]));
+					}
+				}
+				else {
+					retFormField[key] = formField[key];
+				}
+			}
+		}
+		// Also include "value" for all form fields (as string) 
+		retFormField["value"] = formField.getValueAsString()
+		return retFormField;
+	};
+	// Method invocation
+	chan.bind("invokeFn", function(trans, params) {
+		params = params || {};
+		var fnName = params.fnName;
+		var callerParams = params.params;
+		// Synchronous functions
+		if (fnName == "Forms.getFormField") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			return simplifyFormField(formField);
+		}
+		else if (fnName == "Forms.getAllFormFields") {
+			var formFields = docViewerObj.forms.getAllFormFields();
+			// Separate out the fields based on their type to make it possible to 
+			// deserialize into appropriate objects on the server
+			var retFormFields = {
+				textFormFields: [],
+				radioGroupFormFields: [],
+				comboBoxFormFields: [],
+				listBoxFormFields: [],
+				checkBoxFormFields: [],
+				submitPushButtonFormFields: [],
+				resetPushButtonFormFields: [],
+				simplePushButtonFormFields: []
+			};
+			for (var i = 0; i < formFields.length; ++ i) {
+				var simpleFormField = simplifyFormField(formFields[i]);
+				switch(simpleFormField.type) {
+					case 'text': retFormFields.textFormFields.push(simpleFormField); break;
+					case 'radioGroup': retFormFields.radioGroupFormFields.push(simpleFormField); break;
+					case 'comboBox': retFormFields.comboBoxFormFields.push(simpleFormField); break;
+					case 'listBox': retFormFields.listBoxFormFields.push(simpleFormField); break;
+					case 'checkBox': retFormFields.checkBoxFormFields.push(simpleFormField); break;
+					case 'submitPushButton': retFormFields.submitPushButtonFormFields.push(simpleFormField); break;
+					case 'resetPushButton': retFormFields.resetPushButtonFormFields.push(simpleFormField); break;
+					case 'simplePushButton': retFormFields.simplePushButtonFormFields.push(simpleFormField); break;
+				}
+			}
+			return retFormFields;
+		}
+		else if (fnName == "Forms.getValueAsString") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null) {
+				return formField.getValueAsString();
+			}
+			return null;
+		}
+		else if (fnName == "Forms.setValueAsString") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null) {
+				formField.setValueAsString(callerParams.value);
+				return true;
+			}
+			return false;
+		}
+		else if (fnName == "Forms.getRadioButtonSelectedIndex") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && formField.type === 'radioGroup') {
+				return formField.getSelectedRadioButtonIndex();
+			}
+			return null;
+		}
+		else if (fnName == "Forms.setRadioButtonSelectedIndex") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && (formField instanceof gnostice.RadioGroupFormField)) {
+				formField.setSelectedRadioButtonIndex(callerParams.selectedIndex);
+				return true;
+			}
+			return false;
+		}
+		else if (fnName == "Forms.getComboListBoxSelectedItemIndices") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && (formField.type === 'comboBox' || formField.type === 'listBox')) {
+				return formField.getSelectedItemIndices();
+			}
+			return null;
+		}
+		else if (fnName == "Forms.setComboListBoxSelectedItemIndices") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && (formField instanceof gnostice.ComboBoxFormField || formField instanceof gnostice.ListBoxFormField)) {
+				formField.setSelectedItemIndices(callerParams.selectedIndices);
+				return true;
+			}
+			return false;
+		}
+		else if (fnName == "Forms.setComboBoxValue") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && (formField instanceof gnostice.ComboBoxFormField)) {
+				formField.setValue(callerParams.value);
+				return true;
+			}
+			return false;
+		}
+		else if (fnName == "Forms.getCheckBoxChecked") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && formField.type === 'checkBox') {
+				return formField.getChecked();
+			}
+			return null;
+		}
+		else if (fnName == "Forms.setCheckBoxChecked") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null && (formField instanceof gnostice.CheckBoxFormField)) {
+				formField.setChecked(callerParams.checked);
+				return true;
+			}
+			return false;
+		}
+		else if (fnName == "Forms.resetForm") {
+			return docViewerObj.forms.resetForm(callerParams.resetFields, callerParams.isIncludeList);
+		}
+		else if (fnName == "Forms.focusForm") {
+			return docViewerObj.forms.focusForm();
+		}
+		else if (fnName == "Forms.setFocus") {
+			var formField = docViewerObj.forms.getFormField(callerParams.formFieldName);
+			if (formField != null) {
+				formField.setFocus();
+				return true;
+			}
+			return false;
+		}
+		// Asynchronous functions
+		else if (fnName == "Forms.submitForm") {
+			var submitMethod = 1;		// Post
+			if (callerParams.submitMethod != null && callerParams.submitMethod.toUpperCase() == 'GET') {
+				submitMethod = 0;
+			}
+			docViewerObj.forms.submitForm(callerParams.submitUrl, submitMethod, callerParams.includeNoValueFields, callerParams.submitFields, callerParams.isIncludeList)
+			.done(function(data, textStatus, jqXHR){
+				trans.complete(data, textStatus);
+			})
+			.fail(function(jqXhr, textStatus, errorThrown) {
+				trans.error(textStatus, errorThrown);
+			});
+			trans.delayReturn(true);
+		}
+		else if (fnName == "Forms.addEventListener") {
+			console.log("In child frame Forms.addEventListener");
+			var eventName = callerParams.eventName;
+			var formFieldSpec = callerParams.formFieldSpec;
+			var callback = callerParams.eventCb;
+			console.log("eventName=" + eventName + ", formFieldSpec=" + formFieldSpec);
+			if (eventName != null && callback != null) {
+				docViewerObj.forms.addEventListener(eventName, formFieldSpec, function(cbparams) {
+					// Remove internal objects since they can't be serialized
+					if (cbparams.hasOwnProperty('viewerManager')) {
+						delete cbparams.viewerManager;
+					}
+					if (cbparams.hasOwnProperty("formField")) {
+						cbparams.formField = simplifyFormField(cbparams.formField);
+					}
+					callback(cbparams);
+				});
+			}
+			trans.delayReturn(true);
+		}
+		else {
+			// Unknown function, return error
+			trans.error("Unknown function: " + fnName, "");
+		}
+	});
 };
