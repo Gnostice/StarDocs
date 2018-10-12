@@ -4,34 +4,21 @@ import org.json.JSONObject;
 
 public class VisibleRotationControls
 {
-	// Fields
+	// Properties
+	private boolean clockwise = true;
+	private boolean counterClockwise = true;
 
 	// Ctors
 	/** 
 	 Creates an instance of this class.
 	*/
-
-	public VisibleRotationControls(boolean clockwise)
-	{
-		this(clockwise, true);
-	}
-
 	public VisibleRotationControls()
 	{
-		this(true, true);
 	}
 
-	public VisibleRotationControls(boolean clockwise, boolean counterClockwise)
-	{
-		setClockwise(clockwise);
-		setCounterClockwise(counterClockwise);
-	}
-
-	// Properties
 	/** 
 	 Gets or sets whether the clockwise rotation control is visible.
 	*/
-	private boolean clockwise;
 	public final boolean getClockwise()
 	{
 		return clockwise;
@@ -44,7 +31,6 @@ public class VisibleRotationControls
 	/** 
 	 Gets or sets whether the counter-clockwise rotation control is visible.
 	*/
-	private boolean counterClockwise;
 	public final boolean getCounterClockwise()
 	{
 		return counterClockwise;

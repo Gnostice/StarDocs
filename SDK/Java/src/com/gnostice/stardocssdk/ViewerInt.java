@@ -38,7 +38,7 @@ public class ViewerInt
 		{
 			jsonRequest.put("timeToLiveSecs", timeToLiveSecs);
 		}
-		jsonRequest.put("forceFullPermission", starDocs.getPreferences().getDocPassword().getForceFullPermission());
+		jsonRequest.put("forceFullPermission", starDocs.getPreferences().getDocPasswordSettings().getForceFullPermission());
 		if (viewerSettings != null)
 		{
 			viewerSettings.EncodeJson(jsonRequest);

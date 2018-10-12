@@ -75,7 +75,7 @@ public class StorageInt
 	{
 		// Upload the file
 		uploadRequest.getHttpRequest().header("Authorization", String.format("Bearer %1$s", starDocs.getAuthResponse().getAccessToken()));
-		uploadRequest.field("forceFullPermission", starDocs.getPreferences().getDocPassword().getForceFullPermission());
+		uploadRequest.field("forceFullPermission", starDocs.getPreferences().getDocPasswordSettings().getForceFullPermission());
 		
 		// Always use multipart/form-data
 		//uploadRequest.getHttpRequest().header("Content-Type", "multipart/form-data");

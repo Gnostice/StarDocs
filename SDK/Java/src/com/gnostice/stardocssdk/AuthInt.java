@@ -21,6 +21,9 @@ public class AuthInt
 
 	public final AuthResponse loginApp(String entityId) throws StarDocsException
 	{
+		// Set timeouts
+		Unirest.setTimeouts(starDocs.getConnectionInfo().getConnectionTimeout(), starDocs.getConnectionInfo().getServerTimeout());
+
 		String url = starDocs.getConnectionInfo().getApiServerUrl() + "/auth/token";
 		HttpRequestWithBody request = 
 			Unirest
@@ -55,6 +58,8 @@ public class AuthInt
 
 	public final AuthResponse loginUser()
 	{
+		// Set timeouts
+		Unirest.setTimeouts(starDocs.getConnectionInfo().getConnectionTimeout(), starDocs.getConnectionInfo().getServerTimeout());
 		throw new UnsupportedOperationException();
 	}
 }

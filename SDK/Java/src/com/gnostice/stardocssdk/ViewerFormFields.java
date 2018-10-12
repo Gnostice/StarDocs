@@ -4,34 +4,24 @@ import org.json.JSONObject;
 
 public class ViewerFormFields
 {
-	// Fields
+	// Properties
+	private boolean enableFormFilling = true;
+	private Color formFieldHighlightColor = new Color(204, 215, 255, 50);
+	private Color formFieldReadonlyColor = new Color(246, 246, 246, 50);
+	private Color formFieldFocusColor = null;
+	private boolean allowJavaScriptExecution = false;
 
 	// Ctors
 	/** 
 	 Creates an instance of this class.
 	*/
-
 	public ViewerFormFields()
 	{
-		this(true);
 	}
 
-	public ViewerFormFields(boolean enableFormFilling)
-	{
-		this(enableFormFilling, new Color(204, 215, 255, 50));
-	}
-
-	public ViewerFormFields(boolean enableFormFilling, Color highlightColor)
-	{
-		this.setEnableFormFilling(enableFormFilling);
-		this.setHighlightColor(highlightColor);
-	}
-
-	// Properties
 	/** 
 	 Gets or sets whether form filling is enabled.
 	*/
-	private boolean enableFormFilling;
 	public final boolean getEnableFormFilling()
 	{
 		return enableFormFilling;
@@ -40,17 +30,47 @@ public class ViewerFormFields
 	{
 		enableFormFilling = value;
 	}
+
 	/** 
 	 Gets or sets the form field fill area highlight color.
 	*/
-	private Color highlightColor;
-	public final Color getHighlightColor()
+	public final Color getFormFieldHighlightColor()
 	{
-		return highlightColor;
+		return formFieldHighlightColor;
 	}
-	public final void setHighlightColor(Color value)
+	public final void setFormFieldHighlightColor(Color value)
 	{
-		highlightColor = value;
+		formFieldHighlightColor = value;
+	}
+
+	public final Color getFormFieldReadonlyColor()
+	{
+		return formFieldReadonlyColor;
+	}
+	public final void setFormFieldReadonlyColor(Color value)
+	{
+		formFieldReadonlyColor = value;
+	}
+
+	public final Color getFormFieldFocusColor()
+	{
+		return formFieldFocusColor;
+	}
+	public final void setFormFieldFocusColor(Color value)
+	{
+		formFieldFocusColor = value;
+	}
+
+	/** 
+	 Gets or sets whether the JavaScript present in the PDF file is allowed to be executed.
+	*/
+	public final boolean getAllowJavaScriptExecution()
+	{
+		return allowJavaScriptExecution;
+	}
+	public final void setAllowJavaScriptExecution(boolean value)
+	{
+		allowJavaScriptExecution = value;
 	}
 
 	// Methods
@@ -58,7 +78,17 @@ public class ViewerFormFields
 	{
 		JSONObject jsonObjFormFields = new JSONObject();
 		jsonObjFormFields.put("enableFormFilling", enableFormFilling);
-		jsonObjFormFields.put("highlightColor", highlightColor.toHexString());
+		jsonObjFormFields.put("formFieldHighlightColor", formFieldHighlightColor.toRGBA());
+		jsonObjFormFields.put("formFieldReadonlyColor", formFieldReadonlyColor.toRGBA());
+		if (formFieldFocusColor != null)
+		{
+			jsonObjFormFields.put("formFieldFocusColor", formFieldFocusColor.toRGBA());
+		}
+		else
+		{
+			jsonObjFormFields.put("formFieldFocusColor", "");
+		}
+		jsonObjFormFields.put("allowJavaScriptExecution", allowJavaScriptExecution);
 		jsonObj.put("formFields", jsonObjFormFields);
 	}
 }

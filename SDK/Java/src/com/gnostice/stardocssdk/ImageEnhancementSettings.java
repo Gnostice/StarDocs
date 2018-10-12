@@ -5,41 +5,20 @@ import org.json.JSONObject;
 
 public class ImageEnhancementSettings
 {
+	private ImageEnhancementMode imageEnhancementMode = ImageEnhancementMode.Off;
+	private ImageEnhancementTechnique[] imageEnhancementTechniques = null;
+	private float scalingFactor = 1;
+
 	/**
     Creates an instance of this class.
     */
     public ImageEnhancementSettings()
     {
-    	this(ImageEnhancementMode.Off, null, 1);
     }
 
-    /**
-    Creates an instance of this class.
-    */
-    public ImageEnhancementSettings(ImageEnhancementMode imageEnhancementMode)
-    {
-    	this(imageEnhancementMode, null, 1);
-    }
-
-	/**
-    Creates an instance of this class.
-    */
-    public ImageEnhancementSettings(ImageEnhancementMode imageEnhancementMode,
-      ImageEnhancementTechnique[] imageEnhancementTechniques, float scalingFactor)
-    {
-      this.imageEnhancementMode = imageEnhancementMode;
-      this.imageEnhancementTechniques = imageEnhancementTechniques;
-      if (imageEnhancementTechniques == null)
-      {
-        this.imageEnhancementTechniques = new ImageEnhancementTechnique[0];
-      }
-      this.scalingFactor = scalingFactor;
-    }
-    
 	/** 
     Gets or sets the image enhancement mode used by the digitizer.
 	*/
-	private ImageEnhancementMode imageEnhancementMode;
 	public final ImageEnhancementMode getImageEnhancementMode()
 	{
 		return imageEnhancementMode;
@@ -52,12 +31,11 @@ public class ImageEnhancementSettings
 	/** 
     Gets or sets the image enhancement techniques used by the digitizer.
 	*/
-	private ImageEnhancementTechnique[] imageEnhancementTechniques;
-	public final ImageEnhancementTechnique[] getImageEnhancementTechnique()
+	public final ImageEnhancementTechnique[] getImageEnhancementTechniques()
 	{
 		return imageEnhancementTechniques;
 	}
-	public final void setImageEnhancementTechnique(ImageEnhancementTechnique[] value)
+	public final void setImageEnhancementTechniques(ImageEnhancementTechnique[] value)
 	{
 		imageEnhancementTechniques = value;
 	}
@@ -65,7 +43,6 @@ public class ImageEnhancementSettings
 	/** 
     Gets or sets the scaling factor used for the Scaling image enhancement technique.
 	*/
-	private float scalingFactor;
 	public final float getScalingFactor()
 	{
 		return scalingFactor;
@@ -81,9 +58,12 @@ public class ImageEnhancementSettings
 		JSONObject jsonImageEnhancementSettings = new JSONObject();
 		jsonImageEnhancementSettings.put("enhancementMode", Utils.toCamelCase(getImageEnhancementMode().name()));
 		JSONArray jsonArrayEnhancementTechniques = new JSONArray();
-		for (int index = 0; index < imageEnhancementTechniques.length; ++index)
+		if (imageEnhancementTechniques != null)
 		{
-			jsonArrayEnhancementTechniques.put(Utils.toCamelCase(imageEnhancementTechniques[index].name()));
+			for (int index = 0; index < imageEnhancementTechniques.length; ++index)
+			{
+				jsonArrayEnhancementTechniques.put(Utils.toCamelCase(imageEnhancementTechniques[index].name()));
+			}
 		}
 		jsonImageEnhancementSettings.put("enhancementTechniques", jsonArrayEnhancementTechniques);
 		jsonImageEnhancementSettings.put("scalingFactor", scalingFactor);

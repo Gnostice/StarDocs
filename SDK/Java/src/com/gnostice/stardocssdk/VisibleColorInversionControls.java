@@ -4,7 +4,8 @@ import org.json.JSONObject;
 
 public class VisibleColorInversionControls
 {
-	// Fields
+	// Properties
+	private boolean allPages = false;
 
 	// Ctors
 	/** 
@@ -13,19 +14,11 @@ public class VisibleColorInversionControls
 
 	public VisibleColorInversionControls()
 	{
-		this(false);
 	}
 
-	public VisibleColorInversionControls(boolean allPages)
-	{
-		this.setAllPages(allPages);
-	}
-
-	// Properties
 	/** 
 	 Gets or sets whether the all-pages color inversion control is visible.
 	*/
-	private boolean allPages;
 	public final boolean getAllPages()
 	{
 		return allPages;

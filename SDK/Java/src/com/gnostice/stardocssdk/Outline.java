@@ -16,49 +16,30 @@ import org.json.JSONObject;
 */
 public class Outline
 {
-	// Fields
+	// Properties
+	private Pen pen = new Pen();
+	private ColoringMode penColoringMode = ColoringMode.None;
 
 	// Ctors
 	/** 
 	 Creates an instance of this class with specified coloring
 	 mode and pen.
 	*/
-
-	public Outline(ColoringMode penColoringMode)
-	{
-		this(penColoringMode, null);
-	}
-
 	public Outline()
 	{
-		this(ColoringMode.None, null);
 	}
-
-	public Outline(ColoringMode penColoringMode, Pen pen)
-	{
-		setPenColoringMode(penColoringMode);
-		setPen((pen != null) ? pen : new Pen());
-	}
-
-	// Properties
 
 	/** 
 	 Gets pen used to stroke the outline.
 	*/
-	private Pen pen;
 	public final Pen getPen()
 	{
 		return pen;
-	}
-	private void setPen(Pen value)
-	{
-		pen = value;
 	}
 	
 	/** 
 	 Gets or sets how a pen colors its strokes.
 	*/
-	private ColoringMode penColoringMode;
 	public final ColoringMode getPenColoringMode()
 	{
 		return penColoringMode;

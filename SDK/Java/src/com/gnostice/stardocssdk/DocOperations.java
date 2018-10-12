@@ -184,7 +184,33 @@ public class DocOperations
 	}
 
 	/** 
-	 Redacts text in specified file.
+	 Search for text in specified PDF file.
+	 @param file File in which text needs to be searched.
+	 @param password Passwords of the files for decryption.
+	 @param pageRange Pages where search needs to be performed.
+	 @param textSearchMode Whether the search is for literal strings or with regular expressions.
+	 @param searchText Text whose occurrences need to be found.
+	 @param searchScope Specifes which document areas should be included in the search.
+	 * @throws StarDocsException 
+	 * @throws URISyntaxException 
+	*/
+
+	public final SearchTextResponse searchText(FileObject file, String password, PageRange pageRange, 
+			TextSearchMode textSearchMode, ArrayList<SearchText> searchText) throws URISyntaxException, StarDocsException
+	{
+		return searchText(file, password, pageRange, 
+				textSearchMode, searchText, EnumSet.of(SearchScope.PageText));
+	}
+
+	public final SearchTextResponse searchText(FileObject file, String password, PageRange pageRange, 
+			TextSearchMode textSearchMode, ArrayList<SearchText> searchText, EnumSet<SearchScope> searchScope) throws URISyntaxException, StarDocsException
+	{
+		return docOperationsInt.searchText(file, password, pageRange, 
+				textSearchMode, searchText, searchScope);
+	}
+
+	/** 
+	 Redacts text in specified PDF file.
 	 @param file File in which text needs to be redacted.
 	 @param password Passwords of the files for decryption.
 	 @param pageRange Pages where redaction needs to be performed.

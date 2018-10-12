@@ -13,14 +13,16 @@ package com.gnostice.stardocssdk;
 */
 public class Pen
 {
-	// Fields
+	// Properties
+	private Color color;
+	private int width;
+	private PenStyle style;
 
 	// Ctors
 	/** 
 	 Creates an instance of this class and initializes it with
 	 specified color, style and width.
 	*/
-
 	public Pen(Color color, PenStyle penStyle)
 	{
 		this(color, penStyle, 1);
@@ -43,11 +45,9 @@ public class Pen
 		setWidth(width);
 	}
 
-	// Properties
 	/** 
 	 Gets color used by the pen for strokes.
 	*/
-	private Color color;
 	public final Color getColor()
 	{
 		return color;
@@ -61,7 +61,6 @@ public class Pen
 	/** 
 	 Gets or sets width of the strokes of the pen.
 	*/
-	private int width;
 	public final int getWidth()
 	{
 		return width;
@@ -74,7 +73,6 @@ public class Pen
 	/** 
 	 Gets or sets stroke pattern used by the pen.
 	*/
-	private PenStyle style;
 	public final PenStyle getStyle()
 	{
 		return style;

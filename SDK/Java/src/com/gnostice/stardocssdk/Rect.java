@@ -13,10 +13,14 @@ package com.gnostice.stardocssdk;
 */
 public class Rect
 {
-	// Fields
+	// Properties
+	private float top;
+	private float left;
+	private float bottom;
+	private float right;
 
 	// Ctors
-	public Rect(int top, int left, int bottom, int right)
+	public Rect(float top, float left, float bottom, float right)
 	{
 		setTop(top);
 		setLeft(left);
@@ -24,58 +28,72 @@ public class Rect
 		setRight(right);
 	}
 
-	// Properties
 	/** 
 	 Gets or sets location of the bottom edge of the region on the
 	 page.
 	*/
-	private int Top;
-	public final int getTop()
+	public final float getTop()
 	{
-		return Top;
+		return top;
 	}
-	public final void setTop(int value)
+	public final void setTop(float value)
 	{
-		Top = value;
+		top = value;
 	}
+	
 	/** 
 	 Gets or sets location of the bottom edge of the region on the
 	 page.
 	*/
-	private int Bottom;
-	public final int getBottom()
+	public final float getBottom()
 	{
-		return Bottom;
+		return bottom;
 	}
-	public final void setBottom(int value)
+	public final void setBottom(float value)
 	{
-		Bottom = value;
+		bottom = value;
 	}
+
 	/** 
 	 Gets or sets location of the left edge of the region on the
 	 page.
 	*/
-	private int Left;
-	public final int getLeft()
+	public final float getLeft()
 	{
-		return Left;
+		return left;
 	}
-	public final void setLeft(int value)
+	public final void setLeft(float value)
 	{
-		Left = value;
+		left = value;
 	}
+
 	/** 
 	 Gets or sets location of the right edge of the region on the
 	 page.
 	*/
-	private int Right;
-	public final int getRight()
+	public final float getRight()
 	{
-		return Right;
+		return right;
 	}
-	public final void setRight(int value)
+	public final void setRight(float value)
 	{
-		Right = value;
+		right = value;
+	}
+
+	/** 
+	 Gets width of the region on the page.
+	*/
+	public final float getWidth()
+	{
+		return right - left;
+	}
+
+	/** 
+	 Gets height of the region on the page.
+	*/
+	public final float getHeight()
+	{
+		return bottom - top;
 	}
 
 	// Methods
@@ -83,5 +101,12 @@ public class Rect
 	{
 		String str = String.valueOf(getTop()) + "x" + String.valueOf(getLeft()) + "x" + String.valueOf(getBottom()) + "x" + String.valueOf(getRight());
 		return str;
+	}
+
+	@Override
+	public String toString()
+	{
+		String res = "top=" + top + ", left=" + left + ", width=" + getWidth() + ", height=" + getHeight();
+		return res;
 	}
 }

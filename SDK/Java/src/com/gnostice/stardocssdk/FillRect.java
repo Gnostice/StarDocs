@@ -16,25 +16,18 @@ import org.json.JSONObject;
 public class FillRect
 {
 	// Fields
+	private ColoringMode brushColoringMode = ColoringMode.None;
+	private Brush brush = new Brush();
 
 	// Ctors
-
 	public FillRect()
 	{
-		this(ColoringMode.None, null);
-	}
-
-	public FillRect(ColoringMode brushColoringMode, Brush brush)
-	{
-		setBrushColoringMode(brushColoringMode);
-		setBrush((brush != null) ? brush : new Brush());
 	}
 
 	// Properties
 	/** 
 	 Gets or sets brush settings for filling the rectangle.
 	*/
-	private ColoringMode brushColoringMode;
 	public final ColoringMode getBrushColoringMode()
 	{
 		return brushColoringMode;
@@ -47,14 +40,9 @@ public class FillRect
 	/** 
 	 Gets brush used to fill the rectangle.
 	*/
-	private Brush brush;
 	public final Brush getBrush()
 	{
 		return brush;
-	}
-	private void setBrush(Brush value)
-	{
-		brush = value;
 	}
 
 	// Methods

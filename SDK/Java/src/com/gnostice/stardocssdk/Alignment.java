@@ -5,40 +5,19 @@ import org.json.JSONObject;
 public class Alignment
 {
 	// Ctor
-
-	public Alignment(HorizontalAlignmentType horizontalAlignmentType, int horizontalOffset, VerticalAlignmentType verticalAlignmentType)
-	{
-		this(horizontalAlignmentType, horizontalOffset, verticalAlignmentType, 0);
-	}
-
-	public Alignment(HorizontalAlignmentType horizontalAlignmentType, int horizontalOffset)
-	{
-		this(horizontalAlignmentType, horizontalOffset, VerticalAlignmentType.Center, 0);
-	}
-
-	public Alignment(HorizontalAlignmentType horizontalAlignmentType)
-	{
-		this(horizontalAlignmentType, 0, VerticalAlignmentType.Center, 0);
-	}
-
 	public Alignment()
 	{
-		this(HorizontalAlignmentType.Center, 0, VerticalAlignmentType.Center, 0);
-	}
-
-	public Alignment(HorizontalAlignmentType horizontalAlignmentType, int horizontalOffset, VerticalAlignmentType verticalAlignmentType, int verticalOffset)
-	{
-		setHorizontalAlignmentType(horizontalAlignmentType);
-		setHorizontalOffset(horizontalOffset);
-		setVerticalAlignmentType(verticalAlignmentType);
-		setVerticalOffset(verticalOffset);
 	}
 
 	// Properties
+	private HorizontalAlignmentType horizontalAlignmentType = HorizontalAlignmentType.Center;
+	private int horizontalOffset = 0;
+	private VerticalAlignmentType verticalAlignmentType = VerticalAlignmentType.Center;
+	private int verticalOffset = 0;
+
 	/** 
 	 Get or set the horizontal alignment of the content with respect to the canvas.
 	*/
-	private HorizontalAlignmentType horizontalAlignmentType;
 	public final HorizontalAlignmentType getHorizontalAlignmentType()
 	{
 		return horizontalAlignmentType;
@@ -50,7 +29,6 @@ public class Alignment
 	/** 
 	 Get or set the horizontal offset measured from the set alignment.
 	*/
-	private int horizontalOffset;
 	public final int getHorizontalOffset()
 	{
 		return horizontalOffset;
@@ -62,7 +40,6 @@ public class Alignment
 	/** 
 	 Get or set the vertical alignment of the content with respect to the canvas.
 	*/
-	private VerticalAlignmentType verticalAlignmentType;
 	public final VerticalAlignmentType getVerticalAlignmentType()
 	{
 		return verticalAlignmentType;
@@ -74,7 +51,6 @@ public class Alignment
 	/** 
 	 Get or set the vertical offset measured from the set alignment.
 	*/
-	private int verticalOffset;
 	public final int getVerticalOffset()
 	{
 		return verticalOffset;

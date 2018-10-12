@@ -4,52 +4,24 @@ import org.json.JSONObject;
 
 public class ViewerNavigationPane 
 {
-	// Fields
+	// Properties
+	private boolean visible = true;
+	private boolean enableBookmarks = true;
+	private boolean enableThumbnails = true;
+	private NavigationPanePosition position = NavigationPanePosition.Auto;
+	private int width = 200;
 
 	// Ctors
 	/** 
 	 Creates an instance of this class.
 	*/
-
 	public ViewerNavigationPane()
 	{
-		this(true, true, true, NavigationPanePosition.Auto, 200);
 	}
 
-	public ViewerNavigationPane(boolean visible)
-	{
-		this(visible, true, true, NavigationPanePosition.Auto, 200);
-	}
-	
-	public ViewerNavigationPane(boolean visible, boolean enableBookmarks)
-	{
-		this(visible, enableBookmarks, true, NavigationPanePosition.Auto, 200);
-	}
-	
-	public ViewerNavigationPane(boolean visible, boolean enableBookmarks, boolean enableThumbnails)
-	{
-		this(visible, enableBookmarks, enableThumbnails, NavigationPanePosition.Auto, 200);
-	}
-
-	public ViewerNavigationPane(boolean visible, boolean enableBookmarks, boolean enableThumbnails, NavigationPanePosition position)
-	{
-		this(visible, enableBookmarks, enableThumbnails, position, 200);
-	}
-
-	public ViewerNavigationPane(boolean visible, boolean enableBookmarks, boolean enableThumbnails, NavigationPanePosition position, int width)
-	{
-		this.setVisible(visible);
-		this.setEnableBookmarks(enableBookmarks);
-		this.setEnableThumbnails(enableThumbnails);
-		this.setPosition(position);
-		this.setWidth(width);
-	}
-
-	// Properties
 	/** 
 	 Gets or sets whether the navigation pane should be shown.
 	*/
-	private boolean visible;
 	public final boolean getVisible()
 	{
 		return visible;
@@ -58,10 +30,10 @@ public class ViewerNavigationPane
 	{
 		visible = value;
 	}
+	
 	/** 
 	 Gets or sets whether bookmark-based navigation should be enabled.
 	*/
-	private boolean enableBookmarks;
 	public final boolean getEnableBookmarks()
 	{
 		return enableBookmarks;
@@ -70,10 +42,10 @@ public class ViewerNavigationPane
 	{
 		enableBookmarks = value;
 	}
+
 	/** 
 	 Gets or sets whether thumbnail-based navigation should be enabled.
 	*/
-	private boolean enableThumbnails;
 	public final boolean getEnableThumbnails()
 	{
 		return enableThumbnails;
@@ -82,10 +54,10 @@ public class ViewerNavigationPane
 	{
 		enableThumbnails = value;
 	}
+
 	/** 
 	 Gets or sets the positioning of the navigation pane.
 	*/
-	private NavigationPanePosition position;
 	public final NavigationPanePosition getPosition()
 	{
 		return position;
@@ -94,10 +66,10 @@ public class ViewerNavigationPane
 	{
 		position = value;
 	}
+
 	/** 
 	 Gets or sets the width (in pixels) of the navigation pane.
 	*/
-	private int width;
 	public final int getWidth()
 	{
 		return width;

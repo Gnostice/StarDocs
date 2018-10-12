@@ -103,38 +103,6 @@ public class PageRangeSettings
 
 	// Methods
 
-	/*
-	public final void EncodeJson(JSONObject jsonObj)
-	{
-		EncodeJson(false);
-	}
-	
-	public final void EncodeJson(JSONObject jsonObj, boolean excludeOrdering)
-	{
-		String str = getPageRange().getRange() + ";" + Utils.toCamelCase(getPageSubRangeMode().name());
-		if (!excludeOrdering)
-		{
-			str += (";" + String.valueOf(getReverseOrder()));
-		}
-		return str;
-	}*/
-
-	/*
-	public final String encodeString()
-	{
-		return encodeString(false);
-	}
-
-	public final String encodeString(boolean excludeOrdering)
-	{
-		String str = getPageRange().getRange() + ";" + Utils.toCamelCase(getPageSubRangeMode().name());
-		if (!excludeOrdering)
-		{
-			str += (";" + String.valueOf(getReverseOrder()));
-		}
-		return str;
-	}*/
-
 	public JSONObject toJson(boolean excludeOrdering) 
 	{
 		JSONObject jsonObj = new JSONObject();

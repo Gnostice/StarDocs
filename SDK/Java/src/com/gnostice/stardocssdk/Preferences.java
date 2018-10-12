@@ -29,17 +29,15 @@ public class Preferences
 		this(null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public Preferences(DocPasswordSettings docPasswordSettings = null)
 	public Preferences(DocPasswordSettings docPasswordSettings)
 	{
-		this.docPasswordSettings = (docPasswordSettings != null) ? docPasswordSettings : new DocPasswordSettings(false);
+		this.docPasswordSettings = (docPasswordSettings != null) ? docPasswordSettings : new DocPasswordSettings();
 	}
 
 	/** 
 	 Gets password settings.
 	*/
-	public final DocPasswordSettings getDocPassword()
+	public final DocPasswordSettings getDocPasswordSettings()
 	{
 		return docPasswordSettings;
 	}

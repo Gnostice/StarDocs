@@ -4,40 +4,22 @@ import org.json.JSONObject;
 
 public class VisibleZoomControls
 {
-	// Fields
+	// Properties
+	private boolean fixedSteps = true;
+	private boolean zoomIn = true;
+	private boolean zoomOut = true;
 
 	// Ctors
 	/** 
 	 Creates an instance of this class.
 	*/
-
-	public VisibleZoomControls(boolean fixedSteps, boolean zoomIn)
-	{
-		this(fixedSteps, zoomIn, true);
-	}
-
-	public VisibleZoomControls(boolean fixedSteps)
-	{
-		this(fixedSteps, true, true);
-	}
-
 	public VisibleZoomControls()
 	{
-		this(true, true, true);
 	}
 
-	public VisibleZoomControls(boolean fixedSteps, boolean zoomIn, boolean zoomOut)
-	{
-		setFixedSteps(fixedSteps);
-		setZoomIn(zoomIn);
-		setZoomOut(zoomOut);
-	}
-
-	// Properties
 	/** 
 	 Gets or sets whether the fixed-steps zoom control is visible.
 	*/
-	private boolean fixedSteps;
 	public final boolean getFixedSteps()
 	{
 		return fixedSteps;
@@ -50,7 +32,6 @@ public class VisibleZoomControls
 	/** 
 	 Gets or sets whether the zoom-in control is visible.
 	*/
-	private boolean zoomIn;
 	public final boolean getZoomIn()
 	{
 		return zoomIn;
@@ -63,7 +44,6 @@ public class VisibleZoomControls
 	/** 
 	 Gets or sets whether the zoom-out control is visible.
 	*/
-	private boolean zoomOut;
 	public final boolean getZoomOut()
 	{
 		return zoomOut;

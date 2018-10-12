@@ -15,7 +15,11 @@ import org.json.JSONObject;
 */
 public class Size
 {
-	// Fields
+	// Properties
+	private PaperSize paperSize;
+	private float width;
+	private float height;
+	private Units units;
 
 	// Ctors
 	/** 
@@ -48,12 +52,9 @@ public class Size
 		setUnits(units);
 	}
 
-	// Properties
-
 	/** 
 	 Gets or sets pre-defined size for the page.
 	*/
-	private PaperSize paperSize;
 	public final PaperSize getPaperSize()
 	{
 		return paperSize;
@@ -66,7 +67,6 @@ public class Size
 	/** 
 	 Gets or sets height of the page.
 	*/
-	private float width;
 	public final float getWidth()
 	{
 		return width;
@@ -79,7 +79,6 @@ public class Size
 	/** 
 	 Gets or sets height of the page.
 	*/
-	private float height;
 	public final float getHeight()
 	{
 		return height;
@@ -92,7 +91,6 @@ public class Size
 	/** 
 	 Gets or sets units of width and height.
 	*/
-	private Units units;
 	public final Units getUnits()
 	{
 		return units;

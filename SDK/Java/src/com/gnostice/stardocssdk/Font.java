@@ -43,10 +43,15 @@ public class Font
 		setEffect(effect);
 	}
 
+	private String name;
+	private EnumSet<FontStyle> style;
+	private int size;
+	private Color color;
+	private FontEffect effect;
+
 	/** 
 	 Gets or sets name for the font.
 	*/
-	private String name;
 	public final String getName()
 	{
 		return name;
@@ -59,7 +64,6 @@ public class Font
 	/** 
 	 Gets or sets text style used by the font.
 	*/
-	private EnumSet<FontStyle> style;
 	public final EnumSet<FontStyle> getStyle()
 	{
 		return style;
@@ -72,7 +76,6 @@ public class Font
 	/** 
 	 Gets or sets size of the text.
 	*/
-	private int size;
 	public final int getSize()
 	{
 		return size;
@@ -85,7 +88,6 @@ public class Font
 	/** 
 	 Gets color used to write text with this font.
 	*/
-	private Color color;
 	public final Color getColor()
 	{
 		return color;
@@ -98,7 +100,6 @@ public class Font
 	/** 
 	 Gets text effects for this font.
 	*/
-	private FontEffect effect;
 	public final FontEffect getEffect()
 	{
 		return effect;

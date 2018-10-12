@@ -5,39 +5,20 @@ import org.json.JSONObject;
 public class CanvasSize
 {
 	// Ctor
-	public CanvasSize(SizingMode sizingMode, Size size, int relativeSizeX)
-	{
-		this(sizingMode, size, relativeSizeX, 100);
-	}
-
-	public CanvasSize(SizingMode sizingMode, Size size)
-	{
-		this(sizingMode, size, 100, 100);
-	}
-
-	public CanvasSize(SizingMode sizingMode)
-	{
-		this(sizingMode, null, 100, 100);
-	}
 
 	public CanvasSize()
 	{
-		this(SizingMode.UseSource, null, 100, 100);
-	}
-
-	public CanvasSize(SizingMode sizingMode, Size size, int relativeSizeX, int relativeSizeY)
-	{
-		setSizingMode(sizingMode);
-		setSize((size != null) ? size : new Size(PaperSize.A4));
-		setRelativeSizeX(relativeSizeX);
-		setRelativeSizeY(relativeSizeY);
 	}
 
 	// Properties
+	private SizingMode sizingMode = SizingMode.UseSource;
+	private Size size = new Size(PaperSize.A4);
+	private int relativeSizeX = 100;
+	private int relativeSizeY = 100;
+
 	/** 
 	 Get or set the sizing mode.
 	*/
-	private SizingMode sizingMode;
 	public final SizingMode getSizingMode()
 	{
 		return sizingMode;
@@ -49,7 +30,6 @@ public class CanvasSize
 	/** 
 	 Get or set the canvas size. Applies only when the SizingMode is UseSpecifiedSize.
 	*/
-	private Size size;
 	public final Size getSize()
 	{
 		return size;
@@ -62,7 +42,6 @@ public class CanvasSize
 	/** 
 	 Get or set the horizontal canvas size relative (%) to the input. Applies only when the SizingMode is UseSpecifiedRelativeSize.
 	*/
-	private int relativeSizeX;
 	public final int getRelativeSizeX()
 	{
 		return relativeSizeX;
@@ -74,7 +53,6 @@ public class CanvasSize
 	/** 
 	 Get or set the vertical canvas size relative (%) to the input. Applies only when the SizingMode is UseSpecifiedRelativeSize.
 	*/
-	private int relativeSizeY;
 	public final int getRelativeSizeY()
 	{
 		return relativeSizeY;

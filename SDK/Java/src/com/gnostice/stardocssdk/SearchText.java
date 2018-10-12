@@ -7,10 +7,12 @@ import org.json.JSONObject;
 */
 public class SearchText
 {
-	// Fields
+	// Properties
+	private String text;
+	private boolean caseSensitive;
+	private boolean wholeWord;
 
 	// Ctors
-
 	public SearchText(String text)
 	{
 		this(text, false, false);
@@ -28,11 +30,9 @@ public class SearchText
 		setWholeWord(wholeWord);
 	}
 
-	// Properties
 	/** 
 	 Gets or sets text that needs to be searched.
 	*/
-	private String text;
 	public final String getText()
 	{
 		return text;
@@ -41,10 +41,10 @@ public class SearchText
 	{
 		text = value;
 	}
+	
 	/** 
 	 Gets or sets whether the search is case-sensitive.
 	*/
-	private boolean caseSensitive;
 	public final boolean getCaseSensitive()
 	{
 		return caseSensitive;
@@ -53,11 +53,11 @@ public class SearchText
 	{
 		caseSensitive = value;
 	}
+
 	/** 
 	 Gets or sets whether the search is for &quot;whole-word&quot;
 	 occurrences.
 	*/
-	private boolean wholeWord;
 	public final boolean getWholeWord()
 	{
 		return wholeWord;
@@ -77,5 +77,4 @@ public class SearchText
 		jsonObj.put("wholeWord", getWholeWord());
 		return jsonObj;
 	}
-
 }

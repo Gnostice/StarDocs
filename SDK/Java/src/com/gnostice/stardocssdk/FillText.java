@@ -15,51 +15,22 @@ import org.json.JSONObject;
 */
 public class FillText
 {
-	// Fields
+	// Properties
+	private String replaceText = "";
+	private FontSelectionMode fontSelectionMode = FontSelectionMode.UseFont;
+	public FontSizingMode fontSizingMode = FontSizingMode.AutoFit;
+	public FontColoringMode fontColoringMode = FontColoringMode.Source;
+	private Font font = new Font("Arial", 10, new Color((byte)00, (byte)00, (byte)00, (byte)100));
 
 	// Ctors
-
-	public FillText(String replaceText, FontSelectionMode fontSelectionMode, FontSizingMode fontSizingMode, FontColoringMode fontColoringMode)
+	public FillText()
 	{
-		this(replaceText, fontSelectionMode, fontSizingMode, fontColoringMode, null);
 	}
-
-	public FillText(String replaceText, FontSelectionMode fontSelectionMode, FontSizingMode fontSizingMode)
-	{
-		this(replaceText, fontSelectionMode, fontSizingMode, FontColoringMode.Source, null);
-	}
-
-	public FillText(String replaceText, FontSelectionMode fontSelectionMode)
-	{
-		this(replaceText, fontSelectionMode, FontSizingMode.AutoFit, FontColoringMode.Source, null);
-	}
-
-	public FillText(String replaceText)
-	{
-		this(replaceText, FontSelectionMode.UseFont, FontSizingMode.AutoFit, FontColoringMode.Source, null);
-	}
-
-	public FillText(String replaceText, FontSelectionMode fontSelectionMode, FontSizingMode _fontSizingMode, FontColoringMode _fontColoringMode, Font font) /*, bool wrap = true,
-      bool repeat = false, HAlignmentType hAlign = HAlignmentType.Left, VAlignmentType vAlign = VAlignmentType.TextBaseline*/
-	{
-		setReplaceText((replaceText != null) ? replaceText : "");
-		setFontSelectionMode(fontSelectionMode);
-		fontSizingMode = _fontSizingMode;
-		fontColoringMode = _fontColoringMode;
-		setFont((font != null) ? font : new Font("Arial", 10, new Color((byte)00, (byte)00, (byte)00, (byte)100)));
-		//Wrap = wrap;
-		//Repeat = repeat;
-		//HAlign = hAlign;
-		//VAlign = vAlign;
-	}
-
-	// Properties
 
 	/** 
 	 Gets or sets text that needs to be replace specified existing
 	 text occurrences.
 	*/
-	private String replaceText;
 	public final String getReplaceText()
 	{
 		return replaceText;
@@ -72,7 +43,18 @@ public class FillText
 	/** 
 	 Gets or sets how font is selected for the replacement text.
 	*/
-	private FontSelectionMode fontSelectionMode;
+	public final FontSizingMode getFontSizingMode()
+	{
+		return fontSizingMode;
+	}
+	public final void setFontSizingMode(FontSizingMode value)
+	{
+		fontSizingMode = value;
+	}
+
+	/** 
+	 Gets or sets how font is sized for the replacement text.
+	*/
 	public final FontSelectionMode getFontSelectionMode()
 	{
 		return fontSelectionMode;
@@ -82,18 +64,30 @@ public class FillText
 		fontSelectionMode = value;
 	}
 	
-	public FontSizingMode fontSizingMode;
-	public FontColoringMode fontColoringMode;
-	
+	/** 
+	 Gets or sets how replacement text is colored.
+	*/
+	public final FontColoringMode getFontColoringMode()
+	{
+		return fontColoringMode;
+	}
+	public final void setFontColoringMode(FontColoringMode value)
+	{
+		fontColoringMode = value;
+	}
+
 	/** 
 	 Gets font used to render text in the filled area.
 	*/
-	private Font font;
 	public final Font getFont()
 	{
 		return font;
 	}
-	private void setFont(Font value)
+
+	/** 
+	 Sets the font used to render text in the filled area.
+	*/
+	public final void setFont(Font value)
 	{
 		font = value;
 	}

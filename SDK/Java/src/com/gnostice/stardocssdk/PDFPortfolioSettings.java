@@ -15,13 +15,11 @@ import org.json.JSONObject;
 */
 public class PDFPortfolioSettings
 {
+	// Properties
+	private PDFPortfolioCreationMode pdfPortfolioCreationMode;
+	private PDFPortfolioInitialLayout pdfPortfolioInitialLayout;
+
 	// Ctors
-
-	public PDFPortfolioSettings(PDFPortfolioCreationMode pdfPortfolioCreationMode)
-	{
-		this(pdfPortfolioCreationMode, PDFPortfolioInitialLayout.Details);
-	}
-
 	public PDFPortfolioSettings()
 	{
 		this(PDFPortfolioCreationMode.WhenInputIsPortfolio, PDFPortfolioInitialLayout.Details);
@@ -33,12 +31,9 @@ public class PDFPortfolioSettings
 		setPDFPortfolioInitialLayout(portfolioInitialLayout);
 	}
 
-	// Properties
-
 	/** 
 	 Specifies when a PDF should be created as a portfolio.
 	*/
-	private PDFPortfolioCreationMode pdfPortfolioCreationMode;
 	public final PDFPortfolioCreationMode getPDFPortfolioCreationMode()
 	{
 		return pdfPortfolioCreationMode;
@@ -51,7 +46,6 @@ public class PDFPortfolioSettings
 	/** 
 	 Specifies the initial view of the PDF portfolio.
 	*/
-	private PDFPortfolioInitialLayout pdfPortfolioInitialLayout;
 	public final PDFPortfolioInitialLayout getPDFPortfolioInitialLayout()
 	{
 		return pdfPortfolioInitialLayout;

@@ -15,84 +15,21 @@ import java.util.*;
 */
 public class DocProperties
 {
-	// Fields
+	// Properties
+	private String title;
+	private String author;
+	private String subject;
+	private ArrayList<String> keywords = new ArrayList<String>();
+	private String creator;
 
 	// Ctors
-	/** 
-	 Creates a new instance of this class with specified title,
-	 author, subject, keywords (in a list), and creator document
-	 properties.
-	*/
-
-	public DocProperties(String title, String author, String subject, java.util.ArrayList<String> keywords)
-	{
-		this(title, author, subject, keywords, null);
-	}
-
-	public DocProperties(String title, String author, String subject)
-	{
-		this(title, author, subject, (String)null, null);
-	}
-
-	public DocProperties(String title, String author)
-	{
-		this(title, author, null, (String)null, null);
-	}
-
-	public DocProperties(String title)
-	{
-		this(title, null, null, (String)null, null);
-	}
-
 	public DocProperties()
 	{
-		this(null, null, null, (String)null, null);
 	}
 
-	public DocProperties(String title, String author, String subject, ArrayList<String> keywords, String creator)
-	{
-		setTitle(title);
-		setAuthor(author);
-		setSubject(subject);
-		setKeywords((keywords != null) ? keywords : new ArrayList<String>());
-		setCreator(creator);
-	}
-
-	/** 
-	 Creates a new instance of this class with specified title,
-	 author, subject, keywords (in a string), and creator
-	 document properties.
-	*/
-
-	public DocProperties(String title, String author, String subject, String keywords)
-	{
-		this(title, author, subject, keywords, null);
-	}
-
-
-	public DocProperties(String title, String author, String subject, String keywords, String creator)
-	{
-		setTitle(title);
-		setAuthor(author);
-		setSubject(subject);
-		if (keywords != null)
-		{
-			// Tokenize
-			String[] keywordArray = keywords.split("[;]", -1);
-			setKeywords(new ArrayList<String>(keywordArray));
-		}
-		else
-		{
-			setKeywords(new ArrayList<String>());
-		}
-		setCreator(creator);
-	}
-
-	// Properties
 	/** 
 	 Gets or sets &quot;title&quot; document property.
 	*/
-	private String title;
 	public final String getTitle()
 	{
 		return title;
@@ -105,7 +42,6 @@ public class DocProperties
 	/** 
 	 Gets or sets &quot;author&quot; document property.
 	*/
-	private String author;
 	public final String getAuthor()
 	{
 		return author;
@@ -118,7 +54,6 @@ public class DocProperties
 	/** 
 	 Gets or sets &quot;subject&quot; document property.
 	*/
-	private String subject;
 	public final String getSubject()
 	{
 		return subject;
@@ -131,7 +66,6 @@ public class DocProperties
 	/** 
 	 Gets or sets &quot;keywords&quot; document property.
 	*/
-	private ArrayList<String> keywords;
 	public final ArrayList<String> getKeywords()
 	{
 		return keywords;
@@ -144,7 +78,6 @@ public class DocProperties
 	/** 
 	 Gets or sets &quot;creator&quot; document property.
 	*/
-	private String creator;
 	public final String getCreator()
 	{
 		return creator;

@@ -4,7 +4,8 @@ import org.json.JSONObject;
 
 public class ViewerInteractiveElements 
 {
-	// Fields
+	// Properties
+	private ViewerFormFields viewerFormFields = new ViewerFormFields();
 
 	// Ctors
 	/** 
@@ -13,19 +14,11 @@ public class ViewerInteractiveElements
 
 	public ViewerInteractiveElements()
 	{
-		this(null);
 	}
 
-	public ViewerInteractiveElements(ViewerFormFields _formFields)
-	{
-		viewerFormFields = (_formFields != null) ? _formFields : new ViewerFormFields();
-	}
-
-	// Properties
 	/** 
 	 Gets or sets form filling related settings.
 	*/
-	private ViewerFormFields viewerFormFields;
 	public final ViewerFormFields getFormFields()
 	{
 		return viewerFormFields;

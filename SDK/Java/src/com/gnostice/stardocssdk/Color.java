@@ -44,10 +44,15 @@ public class Color
 		setAlpha(alpha);
 	}
 
+	// Properties
+	private int red;
+	private int green;
+	private int blue;
+	private int alpha;
+	
 	/** 
 	 Gets or sets red component value of the color.
 	*/
-	private int red;
 	public final int getRed()
 	{
 		return red;
@@ -60,7 +65,6 @@ public class Color
 	/** 
 	 Gets or sets green component value of the color. 
 	*/
-	private int green;
 	public final int getGreen()
 	{
 		return green;
@@ -74,7 +78,6 @@ public class Color
 	/** 
 	 Gets or sets blue component value of the color. 
 	*/
-	private int blue;
 	public final int getBlue()
 	{
 		return blue;
@@ -87,7 +90,6 @@ public class Color
 	/** 
 	 Gets or sets transparency value of the color.
 	*/
-	private int alpha;
 	public final int getAlpha()
 	{
 		return alpha;
@@ -111,6 +113,15 @@ public class Color
 		{
 			str += String.format("%02X", getAlpha());
 		}
+		return str;
+	}
+
+	public final String toRGBA()
+	{
+		// Encode as RGBA
+		String str = "rgba(" + Integer.toString(getRed()) + "," + Integer.toString(getGreen()) + "," + Integer.toString(getBlue());
+		double fAlpha = getAlpha() / 100.0;
+		str += ("," + Double.toString(fAlpha) + ")");
 		return str;
 	}
 }

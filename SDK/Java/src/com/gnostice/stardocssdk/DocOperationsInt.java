@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,7 +20,7 @@ import com.mashape.unirest.request.GetRequest;
 
 /* 
  * Gnostice StarDocs v1
- * Copyright © 2002-2016 Gnostice Information Technologies Private Limited, Bangalore, India
+ * Copyright © Gnostice Information Technologies Private Limited, Bangalore, India
  * http://www.gnostice.com
  * 
 */
@@ -42,6 +43,7 @@ public class DocOperationsInt
 	public final GetDocumentInfoResponse getDocumentInfo(FileObject file, String password) throws URISyntaxException, StarDocsException
 	{
 		String docUrl = CommonInt.getDocUrl(starDocs, file);
+		
 		// Issue get doc info request
 		String url = docUrl + "/info";
 		if (password != null)
@@ -283,6 +285,77 @@ public class DocOperationsInt
 		CommonInt.RestAPISuccessResponseCommon parsedResponse = gson.fromJson(responseJSONString, CommonInt.RestAPISuccessResponseCommon.class);
 		return new DocObject(parsedResponse.documents[0]);
 	}
+	
+	public final SearchTextResponse searchText(FileObject file, String password, PageRange pageRange, 
+			TextSearchMode textSearchMode, ArrayList<SearchText> searchText, EnumSet<SearchScope> searchScope) throws URISyntaxException, StarDocsException
+	{
+		String docUrl = CommonInt.getDocUrl(starDocs, file);
+		String url = docUrl + "/ops/search-text";
+		URIBuilder uriBuilder = new URIBuilder(url);
+
+		// Build search text request
+		uriBuilder.setParameter("password", password);
+		uriBuilder.setParameter("mode", Utils.toCamelCase(textSearchMode.name()));
+		if (pageRange != null)
+		{
+			uriBuilder.setParameter("page_range", pageRange.getRange());
+		}
+		
+		for (SearchText sText: searchText)
+		{
+			String key = "text";
+			if (sText.getCaseSensitive() && sText.getWholeWord())
+			{
+				key = "text_case_word";
+			}
+			else if (sText.getCaseSensitive())
+			{
+				key = "text_case";
+			}
+			else if (sText.getWholeWord())
+			{
+				key = "text_word";
+			}
+			uriBuilder.setParameter(key, sText.getText());
+		}
+		
+		if (!searchScope.contains(SearchScope.PageText))
+		{
+			uriBuilder.setParameter("scope_page_text", "false");
+		}
+		if (searchScope.contains(SearchScope.PageImages))
+		{
+			uriBuilder.setParameter("scope_page_images", "true");
+		}
+		if (searchScope.contains(SearchScope.DocumentProperties))
+		{
+			uriBuilder.setParameter("scope_document_properties", "true");
+		}
+		if (searchScope.contains(SearchScope.Bookmarks))
+		{
+			uriBuilder.setParameter("scope_bookmarks", "true");
+		}
+		if (searchScope.contains(SearchScope.BookmarkActions))
+		{
+			uriBuilder.setParameter("scope_bookmark_actions", "true");
+		}
+		if (searchScope.contains(SearchScope.Annotations))
+		{
+			uriBuilder.setParameter("scope_annotations", "true");
+		}
+		if (searchScope.contains(SearchScope.AnnotationActions))
+		{
+			uriBuilder.setParameter("scope_annotation_actions", "true");
+		}
+
+		url = uriBuilder.toString();
+		HttpResponse<JsonNode> response = IssueRequestAndPoll(url, "get", null);
+		Gson gson = new Gson();
+		String responseJSONString = response.getBody().toString();
+		CommonInt.RestAPISearchTextResponse parsedResponse = gson.fromJson(responseJSONString, CommonInt.RestAPISearchTextResponse.class);
+		return new SearchTextResponse(parsedResponse);
+	}
+
 	
 	public final DocObject redactText(FileObject file, String password, PageRangeSettings pageRange, 
 			TextSearchMode textSearchMode, ArrayList<SearchText> searchText, boolean removeAssociatedAnnotations, 
@@ -551,7 +624,7 @@ public class DocOperationsInt
 
 	private HttpResponse<JsonNode> IssueRequestAndPoll(String url, String httpMethod, JSONObject jsonRequest) throws URISyntaxException, StarDocsException 
 	{
-		Boolean forceFullPermission = starDocs.getPreferences().getDocPassword().getForceFullPermission();
+		Boolean forceFullPermission = starDocs.getPreferences().getDocPasswordSettings().getForceFullPermission();
 		HttpResponse<JsonNode> response;
 		try
 		{

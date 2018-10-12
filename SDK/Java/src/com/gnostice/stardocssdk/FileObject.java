@@ -2,7 +2,6 @@ package com.gnostice.stardocssdk;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /* 
  * Gnostice StarDocs v1
@@ -137,11 +136,5 @@ public class FileObject
 	{
 		Object[] objs = new Object[] {getFileUrl(), getStream(), getStreamFileName(), getLocalFilePath(), getFileUploaded()};
 		return String.format("FileUrl=%1$s, Stream=%2$s, StreamFileName=%3$s, LocalFilePath=%4$s, FileUploaded=%5$s", objs);
-	}
-
-	public final void SetUploaded(String uri) throws URISyntaxException
-	{
-		setFileUploaded(true);
-		setFileUrl(new URI(uri));
 	}
 }

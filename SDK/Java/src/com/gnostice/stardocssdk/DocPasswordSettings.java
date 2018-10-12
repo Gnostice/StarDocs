@@ -15,7 +15,7 @@ package com.gnostice.stardocssdk;
 */
 public class DocPasswordSettings
 {
-	private boolean forceFullPermission;
+	private boolean forceFullPermission = false;
 
 	/** 
 	 Creates an instance of this class.
@@ -27,15 +27,8 @@ public class DocPasswordSettings
 
 	public DocPasswordSettings()
 	{
-		this(false);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public DocPasswordSettings(bool forceFullPermission = false)
-	public DocPasswordSettings(boolean forceFullPermission)
-	{
-		this.forceFullPermission = forceFullPermission;
-	}
 
 	/** 
 	 Gets or sets whether all document usage permissions need to

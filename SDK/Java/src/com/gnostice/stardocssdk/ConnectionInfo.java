@@ -22,8 +22,8 @@ public class ConnectionInfo
 	private String apiKey;
 	private String apiSecret;
 	private long connectionTimeout = 10 * 1000;
-	private long serverTimeout;
-	private long docOperationTimeout;
+	private long serverTimeout = 10 * 60 * 1000;
+	private long docOperationTimeout = -1;
 	private long pollInterval = 1000;
 
 	/** 
@@ -34,40 +34,16 @@ public class ConnectionInfo
 	 @param serverTimeout Timeout for receiving response from the REST API server.
 	 @param docOperationTimeout Timeout for document operations.     
 	*/
-
-	public ConnectionInfo(URI apiServerUrl, String apiKey, String apiSecret, int serverTimeout) throws URISyntaxException
+	public ConnectionInfo()
 	{
-		this(apiServerUrl, apiKey, apiSecret, serverTimeout, -1);
-	}
-
-	public ConnectionInfo(URI apiServerUrl, String apiKey, String apiSecret) throws URISyntaxException
-	{
-		this(apiServerUrl, apiKey, apiSecret, 10 * 60 * 1000, -1);
-	}
-
-	public ConnectionInfo(URI apiServerUrl, String apiKey) throws URISyntaxException
-	{
-		this(apiServerUrl, apiKey, null, 10 * 60 * 1000, -1);
-	}
-
-	public ConnectionInfo(URI apiServerUrl) throws URISyntaxException
-	{
-		this(apiServerUrl, null, null, 10 * 60 * 1000, -1);
-	}
-
-	public ConnectionInfo() throws URISyntaxException
-	{
-		this(null, null, null, 10 * 60 * 1000, -1);
-	}
-
-	public ConnectionInfo(URI apiServerUrl, String apiKey, String apiSecret, int serverTimeout, int docOperationTimeout) throws URISyntaxException // 10 min
-	{
-		//this.apiServerVersion = "0.0.1";
-		this.apiServerUrl = (apiServerUrl != null) ? apiServerUrl : new URI("");
-		this.apiKey = apiKey;
-		this.apiSecret = apiSecret;
-		this.serverTimeout = serverTimeout;
-		this.docOperationTimeout = serverTimeout;
+		try 
+		{
+			apiServerUrl = new URI("");
+		} 
+		catch (URISyntaxException e) 
+		{
+			// Can never happen
+		}
 	}
 
 	/** 

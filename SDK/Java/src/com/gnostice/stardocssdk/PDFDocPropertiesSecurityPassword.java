@@ -10,7 +10,12 @@ package com.gnostice.stardocssdk;
 
 public class PDFDocPropertiesSecurityPassword extends DocPropertiesSecurity
 {
-	// Fields
+	// Properties
+	private PDFEncryptionLevel PDFEncryptionLevel;
+	private PasswordType SuppliedPassword;
+	private boolean HasOpenPassword;
+	private boolean HasPermissionsPassword;
+	private PDFDocPermissions PDFDocPermissions;
 
 	// Ctors
 	public PDFDocPropertiesSecurityPassword(CommonInt.RestAPIDocPropertiesSecurity apiResponse)
@@ -65,8 +70,6 @@ public class PDFDocPropertiesSecurityPassword extends DocPropertiesSecurity
 		setPDFDocPermissions(new PDFDocPermissions(permissions.allowAccessibility, permissions.allowAssembly, permissions.allowCopy, permissions.allowFormFill, permissions.allowHighResPrint, permissions.allowModifyAnnotations, permissions.allowModifyContents, permissions.allowPrinting));
 	}
 
-	// Properties
-	private PDFEncryptionLevel PDFEncryptionLevel;
 	public final PDFEncryptionLevel getPDFEncryptionLevel()
 	{
 		return PDFEncryptionLevel;
@@ -75,7 +78,7 @@ public class PDFDocPropertiesSecurityPassword extends DocPropertiesSecurity
 	{
 		PDFEncryptionLevel = value;
 	}
-	private PasswordType SuppliedPassword;
+	
 	public final PasswordType getSuppliedPassword()
 	{
 		return SuppliedPassword;
@@ -84,7 +87,7 @@ public class PDFDocPropertiesSecurityPassword extends DocPropertiesSecurity
 	{
 		SuppliedPassword = value;
 	}
-	private boolean HasOpenPassword;
+
 	public final boolean getHasOpenPassword()
 	{
 		return HasOpenPassword;
@@ -93,7 +96,7 @@ public class PDFDocPropertiesSecurityPassword extends DocPropertiesSecurity
 	{
 		HasOpenPassword = value;
 	}
-	private boolean HasPermissionsPassword;
+
 	public final boolean getHasPermissionsPassword()
 	{
 		return HasPermissionsPassword;
@@ -102,7 +105,7 @@ public class PDFDocPropertiesSecurityPassword extends DocPropertiesSecurity
 	{
 		HasPermissionsPassword = value;
 	}
-	private PDFDocPermissions PDFDocPermissions;
+
 	public final PDFDocPermissions getPDFDocPermissions()
 	{
 		return PDFDocPermissions;

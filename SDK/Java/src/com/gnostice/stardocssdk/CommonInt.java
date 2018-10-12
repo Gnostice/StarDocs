@@ -69,6 +69,41 @@ public class CommonInt
 		public RestAPIDocPropertiesSecurity extendedPropertiesSecurity;
 	}
 
+	public static class RestAPIRect
+	{
+		public float x;
+		public float y;
+		public float width;
+		public float height;
+	}
+	
+	public static class RestAPIBoundingRect
+	{
+		public int pageNum;
+		public RestAPIRect rect;
+	}
+	
+	public static class RestAPISearchHit
+	{
+		public String matchText;
+		public String foundIn;
+		public int startPageNum;
+		public String lineContainingText;
+		public int indexOfTextInLine;
+		public RestAPIBoundingRect[] boundingRects;
+	}
+	
+	public static class RestAPISearchTextResult
+	{
+		public String text;
+		public RestAPISearchHit[] hits;
+	}
+	
+	public static class RestAPISearchTextResponse
+	{
+		public RestAPISearchTextResult[] results;
+	}
+	
 	public static class RestAPIAuthTokenSuccessResponse
 	{
 		public String access_token;
@@ -147,7 +182,6 @@ public class CommonInt
 		uriBuilder.setParameter(key, value.toString());
 		return uriBuilder.toString();
 	}
-
 
 	public static void encodeJsonDocuments(JSONObject jsonObject, String docUrl, String password)
 	{

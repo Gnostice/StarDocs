@@ -5,7 +5,10 @@ package com.gnostice.stardocssdk;
 */
 public class PDFFormFieldFillData
 {
-	// Fields
+	// Properties
+	private String FieldName;
+	private String FieldValue;
+	private boolean FlattenField;
 
 	// Ctors
 	/** 
@@ -18,13 +21,6 @@ public class PDFFormFieldFillData
 		this(fieldName, fieldValue, false);
 	}
 
-	public PDFFormFieldFillData(String fieldName)
-	{
-		this(fieldName, "", false);
-	}
-
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public PDFFormFieldFillData(string fieldName, string fieldValue = "", bool flattenField = false)
 	public PDFFormFieldFillData(String fieldName, String fieldValue, boolean flattenField)
 	{
 		setFieldName(fieldName);
@@ -32,11 +28,9 @@ public class PDFFormFieldFillData
 		setFlattenField(flattenField);
 	}
 
-	// Properties
 	/** 
 	 Gets or sets the field name.
 	*/
-	private String FieldName;
 	public final String getFieldName()
 	{
 		return FieldName;
@@ -45,10 +39,10 @@ public class PDFFormFieldFillData
 	{
 		FieldName = value;
 	}
+
 	/** 
 	 Gets or sets the value to be filled in the field.
 	*/
-	private String FieldValue;
 	public final String getFieldValue()
 	{
 		return FieldValue;
@@ -57,11 +51,11 @@ public class PDFFormFieldFillData
 	{
 		FieldValue = value;
 	}
+
 	/** 
 	 Gets or sets a flag that indicates whether the form field should be 
 	 flattened (finalized) after filling it.
 	*/
-	private boolean FlattenField;
 	public final boolean getFlattenField()
 	{
 		return FlattenField;
