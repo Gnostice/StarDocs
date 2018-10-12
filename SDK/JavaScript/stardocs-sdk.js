@@ -1,12 +1,11 @@
 /* 
  * Gnostice StarDocs
- * Copyright © 2002-2017 Gnostice Information Technologies Private Limited, Bangalore, India
+ * Copyright © Gnostice Information Technologies Private Limited, Bangalore, India
  * http://www.gnostice.com
  * 
 */
 
 'use strict';
-
 
 /*\
 |*|
@@ -91,6 +90,8 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	this.urlSegDocsOps = '/docs/ops';
 	this.urlSegOps = '/ops';
 	this.urlSegInfo = '/info';
+	this.urlSegSearchText = '/search-text';
+	this.urlSegRedactText = '/redact-text';
 	this.urlSegMetaTags = '/meta/tags';
 	this.urlSegMetaOwner = '/meta/owner';
 	this.urlSegMetaFilename = '/meta/filename';
@@ -841,6 +842,91 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		return this.starDocs.doAjaxWithBodyAndPoll('PUT', docsOpsUrl, body, 'application/json; charset=utf-8');
 	};
 
+	// Search for text in PDF files
+	/* 
+	docUrl - String
+	password - String
+	pageRange - String of the form "a,b-d"
+	mode - String ('literal' or 'regex')
+	text - Array of JS objects having schema { text: <string>, caseSensitive: <boolean>, wholeWord: <boolean> }
+	scope - JS object having schema
+		{
+			pageText: <boolean>,
+			pageImages: <boolean>,
+			bookmarks: <boolean>,
+			bookmarkActions: <boolean>,
+			annotations: <boolean>,
+			annotationActions: <boolean>,
+			documentProperties: <boolean>
+		}
+	*/
+	DocOperations.prototype.searchText = function(docUrl, password, pageRange, mode, text, scope) {
+		var docsOpsUrl = new URI(docUrl).segment(this.starDocs.urlSegOps + this.starDocs.urlSegSearchText)
+			.setQuery("force-full-permission", this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (password != null) {
+			docsOpsUrl = docsOpsUrl.setQuery("password", password);
+		}
+		else if (this.starDocs.documentPassword != null) {
+			docsOpsUrl = docsOpsUrl.setQuery("password", this.starDocs.documentPassword);
+		}
+		
+		if (pageRange != null && pageRange != "") {
+			docsOpsUrl = docsOpsUrl.setQuery("page_range", pageRange);
+		}
+		
+		if (mode != null) {
+			docsOpsUrl = docsOpsUrl.setQuery("mode", mode);
+		}
+		
+		if (text != null && text instanceof Array) {
+			for (var i=0; i < text.length; ++i) {
+				var t = text[i];
+				if (t.text == null || t.text == "") {
+					continue;
+				}
+				var caseSensitive = (t.caseSensitive === true);
+				var wholeWord = (t.wholeWord === true);
+				var paramName = "text";
+				if (caseSensitive && wholeWord) {
+					paramName = "text_case_word";
+				}
+				else if (caseSensitive && !wholeWord) {
+					paramName = "text_case";
+				}
+				else if (!caseSensitive && wholeWord) {
+					paramName = "text_word";
+				}
+				docsOpsUrl = docsOpsUrl.setQuery(paramName, t.text);
+			}
+		}
+
+		if (scope != null && typeof scope === 'object') {
+			if (scope.pageText === false) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_page_text", false);
+			}
+			if (scope.pageImages === true) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_page_images", true);
+			}
+			if (scope.bookmarks === true) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_bookmarks", true);
+			}
+			if (scope.bookmarkActions === true) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_bookmark_actions", true);
+			}
+			if (scope.annotations === true) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_annotations", true);
+			}
+			if (scope.annotationActions === true) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_annotation_actions", true);
+			}
+			if (scope.documentProperties === true) {
+				docsOpsUrl = docsOpsUrl.setQuery("scope_document_properties", true);
+			}
+		}
+		
+		return this.starDocs.doAjaxAndPoll('GET', docsOpsUrl.toString());
+	};
+
 	// Redact text from PDF files
 	/* 
 	docUrl - String
@@ -897,7 +983,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		}
 	*/
 	DocOperations.prototype.redactText = function(docUrl, password, pageRangeSettings, searchMode, searchText, removeAssociatedAnnotations, fillSettings, includeAdditionalItems, cleanupSettings) {
-		var docsOpsUrl = docUrl + this.starDocs.urlSegOps + "/redact-text";
+		var docsOpsUrl = docUrl + this.starDocs.urlSegOps + this.starDocs.urlRedactText;
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
 		if (password != null) {
 			jsonBody.password = passwords;
