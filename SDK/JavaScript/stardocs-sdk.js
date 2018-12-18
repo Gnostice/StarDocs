@@ -298,6 +298,44 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		return this.uploadFromURL(docUrl, password);
 	};
 
+	// Upload file via a buffer
+	// fileBuffer - Buffer containing file data (as byte array - Uint8Array)
+	// fileName - Name for the uploaded file
+	// password - Password if the document is encrypted
+	Storage.prototype.uploadFromBuffer = function(fileBuffer, fileName, password, uploadFromViewer) {
+		console.log('Uploading from buffer');
+		// Convert from byte array to string
+		var binaryStr = '';
+		var len = fileBuffer.byteLength;
+    for (var i = 0; i < len; i++) {
+        binaryStr += String.fromCharCode(fileBuffer[ i ]);
+    }
+		var formData = new FormData();
+		var fileBufferBase64 = jQuery.base64.encode(binaryStr);
+		formData.append('fileBuffer', fileBufferBase64);
+		if (fileName != null) {
+			formData.append('fileName', fileName);
+		}
+		if (password != null) {
+			formData.append('password', password);
+		}
+		formData.append('forceFullPermission', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		if (uploadFromViewer && this.starDocs.viewSessionId != null) {
+			formData.append('viewSessionId', this.starDocs.preferences.docPasswordSettings.forceFullPermission);
+		}
+		var docsUrl = this.starDocs.connectionInfo.apiServerUrl + this.starDocs.urlSegDocs;
+		var self = this;
+		var deferred = this.starDocs.doAjaxWithBody('POST', docsUrl, formData);
+		return deferred.then(
+			function(response, textStatus, jqXhr) {
+				return $.Deferred().resolve(response).promise();
+			},
+			function(jqXhr, textStatus, errorThrown) {
+				return $.Deferred().reject(jqXhr.status, errorThrown, jqXhr.responseJSON).promise();
+			}
+		);
+	};
+
 	// List file(s)
 	// whichFiles = "all"/"owned"/"sharedWithMe"
 	// includeDetails = ['tags', 'rights', 'thumbnail']
@@ -1730,6 +1768,57 @@ Gnostice.bindInterFrameFunctions = function(chan, docViewerObj) {
 				return true;
 			}
 			return false;
+		}
+		else if (fnName == "View.firstPage") {
+			return docViewerObj.firstPage();
+		}
+		else if (fnName == "View.lastPage") {
+			return docViewerObj.lastPage();
+		}
+		else if (fnName == "View.prevPage") {
+			return docViewerObj.prevPage();
+		}
+		else if (fnName == "View.nextPage") {
+			return docViewerObj.nextPage();
+		}
+		else if (fnName == "View.gotoPage") {
+			return docViewerObj.gotoPage(callerParams.pageNum);
+		}
+		else if (fnName == "View.getPageCount") {
+			return docViewerObj.getPageCount();
+		}
+		else if (fnName == "View.zoomIn") {
+			return docViewerObj.zoomIn();
+		}
+		else if (fnName == "View.zoomOut") {
+			return docViewerObj.zoomOut();
+		}
+		else if (fnName == "View.rotateClockwise") {
+			return docViewerObj.rotatePagesClockwise();
+		}
+		else if (fnName == "View.rotateCounterClockwise") {
+			return docViewerObj.rotatePagesCounterClockwise();
+		}
+		else if (fnName == "View.invertColors") {
+			return docViewerObj.invertColors(callerParams.applyInversion);
+		}
+		else if (fnName == "download") {
+			return docViewerObj.download();
+		}
+		else if (fnName == "downloadAs") {
+			return docViewerObj.downloadAs(callerParams.extension);
+		}
+		else if (fnName == "print") {
+			return docViewerObj.print();
+		}
+		else if (fnName == "uploadDocumentFromUri") {
+			return docViewerObj.uploadDocumentFromUri(callerParams.uri);
+		}
+		else if (fnName == "uploadDocumentFromBuffer") {
+			return docViewerObj.uploadDocumentFromBuffer(callerParams.bufferBase64);
+		}
+		else if (fnName == "save") {
+			return docViewerObj.save();
 		}
 		// Asynchronous functions
 		else if (fnName == "Forms.submitForm") {
