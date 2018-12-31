@@ -1021,7 +1021,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 		}
 	*/
 	DocOperations.prototype.redactText = function(docUrl, password, pageRangeSettings, searchMode, searchText, removeAssociatedAnnotations, fillSettings, includeAdditionalItems, cleanupSettings) {
-		var docsOpsUrl = docUrl + this.starDocs.urlSegOps + this.starDocs.urlRedactText;
+		var docsOpsUrl = docUrl + this.starDocs.urlSegOps + this.starDocs.urlSegRedactText;
 		var jsonBody = {'forceFullPermission': this.starDocs.preferences.docPasswordSettings.forceFullPermission};
 		if (password != null) {
 			jsonBody.password = passwords;
