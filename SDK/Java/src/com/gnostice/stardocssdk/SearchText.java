@@ -11,6 +11,7 @@ public class SearchText
 	private String text;
 	private boolean caseSensitive;
 	private boolean wholeWord;
+	private boolean includeOnlyCapturingGroups;
 
 	// Ctors
 	public SearchText(String text)
@@ -28,6 +29,14 @@ public class SearchText
 		setText(text);
 		setCaseSensitive(caseSensitive);
 		setWholeWord(wholeWord);
+	}
+
+	public SearchText(String text, boolean caseSensitive, boolean wholeWord, boolean includeOnlyCapturingGroups)
+	{
+		setText(text);
+		setCaseSensitive(caseSensitive);
+		setWholeWord(wholeWord);
+		setIncludeOnlyCapturingGroups(includeOnlyCapturingGroups);
 	}
 
 	/** 
@@ -67,6 +76,19 @@ public class SearchText
 		wholeWord = value;
 	}
 
+	/** 
+	 Gets or sets whether only capturing groups in the regex should be considered. 
+	 This setting is applicable only for searches based on regex.
+	*/
+	public final boolean getIncludeOnlyCapturingGroups()
+	{
+		return includeOnlyCapturingGroups;
+	}
+	public final void setIncludeOnlyCapturingGroups(boolean value)
+	{
+		includeOnlyCapturingGroups = value;
+	}
+
 	// Methods
 
 	public JSONObject toJson() 
@@ -75,6 +97,7 @@ public class SearchText
 		jsonObj.put("text", getText());
 		jsonObj.put("caseSensitive", getCaseSensitive());
 		jsonObj.put("wholeWord", getWholeWord());
+		jsonObj.put("includeOnlyCapturingGroups", getIncludeOnlyCapturingGroups());
 		return jsonObj;
 	}
 }
