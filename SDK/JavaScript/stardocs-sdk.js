@@ -971,7 +971,7 @@ Gnostice.StarDocs = function(connectionInfo, preferences) {
 	password - String
 	pageRangeSettings - JS object having schema { range: <string>, subRangeMode: <string> }
 	searchMode - String
-	searchText - Array of JS objects having schema { text: <string>, caseSensitive: <boolean>, wholeWord: <boolean> }
+	searchText - Array of JS objects having schema { text: <string>, caseSensitive: <boolean>, wholeWord: <boolean>, includeOnlyCapturingGroups: <boolean> }
 	removeAssociatedAnnotations - Boolean to indicate whether annotations associated with the redacted text should also be removed. Default is false.
 	fillSettings - JS object having schema
 		{
